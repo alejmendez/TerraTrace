@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->avatar === null ? 'https://avatar.iran.liara.run/username?size=32&username='.urlencode($this->full_name) : (Str::startsWith($this->avatar, 'http') ? $this->avatar : Storage::url($this->avatar));
+        return $this->avatar === null ? 'https://api.dicebear.com/10.x/initials/svg?seed='.urlencode($this->full_name) : (Str::startsWith($this->avatar, 'http') ? $this->avatar : Storage::url($this->avatar));
     }
 
     public function harvests()

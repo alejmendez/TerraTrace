@@ -15,13 +15,13 @@ const modules = [
 ]
 
 const aliasModules = modules.reduce((acc, module) => {
-  acc[`@${module}`] = path.resolve(__dirname, `./Modules/${module}/Resources`);
+  acc[`@${module}`] = path.resolve(import.meta.dirname, `./Modules/${module}/Resources`);
   return acc;
 }, {})
 
 const alias = {
   ...aliasModules,
-  'ziggy-js': path.resolve(__dirname, './vendor/tightenco/ziggy'),
+  'ziggy-js': path.resolve(import.meta.dirname, './vendor/tightenco/ziggy'),
 }
 
 export default defineConfig({
