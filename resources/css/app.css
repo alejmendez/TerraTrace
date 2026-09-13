@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-bottom: 0 !important;
+}
+
+.router-link-active {
+  @apply bg-gray-500
+}
+
+.input-label {
+  @apply text-sm font-medium leading-none text-neutral-800;
+}
+
+.dark .input-label {
+  @apply text-slate-300
+}
+
+.input-file {
+  @apply block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-300 file:text-gray-800 hover:file:bg-gray-400;
+}
+
+.pagination {
+  @apply p-5 flex items-center justify-between text-sm;
+}
+
+.pagination ul {
+  @apply flex text-center list-none;
+}
+
+.pagination ul li a {
+  min-width: 40px;
+}
+.pagination ul li a.pagination-link {
+  @apply relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100;
+}
+
+.pagination ul li a.current {
+  @apply relative block rounded bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700 transition-all duration-300;
+}
+
+.pagination ul li a.current span {
+  @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)];
+}
+
+.role.agricultor {
+  @apply border-gray-200 text-zinc-600 bg-gray-50;
+}
+
+.role.tecnico {
+  @apply border-green-100 text-green-600 bg-green-50;
+}
+
+.role.administrador,
+.role.super-admin {
+  @apply border-blue-100 text-cyan-600 bg-blue-50;
+}
+
+.role.ayudante-app {
+  @apply border-purple-100 text-purple-600 bg-purple-50;
+}
+.role.asesor-externo {
+  @apply border-yellow-100 text-yellow-600 bg-yellow-50;
+}
+
+.tableContainer {
+  @apply mt-8 bg-white shadow-sm ring-1 ring-gray-950/5;
+}
+
+.tableContainer .inputSearch {
+  @apply block w-64 rounded-lg border py-2 pl-10 pr-4 text-sm focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400;
+}
+
+.tableContainer table {
+  @apply text-sm border-t-2;
+}
+
+.tableContainer table th {
+  @apply px-6 py-3 cursor-default whitespace-nowrap;
+  vertical-align: top;
+}
+
+.tableContainer table td {
+  @apply px-6 py-3;
+}
+.p-button.p-component {
+  @apply text-sm font-medium transition-colors duration-150 rounded-lg disabled:opacity-75;
+}
+
+.p-button.p-component.p-button-secondary {
+  @apply text-(--p-primary-500) hover:text-(--p-primary-700) bg-gray-50 hover:bg-gray-100 border-gray-300 hover:border-neutral-300 dark:text-gray-100 dark:hover:text-gray-100 dark:bg-gray-600 dark:hover:bg-gray-700 dark:border-gray-600 dark:hover:border-gray-700;
+}
+
+.p-datatable {
+  @apply mt-5;
+}
+
+.p-datatable .p-datatable-thead .p-button {
+  @apply text-xs size-8;
+}
+
+.dark .mention {
+  @apply text-slate-300 bg-gray-500;
+}
+
+.card-section {
+  @apply bg-gray-50 text-gray-900
+}
+
+.dark .card-section {
+  @apply bg-[#2F3349] text-gray-100
+}
+
+.swal2-modal .swal2-actions .swal2-deny {
+  @apply !text-zinc-800
+}
+
+.p-dialog-title {
+  margin-right: 40px;
+}
+
+.p-button.btn-status {
+  margin-right: 20px;
+}
+
+.dark .ql-mention-list-container {
+  @apply bg-gray-700 text-gray-100 border-gray-800;
+}
+
+.dark .ql-mention-list-container .selected {
+  @apply bg-gray-600 text-gray-100;
+}
+
+.dark .mention {
+  @apply bg-gray-600 text-gray-100;
+}
+
+.p-toast {
+  z-index: 300000;
+}
+
+.material-fill {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.aside-left-menu .p-accordionpanel {
+  @apply !border-none !bg-gray-50 dark:!bg-[#2F3349];
+}
+
+.aside-left-menu .p-accordionheader {
+  @apply !w-full !pt-2 pb-0 !px-2 !bg-gray-50 !font-normal !text-neutral-800 dark:!bg-[#2F3349] dark:!text-gray-100;
+}
+
+.aside-left-menu .p-accordionheader svg {
+  @apply float-right text-(--p-primary-color) me-3;
+}
+
+.aside-left-menu .p-accordioncontent-content {
+  @apply !p-0 !bg-gray-50 dark:!bg-[#2F3349];
+}
+
+.aside-left-menu .menu-element {
+  @apply w-full py-[8px] ps-3 text-neutral-800 inline-flex relative items-center text-sm font-medium leading-1 rounded-md transition duration-400 ease-in-out;
+}
+
+.aside-left-menu .menu-element:hover {
+  @apply bg-gray-200;
+}
+
+.aside-left-menu .menu-element.active {
+  @apply text-slate-50 bg-(--p-primary-color);
+}
+
+.aside-left-menu .menu-element span[class*="material-"] {
+  @apply text-(--p-primary-color);
+}
+
+.aside-left-menu .menu-element.active span[class*="material-"]{
+  @apply text-slate-50;
+}
+.aside-left-menu .menu-element.active:hover span[class*="material-"]{
+  @apply text-slate-50;
+}
+
+.aside-left-menu .menu-element:hover span[class*="material-"]{
+  @apply text-(--p-primary-color);
+}
+
+.dark .aside-left-menu .menu-element {
+  @apply text-slate-300
+}
+
+.dark .aside-left-menu .menu-element:hover {
+  @apply bg-gray-600
+}
+
+.dark .aside-left-menu .menu-element.active {
+  @apply text-slate-50 bg-(--p-primary-color);
+}
+
+.dark .aside-left-menu .menu-element span[class*="material-"]{
+  @apply text-(--p-primary-color);
+}
+
+.dark .aside-left-menu .menu-element.active span[class*="material-"]{
+  @apply text-slate-50
+}
+.dark .aside-left-menu .menu-element.active:hover span[class*="material-"]{
+  @apply text-slate-50
+}
+
+.dark .aside-left-menu .menu-element:hover span[class*="material-"]{
+  @apply text-(--p-primary-color);
+}

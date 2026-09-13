@@ -1,0 +1,23 @@
+{
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 140,
+    "lineEnding": "lf",
+    "ignore": []
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "arrowParentheses": "always",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "quoteProperties": "asNeeded",
+      "bracketSpacing": true,
+      "bracketSameLine": false
+    }
+  }
+}

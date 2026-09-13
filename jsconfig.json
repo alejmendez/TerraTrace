@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@Users/*": [
+                "./Modules/Users/Resources/*"
+            ],
+            "@Tasks/*": [
+                "./Modules/Tasks/Resources/*"
+            ],
+            "ziggy-js": [
+                "./vendor/tightenco/ziggy"
+            ],
+            "@Dashboard/*": [
+                "./Modules/Dashboard/Resources/*"
+            ],
+            "@Core/*": [
+                "./Modules/Core/Resources/*"
+            ],
+            "@Fields/*": [
+                "./Modules/Fields/Resources/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "public"
+    ]
+}

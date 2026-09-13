@@ -1,0 +1,29 @@
+# Ignorar node_modules
+# /node_modules
+/npm-debug.log
+/yarn-error.log
+
+# Ignorar directorios de Composer
+# /vendor
+
+# Ignorar archivos y directorios específicos de Laravel
+# /.env
+/.env.example
+# /storage/*
+# !/storage/app
+# !/storage/framework
+# !/storage/logs
+
+# Ignorar configuraciones de IDE y del sistema operativo
+/.idea
+/.vscode
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de logs y de caché
+#/storage/*.log
+/storage/*.cache
+/storage/debugbar
+
+/.git/
+# /.docker/*
