@@ -13,6 +13,7 @@ import {
   MapPin,
   MoreHorizontal,
   Mountain,
+  PawPrint,
   Plus,
   Search,
   Shapes,
@@ -55,6 +56,7 @@ const icons = {
   location_on: MapPin,
   map: Map,
   more_horiz: MoreHorizontal,
+  pets: PawPrint,
   potted_plant: Sprout,
   search: Search,
 };

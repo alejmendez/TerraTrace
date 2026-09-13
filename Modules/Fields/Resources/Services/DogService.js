@@ -1,18 +1,5 @@
-import axios from 'axios';
-import datatable from '@Core/Services/Datatable';
-
-const list = async (lazyParams) => {
-  const response = await datatable.list(route('dogs.index'), lazyParams);
-
-  return response.data;
-};
-
-const del = async (id) => {
-  await axios.delete(route('dogs.destroy', { id }));
-  return true;
-};
-
-export default {
-  list,
-  del,
-};
+// DEPRECATED: este servicio quedó sin consumidores tras la migración de
+// Modules/Fields/Resources/Pages/Dogs/List.vue al patrón Inertia + query params.
+// Eliminar este archivo en el siguiente PR. La lógica de carga y eliminación
+// ahora vive en DogsController::index/destroy y se consume vía Inertia.
+export default {};

@@ -29,14 +29,13 @@ class DogsController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
-
-            return response()->json(ListDog::call($params));
-        }
+        $payload = ListDog::collection(request()->all());
 
         return Inertia::render('Fields::Dogs/List', [
             'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
             'fields' => ListEntity::call('field'),
             'couples' => ListEntity::call('couple'),
             'genders' => ListEntity::call('genders'),
