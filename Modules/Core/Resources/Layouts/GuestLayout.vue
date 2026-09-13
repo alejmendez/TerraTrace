@@ -3,9 +3,20 @@
 </script>
 
 <template>
-  <div id="container-guest" class="h-screen px-8 flex items-center justify-center bg-[#cc6844] dark:bg-gray-900">
-    <div class="w-full md:max-w-lg p-6 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 rounded-md shadow-md border lg:max-w-md">
-      <slot />
+  <div id="container-guest" class="min-h-screen px-5 flex items-center justify-center bg-[#f2f8f1] dark:bg-[#1e2b25]">
+    <div class="w-full lg:max-w-md">
+      <div class="mb-7 flex items-center justify-center gap-3 text-[#173e2e] dark:text-white">
+        <span class="grid h-10 w-10 place-items-center rounded-[50%_50%_50%_12%] bg-[#26713d] text-white rotate-[-16deg]">
+          <span class="material-symbols-rounded rotate-[16deg]">spa</span>
+        </span>
+        <div>
+          <p class="m-0 text-lg font-extrabold tracking-[-0.04em]">TerraTrace</p>
+          <p class="m-0 text-[11px] font-semibold text-[#65776e] dark:text-[#b8c8bd]">Gestión de cosecha</p>
+        </div>
+      </div>
+      <div class="rounded-xl border border-[#dfebdf] bg-white p-7 shadow-[0_14px_45px_rgba(27,72,43,0.12)] dark:border-[#3a5144] dark:bg-[#26362e]">
+        <slot />
+      </div>
     </div>
   </div>
 </template>

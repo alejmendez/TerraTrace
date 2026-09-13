@@ -1,16 +1,19 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
-const DEFAULT_SHOW_SIDE_BAR = true;
+const DEFAULT_SHOW_SIDE_BAR = window.matchMedia('(min-width: 1024px)').matches;
 const DEFAULT_SHOW_DRAWER_RIGHT_MENU = false;
 const LS_KEY_SHOW_SIDE_BAR = 'showSideBar';
 const LS_KEY_SHOW_DRAWER_RIGHT_MENU = 'showDrawerRightMenu';
 
-const getItem = (key, defaultValue) => localStorage.getItem(key) || defaultValue;
+const getItem = (key, defaultValue) => localStorage.getItem(key) ?? String(defaultValue);
 const setItem = (key, value) => localStorage.setItem(key, value);
 
 export const useSideBarStore = defineStore('sideBar', () => {
-  const show = ref(getItem(LS_KEY_SHOW_SIDE_BAR, DEFAULT_SHOW_SIDE_BAR) === 'true');
+  const show = ref(
+    window.matchMedia('(min-width: 1024px)').matches
+      && getItem(LS_KEY_SHOW_SIDE_BAR, DEFAULT_SHOW_SIDE_BAR) === 'true',
+  );
 
   const toggle = () => update(!show.value);
   const open = () => update(true);

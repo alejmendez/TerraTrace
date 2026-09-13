@@ -6,10 +6,14 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   margin-bottom: 0 !important;
+  min-width: 320px;
+  background: #f5f8f5;
+  color: #193b31;
+  font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
 }
 
 .router-link-active {
-  @apply bg-gray-500
+  @apply bg-[#e2f0e3] text-[#17633a]
 }
 
 .input-label {
@@ -108,11 +112,11 @@ body {
 }
 
 .card-section {
-  @apply bg-gray-50 text-gray-900
+  @apply border border-[#e1e9e3] bg-white text-[#193b31] shadow-[0_3px_14px_rgba(24,57,39,0.045)]
 }
 
 .dark .card-section {
-  @apply bg-[#2F3349] text-gray-100
+  @apply border-[#33463c] bg-[#26362e] text-gray-100
 }
 
 .swal2-modal .swal2-actions .swal2-deny {
@@ -219,4 +223,512 @@ body {
 
 .dark .aside-left-menu .menu-element:hover span[class*="material-"]{
   @apply text-(--p-primary-color);
+}
+
+/* Sistema visual agrícola compartido por todas las páginas autenticadas. */
+:root {
+  --terra-forest: #123c2c;
+  --terra-green: #216c3b;
+  --terra-mist: #f5f8f5;
+  --terra-line: #e1e9e3;
+  --terra-muted: #63766e;
+}
+
+.terra-app-shell {
+  display: flex;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 86% 4%, rgba(218, 237, 215, 0.55), transparent 24rem),
+    var(--terra-mist);
+}
+
+.terra-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  width: 264px;
+  height: 100vh;
+  flex: 0 0 auto;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid var(--terra-line);
+  background: #fff;
+  box-shadow: 2px 0 16px rgba(22, 61, 42, 0.025);
+  transition: width 180ms ease, transform 180ms ease;
+}
+
+.terra-sidebar--closed {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.terra-content {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.terra-brand {
+  display: flex;
+  min-height: 74px;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 24px;
+  border-bottom: 1px solid #edf1ed;
+  color: var(--terra-forest);
+  white-space: nowrap;
+}
+
+.terra-brand-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50% 50% 50% 12%;
+  background: linear-gradient(140deg, #61b765, #17663a 70%);
+  color: #fff;
+  transform: rotate(-16deg);
+}
+
+.terra-brand-mark span {
+  font-size: 23px;
+  transform: rotate(16deg);
+}
+
+.terra-brand-name,
+.terra-brand-subtitle,
+.terra-sidebar-footer p {
+  margin: 0;
+}
+
+.terra-brand-name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.terra-brand-subtitle {
+  margin-top: 1px;
+  color: #5f7068;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.terra-sidebar .aside-left-menu {
+  min-height: 0;
+  flex: 1 1 auto;
+  padding: 18px 12px 12px;
+  overflow-y: auto;
+}
+
+.terra-sidebar .aside-left-menu .p-accordionpanel,
+.terra-sidebar .aside-left-menu .p-accordionheader,
+.terra-sidebar .aside-left-menu .p-accordioncontent-content {
+  background: transparent !important;
+}
+
+.terra-sidebar .aside-left-menu .p-accordionheader {
+  padding: 10px 12px 7px !important;
+  color: #6c7d75 !important;
+  font-size: 11px;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.terra-sidebar .aside-left-menu .p-accordionheader svg {
+  color: #7a9686 !important;
+}
+
+.terra-sidebar .aside-left-menu .menu-element {
+  min-height: 43px;
+  margin: 2px 0;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: #3d5148;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.terra-sidebar .aside-left-menu .menu-element span[class*="material-"],
+.terra-sidebar .aside-left-menu .menu-element svg {
+  color: #527166;
+}
+
+.terra-sidebar .aside-left-menu .menu-element:hover {
+  background: #f0f7f0;
+  color: #17633a;
+}
+
+.terra-sidebar .aside-left-menu .menu-element:hover span[class*="material-"],
+.terra-sidebar .aside-left-menu .menu-element:hover svg {
+  color: #1e7943;
+}
+
+.terra-sidebar .aside-left-menu .menu-element.active,
+.terra-sidebar .aside-left-menu .menu-element.router-link-active {
+  background: #e0f0e1;
+  box-shadow: inset 3px 0 #288347;
+  color: #155d34;
+}
+
+.terra-sidebar .aside-left-menu .menu-element.active span[class*="material-"],
+.terra-sidebar .aside-left-menu .menu-element.active svg,
+.terra-sidebar .aside-left-menu .menu-element.router-link-active span[class*="material-"],
+.terra-sidebar .aside-left-menu .menu-element.router-link-active svg {
+  color: #1b7140;
+}
+
+.terra-sidebar-footer {
+  position: relative;
+  min-height: 174px;
+  overflow: hidden;
+  padding: 70px 25px 20px;
+  background:
+    radial-gradient(ellipse at -15% 115%, #c1e3bc 0 17%, transparent 17.5%),
+    radial-gradient(ellipse at 55% 115%, #a7d69f 0 22%, transparent 22.5%),
+    linear-gradient(165deg, #fff 34%, #f0f8ed 35% 63%, #dcefd7 64%);
+  color: #496258;
+}
+
+.terra-sidebar-footer > span {
+  position: absolute;
+  top: 30px;
+  left: 25px;
+  color: #5e9f61;
+  font-size: 29px;
+}
+
+.terra-sidebar-footer p {
+  position: relative;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.terra-sidebar-footer i {
+  display: block;
+  width: 38px;
+  height: 3px;
+  margin-top: 13px;
+  border-radius: 4px;
+  background: #3f9551;
+}
+
+.terra-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  min-height: 74px;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 30px;
+  border-bottom: 1px solid #e6ede7;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+}
+
+.terra-menu-toggle {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #315347;
+  cursor: pointer;
+}
+
+.terra-menu-toggle:hover {
+  border-color: #d8e5da;
+  background: #f1f7f1;
+  color: #17663a;
+}
+
+.terra-global-search {
+  display: flex;
+  width: min(100%, 580px);
+  height: 42px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid #dce6de;
+  border-radius: 7px;
+  background: #fbfcfb;
+  color: #60746b;
+}
+
+.terra-global-search:focus-within {
+  border-color: #4b9b5a;
+  box-shadow: 0 0 0 3px rgba(57, 140, 73, 0.1);
+}
+
+.terra-global-search span {
+  font-size: 20px;
+}
+
+.terra-global-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #24463b;
+  font: inherit;
+  font-size: 12px;
+}
+
+.terra-global-search input::placeholder {
+  color: #84938c;
+}
+
+.terra-topbar-actions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.terra-main {
+  min-height: calc(100vh - 74px);
+  padding: 30px 34px 40px;
+}
+
+.terra-page-header {
+  margin-bottom: 22px;
+}
+
+.terra-page-header .breadcrumbs {
+  padding: 0 0 7px;
+  color: #718078;
+  font-size: 12px;
+}
+
+.terra-page-header > div:first-child > h1 + * {
+  color: var(--terra-muted);
+}
+
+.terra-metric-card {
+  display: flex;
+  min-height: 132px;
+  align-items: flex-start;
+  gap: 14px;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.terra-metric-card.cursor-pointer:hover {
+  border-color: #bfd9c2;
+  box-shadow: 0 8px 20px rgba(24, 82, 45, 0.09);
+  transform: translateY(-2px);
+}
+
+.terra-metric-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 13px;
+}
+
+.terra-metric-icon span {
+  font-size: 23px;
+}
+
+.terra-metric-icon--green {
+  background: #dff1e0;
+  color: #25743d;
+}
+
+.terra-metric-icon--amber {
+  background: #fff0ca;
+  color: #b46e03;
+}
+
+.terra-metric-icon--red {
+  background: #fae3de;
+  color: #b9442d;
+}
+
+.terra-metric-icon--blue {
+  background: #dcecf9;
+  color: #2c76b5;
+}
+
+.p-button.p-component {
+  min-height: 40px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.p-button.p-component:not(.p-button-secondary):not(.p-button-text):not(.p-button-outlined) {
+  box-shadow: 0 2px 5px rgba(21, 94, 52, 0.15);
+}
+
+.p-button.p-component.p-button-secondary,
+.p-button.p-component.p-button-outlined {
+  border-color: #3d8550;
+  background: #fff;
+  color: #256d3c;
+}
+
+.p-button.p-component.p-button-secondary:hover,
+.p-button.p-component.p-button-outlined:hover {
+  border-color: #246d3b;
+  background: #eff7ef;
+  color: #185c31;
+}
+
+.p-inputtext,
+.p-select,
+.p-textarea,
+.p-inputnumber-input,
+.p-datepicker-input {
+  border-radius: 7px !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+}
+
+.p-inputtext:enabled:focus,
+.p-select:not(.p-disabled).p-focus,
+.p-textarea:enabled:focus,
+.p-inputnumber:focus-within,
+.p-datepicker:focus-within {
+  border-color: #3f9653 !important;
+  box-shadow: 0 0 0 3px rgba(57, 140, 73, 0.1) !important;
+}
+
+.terra-datatable .p-datatable-header {
+  padding: 18px 20px 12px;
+  border: 0;
+  border-radius: 12px 12px 0 0;
+  background: #fff;
+}
+
+.terra-datatable .p-datatable-thead > tr > th {
+  padding: 12px 16px;
+  border-color: #e8efea;
+  background: #f5f8f5;
+  color: #52665d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.terra-datatable .p-datatable-tbody > tr {
+  background: #fff;
+  color: #30483e;
+}
+
+.terra-datatable .p-datatable-tbody > tr > td {
+  padding: 12px 16px;
+  border-color: #edf1ee;
+  font-size: 12px;
+}
+
+.terra-datatable .p-datatable-tbody > tr:hover > td {
+  background: #f6faf6;
+}
+
+.terra-datatable .p-paginator {
+  padding: 14px 18px;
+  border: 0;
+  border-top: 1px solid #edf1ee;
+  border-radius: 0 0 12px 12px;
+  background: #fff;
+}
+
+.terra-datatable .p-paginator .p-paginator-page.p-paginator-page-selected {
+  background: #226c3b;
+  color: #fff;
+}
+
+.terra-datatable .p-datatable-footer {
+  border-color: #dfece0;
+  background: #edf7ed;
+  color: #1b5932;
+  font-weight: 800;
+}
+
+.dark .terra-app-shell,
+.dark .terra-main {
+  background: #1e2b25;
+}
+
+.dark .terra-sidebar,
+.dark .terra-topbar,
+.dark .terra-datatable,
+.dark .terra-datatable .p-datatable-header,
+.dark .terra-datatable .p-datatable-tbody > tr,
+.dark .terra-datatable .p-paginator {
+  border-color: #33463c;
+  background: #26362e;
+}
+
+.dark .terra-brand,
+.dark .terra-page-header h1,
+.dark .terra-sidebar .aside-left-menu .menu-element {
+  color: #e3eee6;
+}
+
+.dark .terra-sidebar .aside-left-menu .menu-element:hover,
+.dark .terra-sidebar .aside-left-menu .menu-element.active {
+  background: #34513f;
+}
+
+.dark .terra-global-search {
+  border-color: #3d5347;
+  background: #24352c;
+}
+
+.dark .terra-global-search input {
+  color: #edf7ef;
+}
+
+@media (max-width: 1023px) {
+  .terra-sidebar {
+    position: fixed;
+    width: 272px;
+    box-shadow: 8px 0 30px rgba(12, 37, 25, 0.16);
+  }
+
+  .terra-sidebar--closed {
+    width: 272px;
+    transform: translateX(-100%);
+  }
+
+  .terra-sidebar-backdrop {
+    position: fixed;
+    z-index: 25;
+    inset: 0;
+    background: rgba(12, 37, 25, 0.32);
+  }
+
+  .terra-topbar {
+    padding: 12px 18px;
+  }
+
+  .terra-main {
+    padding: 24px 20px 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .terra-global-search {
+    display: none;
+  }
+
+  .terra-page-header h1 {
+    font-size: 29px !important;
+  }
+
+  .terra-main {
+    padding: 20px 14px 28px;
+  }
+
+  .terra-datatable .p-datatable-header {
+    padding: 14px;
+  }
 }

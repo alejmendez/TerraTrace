@@ -105,7 +105,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="overflow-x-auto"
+    class="terra-datatable overflow-x-auto rounded-xl border border-[#e1e9e3] bg-white shadow-[0_3px_14px_rgba(24,57,39,0.045)]"
     :class="{ 'sm:w-[calc(100vw-65px)] md:w-full ': sideBarStore.show, 'sm:w-[calc(100vw-65px)] md:w-[calc(100vw-65px)] lg:w-[calc(100vw-380px)]': !sideBarStore.show }"
   >
     <DataTable

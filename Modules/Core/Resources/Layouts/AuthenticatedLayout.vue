@@ -33,39 +33,55 @@ const menuRightItems = menuElementsRight(currentComponent);
 <template>
   <Head :title="title" />
 
-  <div class="flex items-center w-full h-[64px] bg-gray-50 dark:bg-[#2F3349] text-gray-100 px-[20px] py-[10px] z-30">
-    <div class="w-[230px] select-none">
-      <div
-        class="px-2 pt-3 inline rounded outline-none transition duration-75 text-(color:--p-primary-500) hover:text-(color:--p-primary-700) focus-visible:ring-primary-600 border border-(color:--p-primary-500) hover:border-(color:--p-primary-700)"
-        @click="sideBarStore.toggle"
-      >
-        <span class="material-symbols-rounded !text-md">dehaze</span>
-      </div>
-    </div>
+  <div class="terra-app-shell">
+    <div v-if="showSideBar" class="terra-sidebar-backdrop" @click="sideBarStore.close" />
 
-    <div class="w-[calc(100%-30px)] flex justify-end">
-      <MenuUser />
-    </div>
-  </div>
-  <div class="w-full flex font-normal text-gray-900 antialiased">
-    <div
-      class="flex-none transition-all duration-200 ease-out z-10 bg-gray-50 dark:bg-[#2F3349] text-gray-100"
-      :class="{ 'lg:w-[320px] lg:opacity-100 w-[0px] opacity-0': !showSideBar, 'lg:w-[0px] lg:opacity-0 w-full opacity-100': showSideBar }"
-    >
-      <h3 class="font-bold text-xl inline ms-6 mt-4">
-        <span class="text-(color:--p-primary-color)">SW </span>
-        <span class="text-gray-900 dark:text-gray-50">Agricola</span>
-      </h3>
-      <SideBarLeft />
-    </div>
-    <div class="grow z-20 bg-zinc-200 dark:bg-[#1D2132]">
-      <div class="min-h-[calc(100vh-64px)] pb-5">
-        <main class="py-[10px] px-[25px] w-full">
-          <Toast />
-          <slot></slot>
-        </main>
+    <aside class="terra-sidebar" :class="{ 'terra-sidebar--closed': !showSideBar }">
+      <div class="terra-brand">
+        <div class="terra-brand-mark" aria-hidden="true">
+          <span class="material-symbols-rounded">spa</span>
+        </div>
+        <div>
+          <p class="terra-brand-name">TerraTrace</p>
+          <p class="terra-brand-subtitle">Gestión de cosecha</p>
+        </div>
       </div>
-    </div>
+
+      <SideBarLeft />
+
+      <div class="terra-sidebar-footer">
+        <span class="material-symbols-rounded" aria-hidden="true">eco</span>
+        <p>Trazabilidad para<br>mejores decisiones</p>
+        <i aria-hidden="true"></i>
+      </div>
+    </aside>
+
+    <section class="terra-content">
+      <header class="terra-topbar">
+        <button
+          class="terra-menu-toggle"
+          type="button"
+          aria-label="Alternar navegación"
+          @click="sideBarStore.toggle"
+        >
+          <span class="material-symbols-rounded">menu</span>
+        </button>
+
+        <label class="terra-global-search">
+          <span class="material-symbols-rounded" aria-hidden="true">search</span>
+          <input type="search" placeholder="Buscar predios, lotes o tareas..." aria-label="Buscar registros">
+        </label>
+
+        <div class="terra-topbar-actions">
+          <MenuUser />
+        </div>
+      </header>
+
+      <main class="terra-main">
+        <Toast />
+        <slot></slot>
+      </main>
+    </section>
   </div>
   <Drawer
     v-model:visible="showDrawerRightMenu"
@@ -73,21 +89,19 @@ const menuRightItems = menuElementsRight(currentComponent);
     position="right"
     @hide="drawerRightMenuStore.close"
   >
-    <div class="">
-      <ul class="space-y-1">
-        <li v-for="item in menuRightItems" :key="item.link">
-          <Link
-            :href="item.link"
-            class="flex items-center py-2 px-2 border-s-4 border-(--p-primary-color) hover:border-primary-500 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-100 hover:text-primary-500 transition-colors"
-            @click="drawerRightMenuStore.close"
-          >
-            <span class="material-symbols-rounded me-3" v-if="item.icon">{{ item.icon }}</span>
-            {{ __(item.text) }}
-          </Link>
-        </li>
-      </ul>
-    </div>
+    <ul class="space-y-1">
+      <li v-for="item in menuRightItems" :key="item.link">
+        <Link
+          :href="item.link"
+          class="flex items-center rounded-lg px-3 py-2 text-[#315347] transition-colors hover:bg-[#edf5ed] hover:text-[#17663a]"
+          @click="drawerRightMenuStore.close"
+        >
+          <span class="material-symbols-rounded me-3" v-if="item.icon">{{ item.icon }}</span>
+          {{ __(item.text) }}
+        </Link>
+      </li>
+    </ul>
   </Drawer>
 
-  <ConfirmDialog></ConfirmDialog>
+  <ConfirmDialog />
 </template>

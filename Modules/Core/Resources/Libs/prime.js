@@ -8,7 +8,7 @@ import { Mention, MentionBlot } from 'quill-mention';
 import 'quill-mention/dist/quill.mention.min.css';
 
 export const initPrime = (app) => {
-  const theme = localStorage.getItem('theme') || 'CarrotOrange';
+  const theme = localStorage.getItem('theme') || 'Apple';
 
   Quill.register({ 'blots/mention': MentionBlot, 'modules/mention': Mention });
 

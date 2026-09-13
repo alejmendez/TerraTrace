@@ -15,12 +15,12 @@ const isLink = (str) => str.toLowerCase().startsWith('http');
 </script>
 
 <template>
-  <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <header class="terra-page-header flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div class="grow ">
       <BreadCrumbs :elements="props.breadcrumbs" />
 
       <h1
-        class="mt-4 mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl md:text-3xl"
+        class="mt-2 mb-1 text-3xl font-extrabold tracking-[-0.035em] text-[#102f27] dark:text-gray-100 sm:text-3xl md:text-4xl"
       >
         {{ props.title }}
       </h1>
