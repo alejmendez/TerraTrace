@@ -9,6 +9,7 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Users\Http\Requests\StoreUserRequest;
 use Modules\Users\Http\Requests\UpdateUserRequest;
 use Modules\Users\Http\Resources\UserResource;
+use Modules\Users\Services\Users\ListUser;
 use Modules\Users\Services\UserService;
 
 class UsersController extends Controller
@@ -28,14 +29,13 @@ class UsersController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
-
-            return response()->json($this->userService->list($params));
-        }
+        $payload = ListUser::collection(request()->all());
 
         return Inertia::render('Users::List', [
             'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
             'roles' => ListEntity::call('role'),
         ]);
     }

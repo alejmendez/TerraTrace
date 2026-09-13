@@ -20,6 +20,7 @@ import {
   Sprout,
   Tractor,
   Trash2,
+  UserRound,
   X,
 } from '@lucide/vue';
 
@@ -56,6 +57,7 @@ const icons = {
   location_on: MapPin,
   map: Map,
   more_horiz: MoreHorizontal,
+  person: UserRound,
   pets: PawPrint,
   potted_plant: Sprout,
   search: Search,
