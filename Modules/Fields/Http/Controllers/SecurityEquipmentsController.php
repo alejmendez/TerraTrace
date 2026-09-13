@@ -28,14 +28,13 @@ class SecurityEquipmentsController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
-
-            return response()->json(ListSecurityEquipment::call($params));
-        }
+        $payload = ListSecurityEquipment::collection(request()->all());
 
         return Inertia::render('Fields::SecurityEquipments/List', [
             'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
         ]);
     }
 
