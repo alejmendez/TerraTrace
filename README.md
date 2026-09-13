@@ -1,113 +1,201 @@
-# LaraTrufas
+# TerraTrace
 
-Sistema de gestión, trazabilidad e inventario para operaciones de cosecha.
+> Plataforma de gestión agrícola para registrar cosechas, mantener trazabilidad y consultar la operación desde el predio hasta la liquidación.
 
-## Problema que resuelve
+TerraTrace resuelve la fragmentación de información en operaciones agrícolas. Centraliza datos de campo, producción, inventario, tareas y resultados económicos en una interfaz web.
 
-Las operaciones de campo suelen quedar repartidas entre planillas, cuadernos y mensajes, lo que dificulta conocer el origen de cada lote, controlar el inventario disponible y entender el resultado económico de una temporada. LaraTrufas reúne esa información en una sola aplicación para mantener una cadena de datos consistente desde el campo hasta la liquidación.
+![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)
+![License](https://img.shields.io/badge/Licencia-no%20definida-6B7280)
 
-## Flujo de trabajo
+## Contexto
+
+Las operaciones agrícolas suelen distribuir datos entre planillas, cuadernos y mensajes. Esta dispersión dificulta identificar el origen de cada lote y medir el resultado de una temporada.
+
+TerraTrace organiza el flujo operativo en una sola aplicación. El proyecto prioriza trazabilidad, control de recursos y lectura rápida de indicadores.
 
 ```text
-Cosecha → Operaciones → Inventario → Beneficio
+Predio → Cuartel → Planta → Cosecha → Lote → Inventario → Liquidación
 ```
 
-1. Se registra la cosecha por lote, fecha, especie y cantidad.
-2. Se coordinan las operaciones de campo y los recursos asociados.
-3. La producción se agrupa en lotes, se mueve por inventario y conserva su trazabilidad.
-4. Las liquidaciones y reportes conectan los ingresos y costos con el resultado económico.
+## Vista rápida
 
-## Funcionalidades
+| Reto | Respuesta en TerraTrace |
+| --- | --- |
+| Identificar el origen de la producción | Modela predios, cuarteles, plantas, cosechas y lotes. |
+| Controlar la operación diaria | Gestiona tareas, comentarios, recursos y notificaciones. |
+| Consolidar movimientos | Registra inventario, lotes y datos de trazabilidad. |
+| Revisar el resultado | Presenta indicadores, gráficas y liquidaciones. |
 
-- Gestión de predios, cuarteles, plantas y tipos de cultivo.
-- Registro individual y masivo de cosechas, con detalle por lote y lectura de QR.
-- Operaciones y tareas de campo con herramientas, maquinaria y comentarios.
-- Inventario por lote, lotes de producción, movimientos e información de trazabilidad.
-- Catálogos de productos, importadores y liquidaciones.
-- Paneles, gráficas y resultado económico de las operaciones.
-- Roles y permisos para administrar el acceso a las funcionalidades.
+## Galería
 
-## Capturas anonimizadas
+Las capturas usan datos ficticios y anonimizados.
 
-Las siguientes imágenes son maquetas generadas para este repositorio. Todos los códigos, cifras, fechas y rótulos representan datos de ejemplo; no proceden de clientes, personas ni entornos reales.
+### Registro de cosechas
 
-### Listado y registro de cosechas
+![Listado de cosechas y formulario de registro](docs/images/harvest-list-anonymized.png)
 
-![Listado y registro de cosechas con datos de ejemplo](docs/images/harvest-list-anonymized.png)
+### Inventario y trazabilidad
 
-### Inventario y trazabilidad de lotes
+![Inventario de lotes y línea de trazabilidad](docs/images/inventory-traceability-anonymized.png)
 
-![Inventario y trazabilidad con datos de ejemplo](docs/images/inventory-traceability-anonymized.png)
+### Resultado económico
 
-### Resultado económico ilustrativo
+![Indicadores y resumen económico de ejemplo](docs/images/economic-results-anonymized.png)
 
-![Resultado económico con datos de ejemplo](docs/images/economic-results-anonymized.png)
+## Capacidades
 
-## Tecnologías
+### Operación agrícola
 
-- PHP y Laravel.
-- Vue 3, Inertia.js, PrimeVue y Tailwind CSS.
-- Vite para los recursos del cliente.
-- MySQL para el entorno local de ejemplo.
-- Spatie Laravel Permission para roles y permisos.
-- ApexCharts, lector QR y herramientas de importación/exportación.
+- Administra predios, cuarteles, plantas y tipos de planta.
+- Registra cosechas individuales y masivas.
+- Consulta detalles de cosecha mediante códigos.
+- Registra herramientas, maquinarias y elementos de seguridad.
+- Mantiene bitácoras, archivos y documentación por entidad.
 
-## Ejecutar localmente con datos de ejemplo
+### Trazabilidad e inventario
+
+- Relaciona plantas, cosechas, lotes y movimientos.
+- Agrupa producción en lotes y lotes de cosecha.
+- Consulta estados y ubicaciones del inventario.
+- Permite integrar lectura de códigos QR en el flujo de cosecha.
+
+### Gestión y análisis
+
+- Asigna tareas y registra comentarios operativos.
+- Entrega notificaciones para tareas pendientes.
+- Visualiza indicadores de cosecha y carga operativa.
+- Consolida liquidaciones y categorías comerciales.
+- Genera gráficas para predios y operaciones.
+
+### Acceso
+
+- Protege rutas mediante autenticación Laravel.
+- Gestiona permisos con `spatie/laravel-permission`.
+- Incluye perfiles para agricultor, técnico, administrador y superadministrador.
+
+## Decisiones de diseño
+
+| Área | Decisión |
+| --- | --- |
+| Interfaz | Usa una navegación lateral agrícola con modo claro y oscuro. |
+| Flujo | Mantiene las entidades de campo conectadas desde el predio hasta la liquidación. |
+| Backend | Separa la aplicación en módulos por dominio. |
+| Frontend | Combina Vue 3, Inertia y PrimeVue para una experiencia SPA con rutas Laravel. |
+| Datos | Utiliza migraciones, seeders y factories para facilitar demostraciones locales. |
+
+## Arquitectura
+
+```text
+Navegador
+    │
+Vue 3 + Inertia.js + PrimeVue + Tailwind CSS
+    │
+Laravel 12
+    ├── Auth
+    ├── Core
+    ├── Dashboard
+    ├── Fields
+    ├── Tasks
+    └── Users
+    │
+MySQL + migraciones + seeders
+```
+
+La estructura modular separa controladores, servicios, recursos, rutas y migraciones por dominio.
+
+| Directorio | Propósito |
+| --- | --- |
+| `Modules/Auth` | Gestiona autenticación y recuperación de acceso. |
+| `Modules/Core` | Centraliza componentes, layouts y servicios compartidos. |
+| `Modules/Dashboard` | Entrega indicadores y paneles de operación. |
+| `Modules/Fields` | Gestiona predios, plantas, cosechas e inventario. |
+| `Modules/Tasks` | Gestiona tareas, comentarios y notificaciones. |
+| `Modules/Users` | Gestiona usuarios, perfiles y permisos. |
+| `docs/images` | Contiene las capturas de referencia. |
+
+## Stack
+
+| Capa | Tecnologías |
+| --- | --- |
+| Backend | PHP 8.1+, Laravel 12, Sanctum, Laravel Octane |
+| Frontend | Vue 3, Inertia.js, Pinia, PrimeVue, Tailwind CSS |
+| Visualización | ApexCharts, Material Symbols, Prime Icons |
+| Datos | MySQL, Eloquent, migraciones, factories y seeders |
+| Integraciones | Ziggy, Maatwebsite Excel, lector QR, jsPDF |
+| Calidad | PHPUnit, Laravel Pint y Biome |
+
+## Inicio local
 
 ### Requisitos
 
-- PHP 8.2 o superior y Composer 2.
-- Node.js LTS y npm.
-- MySQL 8 o una instancia compatible disponible en el equipo local.
+- Instala PHP 8.1 o superior.
+- Instala Composer 2.
+- Instala Node.js LTS y npm.
+- Crea una base de datos MySQL vacía.
 
-### Instalación
+### Instala dependencias
 
 ```bash
-git clone <URL_DEL_REPOSITORIO> laratrufas
-cd laratrufas
-cp .env.example .env
+git clone <URL_DEL_REPOSITORIO> terratrace
+cd terratrace
+copy .env.example .env
 composer install
 npm ci
 ```
 
-Edita únicamente el archivo local `.env` para apuntar a una base de datos vacía creada para pruebas. El archivo de ejemplo propone los valores `harvest_management_demo`; no copies configuraciones, usuarios, contraseñas ni datos desde un ambiente de clientes.
+Usa `cp .env.example .env` en macOS o Linux.
 
-Después, prepara la aplicación y carga las muestras:
+### Configura datos locales
+
+Edita el archivo `.env` con las credenciales de una base de datos local. Usa `harvest_management_demo` como referencia para los nombres de ejemplo.
 
 ```bash
 php artisan key:generate
 php artisan migrate:fresh --seed
-npm run dev
-php artisan serve
 ```
 
-En otra terminal, deja `npm run dev` activo mientras desarrollas. La aplicación se abrirá en la dirección local mostrada por `php artisan serve`.
+El seeder local crea una cuenta ficticia para demostraciones.
 
-El seeder crea solo una cuenta ficticia para desarrollo local:
+| Campo | Valor |
+| --- | --- |
+| Correo | `admin@example.cl` |
+| Contraseña | `12345678` |
 
-- Correo: `admin@example.test`
-- Contraseña: `local-demo-only`
+Usa esta cuenta solo en una base local desechable.
 
-El dominio `example.test` está reservado para ejemplos. Esas credenciales no deben usarse fuera de una base de datos local desechable. El seeder está bloqueado fuera del entorno `local` para evitar que se creen cuentas de demostración en entornos compartidos o productivos.
+### Inicia el entorno
 
-Para ejecutar las pruebas automatizadas:
+```bash
+composer run dev
+```
+
+El comando inicia Laravel, la cola y Vite. Abre `http://localhost:9000`.
+
+### Genera recursos de producción
+
+```bash
+npm run build
+```
+
+### Ejecuta pruebas
 
 ```bash
 php artisan test
 ```
 
-## Privacidad y seguridad
+## Privacidad
 
-- Los seeders y las capturas usan datos sintéticos; no contienen personas, clientes, contactos ni resultados reales.
-- Las configuraciones privadas viven exclusivamente en `.env`; las variantes de ese archivo se ignoran por defecto, salvo `.env.example`.
-- Los registros locales, la información de depuración y los archivos de almacenamiento no deben versionarse.
-- Antes de compartir datos reales, aplica controles de acceso, minimización de datos y una política de retención acorde a tu organización.
-- Si alguna credencial llega a un repositorio público, revócala en su proveedor de origen y reescribe el historial: quitarla del archivo actual no invalida la copia ya expuesta.
+- Usa datos ficticios en las capturas y seeders.
+- Mantiene secretos y datos locales fuera del control de versiones.
+- Evita usar credenciales de producción durante las demostraciones.
+- Aplica políticas de acceso y retención antes de usar datos reales.
 
-## Adaptación a otros cultivos
+## Adaptación
 
-Aunque el modelo está orientado a cosecha, lotes y trazabilidad agrícola, puede adaptarse a viñedos, berries, hortalizas, frutales, olivos, semillas u otros cultivos. Para ello se pueden ajustar los tipos de planta, atributos de calidad, unidades de medida, estados de lote y reglas de liquidación sin cambiar el flujo principal.
+Adapta TerraTrace a viñedos, berries, hortalizas, frutales, olivos o semillas. Ajusta los tipos de planta, atributos, estados y reglas de liquidación sin alterar el flujo principal.
 
 ## Licencia
 
-Este repositorio no incluye una licencia de reutilización. No se añade una hasta contar con autorización expresa del titular del código.
+No agregues una licencia de reutilización hasta contar con autorización del titular del proyecto.
