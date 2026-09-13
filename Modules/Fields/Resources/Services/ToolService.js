@@ -1,18 +1,5 @@
-import axios from 'axios';
-import datatable from '@Core/Services/Datatable';
-
-const list = async (lazyParams) => {
-  const response = await datatable.list(route('tools.index'), lazyParams);
-
-  return response.data;
-};
-
-const del = async (id) => {
-  await axios.delete(route('tools.destroy', { id }));
-  return true;
-};
-
-export default {
-  list,
-  del,
-};
+// DEPRECATED: este servicio quedó sin consumidores tras la migración de
+// Modules/Fields/Resources/Pages/Tools/List.vue al patrón Inertia + query params.
+// Eliminar este archivo en el siguiente PR. La lógica de carga y eliminación
+// ahora vive en ToolsController::index/destroy y ListTool::collection.
+export default {};

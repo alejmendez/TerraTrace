@@ -21,6 +21,7 @@ import {
   Tractor,
   Trash2,
   UserRound,
+  Wrench,
   X,
 } from '@lucide/vue';
 
@@ -61,6 +62,7 @@ const icons = {
   pets: PawPrint,
   potted_plant: Sprout,
   search: Search,
+  wrench: Wrench,
 };
 
 const icon = computed(() => icons[props.name] || CircleAlert);
