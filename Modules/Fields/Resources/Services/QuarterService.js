@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const list = async (lazyParams) => {
+const list = async (params, signal) => {
   const response = await axios.get(route('quarters.index'), {
-    params: {
-      dt_params: JSON.stringify(lazyParams),
-    },
+    params: { collection: 1, ...params },
+    signal,
   });
 
   return response.data;

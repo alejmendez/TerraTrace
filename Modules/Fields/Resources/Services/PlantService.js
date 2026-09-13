@@ -1,8 +1,10 @@
 import axios from 'axios';
-import datatable from '@Core/Services/Datatable';
 
-const list = async (lazyParams) => {
-  const response = await datatable.list(route('plants.index'), lazyParams);
+const list = async (params, signal) => {
+  const response = await axios.get(route('plants.index'), {
+    params: { collection: 1, ...params },
+    signal,
+  });
 
   return response.data;
 };

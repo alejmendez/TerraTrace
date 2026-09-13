@@ -35,6 +35,10 @@ class PlantsController extends Controller
      */
     public function index()
     {
+        if (request()->boolean('collection')) {
+            return response()->json(ListPlant::collection(request()->all()));
+        }
+
         if (request()->exists('dt_params')) {
             $params = json_decode(request('dt_params', '[]'), true);
 
