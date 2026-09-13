@@ -116,7 +116,7 @@ body {
 }
 
 .dark .card-section {
-  @apply border-[#33463c] bg-[#26362e] text-gray-100
+  @apply border-[#385443] bg-[#1b2d22] text-[#edf6ed]
 }
 
 .swal2-modal .swal2-actions .swal2-deny {
@@ -315,10 +315,24 @@ body {
 }
 
 .terra-sidebar .aside-left-menu {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 0;
   flex: 1 1 auto;
   padding: 18px 12px 12px;
+  overflow-x: hidden;
   overflow-y: auto;
+}
+
+.terra-sidebar .aside-left-menu .p-accordion,
+.terra-sidebar .aside-left-menu .p-accordionpanel,
+.terra-sidebar .aside-left-menu .p-accordioncontent,
+.terra-sidebar .aside-left-menu .p-accordioncontent-content,
+.terra-sidebar .aside-left-menu .menu-element {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .terra-sidebar .aside-left-menu .p-accordionpanel,
@@ -654,17 +668,23 @@ body {
 
 .dark .terra-app-shell,
 .dark .terra-main {
-  background: #1e2b25;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(42, 101, 59, 0.2), transparent 28rem),
+    #111d16;
 }
 
 .dark .terra-sidebar,
-.dark .terra-topbar,
+.dark .terra-topbar {
+  border-color: #2c4637;
+  background: rgba(20, 36, 27, 0.92);
+}
+
 .dark .terra-datatable,
 .dark .terra-datatable .p-datatable-header,
 .dark .terra-datatable .p-datatable-tbody > tr,
 .dark .terra-datatable .p-paginator {
-  border-color: #33463c;
-  background: #26362e;
+  border-color: #385443;
+  background: #1b2d22;
 }
 
 .dark .terra-brand,
@@ -675,16 +695,101 @@ body {
 
 .dark .terra-sidebar .aside-left-menu .menu-element:hover,
 .dark .terra-sidebar .aside-left-menu .menu-element.active {
-  background: #34513f;
+  background: #294a35;
+  color: #eff8ef;
 }
 
 .dark .terra-global-search {
-  border-color: #3d5347;
-  background: #24352c;
+  border-color: #385443;
+  background: #14251b;
 }
 
 .dark .terra-global-search input {
   color: #edf7ef;
+}
+
+.dark .terra-global-search input::placeholder {
+  color: #9cb0a0;
+}
+
+.dark .terra-menu-toggle {
+  color: #cfe0d1;
+}
+
+.dark .terra-menu-toggle:hover {
+  border-color: #385443;
+  background: #203a2a;
+  color: #fff;
+}
+
+.dark .terra-sidebar .aside-left-menu .p-accordionheader {
+  color: #9fb5a4 !important;
+}
+
+.dark .terra-sidebar .aside-left-menu .menu-element span[class*="material-"],
+.dark .terra-sidebar .aside-left-menu .menu-element svg {
+  color: #aac1af;
+}
+
+.dark .terra-sidebar .aside-left-menu .menu-element.active span[class*="material-"],
+.dark .terra-sidebar .aside-left-menu .menu-element.active svg {
+  color: #74cc88;
+}
+
+.dark .terra-sidebar-footer {
+  background:
+    radial-gradient(ellipse at -15% 115%, #2d5c37 0 17%, transparent 17.5%),
+    radial-gradient(ellipse at 55% 115%, #234b2d 0 22%, transparent 22.5%),
+    linear-gradient(165deg, #16291e 34%, #1d3525 35% 63%, #213e2a 64%);
+  color: #bdd1c1;
+}
+
+.dark .terra-sidebar-footer > span {
+  color: #78bd83;
+}
+
+.dark .terra-datatable .p-datatable-thead > tr > th {
+  border-color: #385443;
+  background: #203629;
+  color: #c3d4c6;
+}
+
+.dark .terra-datatable .p-datatable-tbody > tr {
+  color: #e8f2e9;
+}
+
+.dark .terra-datatable .p-datatable-tbody > tr > td,
+.dark .terra-datatable .p-paginator {
+  border-color: #2d4637;
+}
+
+.dark .terra-datatable .p-datatable-tbody > tr:hover > td {
+  background: #21392b;
+}
+
+.dark .terra-datatable .p-datatable-footer {
+  border-color: #365542;
+  background: #213d2c;
+  color: #d8ecd9;
+}
+
+.dark .terra-metric-card .text-\[\#5e7369\],
+.dark .terra-metric-card .text-\[\#687b72\] {
+  color: #b2c5b5;
+}
+
+.dark .p-button.p-component.p-button-secondary,
+.dark .p-button.p-component.p-button-outlined {
+  border-color: #5da86c;
+  background: transparent;
+  color: #9ee0aa;
+}
+
+.dark .p-button.p-component.p-button-secondary:hover,
+.dark .p-button.p-component.p-button-outlined:hover {
+  border-color: #76bd80;
+  background: #203d2b;
+  color: #d4efd6;
 }
 
 @media (max-width: 1023px) {

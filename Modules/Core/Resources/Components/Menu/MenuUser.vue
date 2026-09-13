@@ -82,7 +82,7 @@ onUnmounted(() => {
 <template>
   <div class="relative me-3" ref="root" v-if="showRightMenu">
     <div
-      class="text-lg w-[40px] h-[40px] cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 pt-2 ps-2 rounded-full transition-all ease-out duration-300"
+      class="text-lg w-[40px] h-[40px] cursor-pointer hover:bg-[#eff7ef] dark:hover:bg-[#203a2a] text-[#294a3c] dark:text-[#dcebdd] pt-2 ps-2 rounded-full transition-all ease-out duration-300"
       @click="toggleDropMenu"
     >
       <span class="material-symbols-rounded">settings</span>
@@ -99,16 +99,16 @@ onUnmounted(() => {
     <!-- Drop down -->
     <div
       v-show="showDropDown"
-      class="absolute right-[10px] z-50 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-slate-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      class="absolute right-[10px] z-50 mt-2 w-56 origin-top-right rounded-lg bg-white dark:bg-[#1b2d22] shadow-lg ring-1 ring-black/5 dark:ring-[#496752] focus:outline-none"
       role="menu"
       aria-orientation="vertical"
       aria-labelledby="menu-button"
       tabindex="-1"
     >
-      <div class="text-black dark:text-gray-100 font-semibold text-left block px-4 py-2">
+      <div class="text-[#1d3d30] dark:text-[#edf6ed] font-semibold text-left block px-4 py-2">
         <div>{{ $page.props.auth.user.full_name }}</div>
       </div>
-      <div class="text-black font-semibold text-left block px-4 py-2 select-mode">
+      <div class="text-[#1d3d30] dark:text-[#edf6ed] font-semibold text-left block px-4 py-2 select-mode">
         <SelectButton
           class="w-full"
           v-model="darkModeValue"
@@ -128,8 +128,8 @@ onUnmounted(() => {
         <div :class="`${theme.class} rounded-full w-4 h-4 float-left me-2`" v-for="theme in themes" @click="setTheme(theme)"></div>
       </div>
       <div class="py-1 text-left" role="none">
-        <Link :href="route('profile.edit')" class="text-gray-700 dark:text-gray-100 block px-4 py-2"> {{ __('menu.top.profile') }} </Link>
-        <Link :href="route('logout')" method="post" as="button" class="text-gray-700 dark:text-gray-100 block px-4 py-2">
+        <Link :href="route('profile.edit')" class="text-[#355448] dark:text-[#d4e6d6] block px-4 py-2 hover:bg-[#f1f7f1] dark:hover:bg-[#203a2a]"> {{ __('menu.top.profile') }} </Link>
+        <Link :href="route('logout')" method="post" as="button" class="text-[#355448] dark:text-[#d4e6d6] block px-4 py-2 hover:bg-[#f1f7f1] dark:hover:bg-[#203a2a]">
             {{ __('menu.top.logout') }}
         </Link>
       </div>

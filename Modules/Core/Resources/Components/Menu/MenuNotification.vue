@@ -32,12 +32,12 @@ onUnmounted(() => {
 <template>
   <div class="relative me-3" ref="root">
     <div
-      class="text-lg w-[40px] h-[40px] cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 pt-2 ps-2 rounded-full transition-all ease-out duration-300"
+      class="text-lg w-[40px] h-[40px] cursor-pointer hover:bg-[#eff7ef] dark:hover:bg-[#203a2a] text-[#294a3c] dark:text-[#dcebdd] pt-2 ps-2 rounded-full transition-all ease-out duration-300"
       @click="toggleDrop"
     >
       <span class="material-symbols-rounded">notifications</span>
       <span
-        class="text-xs bg-orange-700 text-gray-100 rounded-full px-1 py-0 absolute top-2 right-2"
+        class="text-xs bg-[#e3a325] text-[#263216] rounded-full px-1 py-0 absolute top-2 right-2"
         v-if="numberOfNotifications > 0"
       >
         {{ numberOfNotifications }}
@@ -46,7 +46,7 @@ onUnmounted(() => {
   </div>
   <div
     v-show="showDropDown"
-    class="absolute right-[60px] z-50 mt-12 w-96 origin-top-right rounded-md text-black dark:text-gray-100 bg-white dark:bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+    class="absolute right-[60px] z-50 mt-12 w-96 origin-top-right rounded-lg text-[#1d3d30] dark:text-[#edf6ed] bg-white dark:bg-[#1b2d22] shadow-lg ring-1 ring-black/5 dark:ring-[#496752] focus:outline-none"
     tabindex="-1"
   >
     <div class="font-semibold text-left block px-4 py-2">
