@@ -4,9 +4,9 @@ import { initPrime } from '@Core/Libs/prime';
 import { initApexCharts } from '@Core/Libs/apexcharts';
 import { initComponent } from '@Core/Libs/components';
 
-export const initLibs = (app) => {
+export const initLibs = async (app) => {
   initPinia(app);
-  initI18n(app);
+  await initI18n(app);
   initPrime(app);
   initApexCharts(app);
   initComponent(app);

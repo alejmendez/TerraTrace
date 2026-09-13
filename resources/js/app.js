@@ -27,9 +27,9 @@ const resolvePageComponent = (name) => {
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: (name) => resolvePageComponent(name),
-  setup({ el, App, props, plugin }) {
+  async setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) });
-    initLibs(app);
+    await initLibs(app);
     return app.use(plugin).use(ZiggyVue).mount(el);
   },
   progress: {

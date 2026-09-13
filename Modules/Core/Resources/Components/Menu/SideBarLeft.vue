@@ -15,10 +15,27 @@ const currentComponent = page.component;
 
 const menuData = menuElements(currentComponent);
 const initialState = menuData.map((_, index) => index);
-const menuState = ref(JSON.parse(localStorage.getItem('menu-state')) || initialState);
+const savedMenuState = localStorage.getItem('menu-state');
 
-const openHandler = (e) => {
-  localStorage.setItem('menu-state', JSON.stringify(e));
+const getMenuState = () => {
+  if (!savedMenuState) {
+    return initialState;
+  }
+
+  try {
+    const parsedMenuState = JSON.parse(savedMenuState);
+
+    return Array.isArray(parsedMenuState) ? parsedMenuState : initialState;
+  } catch {
+    return initialState;
+  }
+};
+
+const menuState = ref(getMenuState());
+
+const openHandler = (value) => {
+  menuState.value = value;
+  localStorage.setItem('menu-state', JSON.stringify(value));
 };
 </script>
 <template>

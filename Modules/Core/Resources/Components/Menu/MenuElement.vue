@@ -20,6 +20,12 @@ const props = defineProps({
 });
 
 const sideBarStore = useSideBarStore();
+
+const closeSideBarOnMobile = () => {
+  if (window.matchMedia('(max-width: 1023px)').matches) {
+    sideBarStore.close();
+  }
+};
 </script>
 
 <template>
@@ -28,7 +34,7 @@ const sideBarStore = useSideBarStore();
     :href="props.link"
     class="menu-element"
     :class="{ active: props.active }"
-    @click="sideBarStore.close"
+    @click="closeSideBarOnMobile"
   >
     <div class="w-[25px] mr-2 flex justify-center">
       <span v-html="props.icon"></span>

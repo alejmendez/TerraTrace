@@ -53,11 +53,12 @@ const changeHandlerDarkMode = () => {
   toggleTheme(darkModeValue.value.value === 'dark');
 };
 
-if (localStorage.themeType === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  toggleTheme(true);
-} else {
-  toggleTheme(false);
-}
+const storedThemeType = localStorage.getItem('themeType');
+const shouldUseDarkTheme = storedThemeType === null
+  ? window.matchMedia('(prefers-color-scheme: dark)').matches
+  : storedThemeType === 'dark';
+
+toggleTheme(shouldUseDarkTheme);
 
 const setTheme = (theme) => {
   localStorage.setItem('theme', theme.name);
