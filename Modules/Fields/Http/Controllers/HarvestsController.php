@@ -34,17 +34,13 @@ class HarvestsController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
-            $paramsCollection = collect($params);
-
-            $harvests = ListHarvest::call($params);
-
-            return response()->json($harvests);
-        }
+        $payload = ListHarvest::collection(request()->all());
 
         return Inertia::render('Fields::Harvests/List', [
             'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
             'harvest_available_years' => ListEntity::call('harvest_available_years'),
             'harvest_available_weeks' => ListEntity::call('harvest_available_weeks'),
             'fields' => ListEntity::call('field'),

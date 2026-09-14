@@ -47,7 +47,6 @@ class ListHarvest
             }
 
             $details_count += $detailsTotal->count();
-            // $details_sum_weight += $detailsTotal->sum('weight');
             $details_sum_weight += $harvest->weight;
         }
 
@@ -82,7 +81,6 @@ class ListHarvest
                 'batch' => $harvest->batch,
                 'field_names' => $field_names,
                 'quarter_names' => $quarter_names,
-                // 'total_weight' => $details->map(fn ($detail) => $detail->weight)->sum(),
                 'total_weight' => $harvest->weight,
                 'unit_count' => $details->count(),
                 'farmer_name' => optional($harvest->farmer)->name,
@@ -105,5 +103,100 @@ class ListHarvest
         $harvestsArray['details_sum_weight'] = $details_sum_weight;
 
         return $harvestsArray;
+    }
+
+    public static function collection(array $params = []): array
+    {
+        $query = Harvest::query()
+            ->select('harvests.id', 'harvests.date', 'harvests.year', 'harvests.week', 'harvests.batch', 'harvests.weight', 'harvests.farmer_id')
+            ->with(['farmer:id,name,full_name', 'details:id,harvest_id,quarter_id,weight', 'details.quarter:id,name,field_id', 'details.quarter.field:id,name']);
+
+        $search = trim($params['q'] ?? '');
+
+        if ($search !== '') {
+            $query->where(function ($builder) use ($search) {
+                $builder
+                    ->where('harvests.batch', 'like', "%{$search}%")
+                    ->orWhere('harvests.year', 'like', "%{$search}%")
+                    ->orWhere('harvests.week', 'like', "%{$search}%")
+                    ->orWhereHas('farmer', function ($farmerQuery) use ($search) {
+                        $farmerQuery->where('full_name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('details.quarter.field', function ($fieldQuery) use ($search) {
+                        $fieldQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if (!empty($params['year'])) {
+            $query->where('harvests.year', $params['year']);
+        }
+
+        if (!empty($params['week'])) {
+            $query->where('harvests.week', $params['week']);
+        }
+
+        if (!empty($params['field_id'])) {
+            $query->whereHas('details.quarter', function ($quarterQuery) use ($params) {
+                $quarterQuery->where('field_id', $params['field_id']);
+            });
+        }
+
+        if (!empty($params['quarter_id'])) {
+            $query->whereHas('details', function ($detailQuery) use ($params) {
+                $detailQuery->where('quarter_id', $params['quarter_id']);
+            });
+        }
+
+        if (!empty($params['farmer_id'])) {
+            $query->where('harvests.farmer_id', $params['farmer_id']);
+        }
+
+        $summary = [
+            'harvests' => (clone $query)->count(),
+            'total_weight' => (clone $query)->sum('harvests.weight'),
+        ];
+
+        $sort = in_array($params['sort'] ?? '', ['year', 'week', 'batch', 'date', 'weight', 'updated_at'], true)
+            ? $params['sort']
+            : 'date';
+        $direction = ($params['direction'] ?? 'desc') === 'asc' ? 'asc' : 'desc';
+        $perPage = min(max((int) ($params['per_page'] ?? 12), 1), 24);
+        $page = max((int) ($params['page'] ?? 1), 1);
+
+        $paginator = $query
+            ->orderBy("harvests.{$sort}", $direction)
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        $items = collect($paginator->items())->map(function ($harvest) {
+            $fieldNames = $harvest->details->map(fn ($detail) => $detail->quarter?->field?->name)->filter()->unique()->values()->all();
+            $quarterNames = $harvest->details->map(fn ($detail) => $detail->quarter?->name)->filter()->unique()->values()->all();
+
+            return [
+                'id' => $harvest->id,
+                'date' => $harvest->date,
+                'year' => $harvest->year,
+                'week' => $harvest->week,
+                'batch' => $harvest->batch,
+                'field_names' => $fieldNames,
+                'quarter_names' => $quarterNames,
+                'total_weight' => (float) $harvest->weight,
+                'unit_count' => $harvest->details->count(),
+                'farmer_name' => $harvest->farmer?->name,
+            ];
+        })->all();
+
+        return [
+            'items' => $items,
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'from' => $paginator->firstItem() ?? 0,
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'to' => $paginator->lastItem() ?? 0,
+                'total' => $paginator->total(),
+            ],
+            'summary' => $summary,
+        ];
     }
 }
