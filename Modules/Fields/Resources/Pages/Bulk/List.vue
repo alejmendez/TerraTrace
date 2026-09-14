@@ -1,43 +1,46 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { can } from '@Auth/Services/Auth';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
+import { can } from '@Auth/Services/Auth';
 
 const list = [
   {
     to: 'plants.create.bulk',
     icon: 'potted_plant',
-    title: 'bulk.plants.title',
-    subtitle: 'bulk.plants.subtitle',
+    title: 'Plantas',
+    subtitle: 'Carga masiva de plantas desde una planilla.',
   },
   {
     to: 'harvests.create.bulk',
-    icon: 'shopping_basket',
-    title: 'bulk.harvests.title',
-    subtitle: 'bulk.harvests.subtitle',
+    icon: 'agriculture',
+    title: 'Cosechas',
+    subtitle: 'Carga masiva de cosechas desde una planilla.',
   },
 ].filter((ele) => can(ele.to));
 </script>
 
 <template>
-  <AuthenticatedLayout :title="__('bulk.title')">
-    <HeaderCrud
-      :title="__('bulk.title')"
+  <AuthenticatedLayout title="Carga masiva">
+    <CollectionPageHeader
+      title="Carga masiva"
+      description="Accesos rápidos a las cargas masivas disponibles para los recursos del campo."
     />
 
-    <div class="grid grid-cols-4 gap-x-16 gap-y-4 mt-5">
+    <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <Link
         v-for="ele in list"
-        class="px-6 py-3 rounded-xl bg-white dark:bg-[#2F3349] dark:text-gray-200 shadow-sm ring-1 ring-gray-950/5 hover:bg-slate-100 dark:hover:bg-slate-700 hover:drop-shadow transition-all"
+        :key="ele.to"
         :href="route(ele.to)"
+        class="flex min-h-32 flex-col gap-2 rounded-xl border border-[#e1e9e3] bg-white p-6 shadow-[0_3px_14px_rgba(24,57,39,0.045)] transition hover:border-[#bddcc6] hover:shadow-md"
       >
-        <div class="text-xl">
-          <span class="material-symbols-rounded me-2">{{ ele.icon }}</span>
-          {{ __(ele.title) }}
-        </div>
-        <div>{{ __(ele.subtitle) }}</div>
+        <span class="flex size-12 items-center justify-center rounded-lg bg-[#e7f3e9] text-[#17663a]" aria-hidden="true">
+          <CollectionIcon :name="ele.icon" :size="28" />
+        </span>
+        <h2 class="text-base font-bold text-[#102f27]">{{ ele.title }}</h2>
+        <p class="text-sm text-[#61716c]">{{ ele.subtitle }}</p>
       </Link>
     </div>
   </AuthenticatedLayout>
