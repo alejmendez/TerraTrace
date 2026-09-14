@@ -9,6 +9,7 @@ use Modules\Fields\Http\Requests\StoreImporterRequest;
 use Modules\Fields\Http\Requests\UpdateImporterRequest;
 use Modules\Fields\Services\Importers\CreateImporter;
 use Modules\Fields\Services\Importers\DeleteImporter;
+use Modules\Fields\Services\Importers\FindImporter;
 use Modules\Fields\Services\Importers\ListImporter;
 use Modules\Fields\Services\Importers\UpdateImporter;
 
@@ -26,13 +27,22 @@ class ImportersController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
+        $payload = ListImporter::collection(request()->all());
 
-            return response()->json(ListImporter::call($params));
-        }
+        return Inertia::render('Fields::Importers/List', [
+            'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
+        ]);
+    }
 
-        return Inertia::render('Fields::Importers/List');
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('Fields::Importers/Create');
     }
 
     /**
@@ -40,14 +50,26 @@ class ImportersController extends Controller
      */
     public function store(StoreImporterRequest $request)
     {
-        $data = $request->validated();
-        $importer = CreateImporter::call($data);
+        CreateImporter::call($request->validated());
 
-        return [
-            'importer' => $importer,
-            'success' => true,
-            'message' => 'Importer created.',
-        ];
+        return redirect()->route('importers.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('generics.messages.saved_successfully'),
+            'detail' => __('generics.messages.saved_successfully'),
+            'life' => 5000,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $importer = FindImporter::call($id);
+
+        return Inertia::render('Fields::Importers/Edit', [
+            'data' => $importer,
+        ]);
     }
 
     /**
@@ -55,13 +77,14 @@ class ImportersController extends Controller
      */
     public function update(UpdateImporterRequest $request, string $id)
     {
-        $data = $request->validated();
-        UpdateImporter::call($id, $data);
+        UpdateImporter::call($id, $request->validated());
 
-        return [
-            'success' => true,
-            'message' => 'Importer updated.',
-        ];
+        return redirect()->route('importers.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('generics.messages.saved_successfully'),
+            'detail' => __('generics.messages.saved_successfully'),
+            'life' => 5000,
+        ]);
     }
 
     /**
