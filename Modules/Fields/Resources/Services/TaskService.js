@@ -1,21 +1,6 @@
-import axios from 'axios';
-
-const list = async (lazyParams) => {
-  const response = await axios.get(route('tasks.index'), {
-    params: {
-      dt_params: JSON.stringify(lazyParams),
-    },
-  });
-
-  return response.data;
-};
-
-const del = async (id) => {
-  await axios.delete(route('tasks.destroy', { id }));
-  return true;
-};
-
-export default {
-  list,
-  del,
-};
+// DEPRECATED: este servicio quedó sin consumidores tras la migración de
+// Modules/Tasks/Resources/Pages/List.vue al patrón Inertia + query params.
+// NOTA: este archivo está en Modules/Fields/Resources/Services/TaskService.js por
+// una inconsistencia de path histórica — debería estar en Modules/Tasks/Resources/Services/.
+// Eliminar este archivo en el siguiente PR.
+export default {};

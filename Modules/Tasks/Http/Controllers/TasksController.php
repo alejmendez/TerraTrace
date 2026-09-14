@@ -30,21 +30,16 @@ class TasksController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
-
-            return response()->json(ListTask::call($params));
-        }
-
-        $status = explode(',', request('status', ''));
+        $payload = ListTask::collection(request()->all());
 
         return Inertia::render('Tasks::List', [
             'toast' => session('toast'),
-            'status' => $status,
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
             'responsibles' => ListEntity::call('responsible'),
             'task_priorities' => ListEntity::call('task_priorities'),
             'task_states' => ListEntity::call('task_states'),
-            'task_repeat_type' => ListEntity::call('task_repeat_type'),
         ]);
     }
 
