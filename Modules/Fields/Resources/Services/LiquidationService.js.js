@@ -1,18 +1,5 @@
-import axios from 'axios';
-import datatable from '@Core/Services/Datatable';
-
-const list = async (lazyParams) => {
-  const response = await datatable.list(route('liquidations.index'), lazyParams);
-
-  return response.data;
-};
-
-const del = async (id) => {
-  await axios.delete(route('liquidations.destroy', { id }));
-  return true;
-};
-
-export default {
-  list,
-  del,
-};
+// DEPRECATED: este servicio quedó sin consumidores tras la migración de
+// Modules/Fields/Resources/Pages/Liquidations/List.vue al patrón Inertia + query params.
+// NOTA: este archivo se llama LiquidationService.js.js por una inconsistencia de path histórica.
+// Eliminar este archivo en el siguiente PR.
+export default {};

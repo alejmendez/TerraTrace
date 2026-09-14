@@ -29,14 +29,13 @@ class LiquidationsController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
-
-            return response()->json(ListLiquidation::call($params));
-        }
+        $payload = ListLiquidation::collection(request()->all());
 
         return Inertia::render('Fields::Liquidations/List', [
             'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
             'importers' => ListEntity::call('importer'),
             'liquidation_available_years' => ListEntity::call('liquidation_available_years'),
         ]);
