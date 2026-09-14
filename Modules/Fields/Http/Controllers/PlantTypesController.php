@@ -9,6 +9,7 @@ use Modules\Fields\Http\Requests\StorePlantTypeRequest;
 use Modules\Fields\Http\Requests\UpdatePlantTypeRequest;
 use Modules\Fields\Services\PlantTypes\CreatePlantType;
 use Modules\Fields\Services\PlantTypes\DeletePlantType;
+use Modules\Fields\Services\PlantTypes\FindPlantType;
 use Modules\Fields\Services\PlantTypes\ListPlantType;
 use Modules\Fields\Services\PlantTypes\UpdatePlantType;
 
@@ -26,13 +27,22 @@ class PlantTypesController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
+        $payload = ListPlantType::collection(request()->all());
 
-            return response()->json(ListPlantType::call($params));
-        }
+        return Inertia::render('Fields::PlantTypes/List', [
+            'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
+        ]);
+    }
 
-        return Inertia::render('Fields::PlantTypes/List');
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('Fields::PlantTypes/Create');
     }
 
     /**
@@ -40,14 +50,26 @@ class PlantTypesController extends Controller
      */
     public function store(StorePlantTypeRequest $request)
     {
-        $data = $request->validated();
-        $type = CreatePlantType::call($data);
+        CreatePlantType::call($request->validated());
 
-        return [
-            'type' => $type,
-            'success' => true,
-            'message' => 'Plant Type created.',
-        ];
+        return redirect()->route('plant_types.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('generics.messages.saved_successfully'),
+            'detail' => __('generics.messages.saved_successfully'),
+            'life' => 5000,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $plantType = FindPlantType::call($id);
+
+        return Inertia::render('Fields::PlantTypes/Edit', [
+            'data' => $plantType,
+        ]);
     }
 
     /**
@@ -55,13 +77,14 @@ class PlantTypesController extends Controller
      */
     public function update(UpdatePlantTypeRequest $request, string $id)
     {
-        $data = $request->validated();
-        UpdatePlantType::call($id, $data);
+        UpdatePlantType::call($id, $request->validated());
 
-        return [
-            'success' => true,
-            'message' => 'Plant Type updated.',
-        ];
+        return redirect()->route('plant_types.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('generics.messages.saved_successfully'),
+            'detail' => __('generics.messages.saved_successfully'),
+            'life' => 5000,
+        ]);
     }
 
     /**
