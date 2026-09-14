@@ -9,6 +9,7 @@ use Modules\Fields\Http\Requests\StoreOwnerRequest;
 use Modules\Fields\Http\Requests\UpdateOwnerRequest;
 use Modules\Fields\Services\Owners\CreateOwner;
 use Modules\Fields\Services\Owners\DeleteOwner;
+use Modules\Fields\Services\Owners\FindOwner;
 use Modules\Fields\Services\Owners\ListOwner;
 use Modules\Fields\Services\Owners\UpdateOwner;
 
@@ -26,13 +27,22 @@ class OwnersController extends Controller
      */
     public function index()
     {
-        if (request()->exists('dt_params')) {
-            $params = json_decode(request('dt_params', '[]'), true);
+        $payload = ListOwner::collection(request()->all());
 
-            return response()->json(ListOwner::call($params));
-        }
+        return Inertia::render('Fields::Owners/List', [
+            'toast' => session('toast'),
+            'records' => $payload['items'],
+            'meta' => $payload['meta'],
+            'summary' => $payload['summary'],
+        ]);
+    }
 
-        return Inertia::render('Fields::Owners/List');
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('Fields::Owners/Create');
     }
 
     /**
@@ -40,13 +50,26 @@ class OwnersController extends Controller
      */
     public function store(StoreOwnerRequest $request)
     {
-        $data = $request->validated();
-        CreateOwner::call($data);
+        CreateOwner::call($request->validated());
 
-        return [
-            'success' => true,
-            'message' => 'Owner created.',
-        ];
+        return redirect()->route('owners.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('generics.messages.saved_successfully'),
+            'detail' => __('generics.messages.saved_successfully'),
+            'life' => 5000,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $owner = FindOwner::call($id);
+
+        return Inertia::render('Fields::Owners/Edit', [
+            'data' => $owner,
+        ]);
     }
 
     /**
@@ -54,13 +77,14 @@ class OwnersController extends Controller
      */
     public function update(UpdateOwnerRequest $request, string $id)
     {
-        $data = $request->validated();
-        UpdateOwner::call($id, $data);
+        UpdateOwner::call($id, $request->validated());
 
-        return [
-            'success' => true,
-            'message' => 'Owner updated.',
-        ];
+        return redirect()->route('owners.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('generics.messages.saved_successfully'),
+            'detail' => __('generics.messages.saved_successfully'),
+            'life' => 5000,
+        ]);
     }
 
     /**

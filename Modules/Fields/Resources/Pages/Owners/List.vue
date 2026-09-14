@@ -1,228 +1,228 @@
 <script setup>
-import { ref, reactive } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import { useConfirm } from 'primevue/useconfirm';
-import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
-import Column from 'primevue/column';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import { trans } from 'laravel-vue-i18n';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VInputDni from '@Core/Components/Form/VInputDni.vue';
-import Datatable from '@Core/Components/Table/Datatable.vue';
-import ownerService from '@Fields/Services/OwnerService.js';
-import { deleteRowDatatable } from '@Core/Utils/table.js';
+import CollectionActionMenu from '@Core/Components/Collection/CollectionActionMenu.vue';
+import CollectionConfirmDialog from '@Core/Components/Collection/CollectionConfirmDialog.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
+import CollectionMetricCard from '@Core/Components/Collection/CollectionMetricCard.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
+import CollectionPagination from '@Core/Components/Collection/CollectionPagination.vue';
+import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
+import { formatNumber } from '@Core/Utils/format';
 import { can } from '@Auth/Services/Auth';
+
 const props = defineProps({
+  meta: Object,
+  records: Array,
+  summary: Object,
   toast: Object,
 });
 
-const toast = useToast();
-const confirm = useConfirm();
-
-const showModal = ref(false);
-
-const datatable = ref(null);
-const filters = {
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-  dni: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-};
-
-const loading = ref(false);
-const form = reactive({
-  id: null,
-  name: null,
-  dni: null,
-  errors: {},
-});
-
 const canCreate = can('owners.create');
-const canEdit = can('owners.edit');
 const canDestroy = can('owners.destroy');
+const canEdit = can('owners.edit');
 
-const showSuccessToast = () => {
-  toast.add({
-    severity: 'success',
-    summary: trans('owner.titles.entity_breadcrumb'),
-    detail: trans('generics.messages.saved_successfully'),
-    life: 5000,
-  });
+const initialQuery = () => {
+  const params = new URLSearchParams(window.location.search);
 
-  form.id = null;
-  form.name = null;
-  form.dni = null;
-  form.errors = {};
-};
-
-const showErrorToast = () => {
-  toast.add({
-    severity: 'error',
-    summary: trans('owner.titles.entity_breadcrumb'),
-    detail: trans('generics.errors.trying_to_save'),
-    life: 5000,
-  });
-};
-
-const fetchHandler = async (params) => {
-  return await ownerService.list(params);
-};
-
-const deleteHandler = async (record) => {
-  const options = {
-    datatable,
-    confirm,
-    toast,
-    entity: trans('owner.titles.entity_breadcrumb'),
-    handler: () => ownerService.del(record.id),
+  return {
+    q: params.get('q') || '',
+    page: Number(params.get('page') || 1),
+    per_page: Number(params.get('per_page') || 12),
+    sort: params.get('sort') || 'name',
+    direction: params.get('direction') || 'asc',
   };
-
-  deleteRowDatatable(options);
 };
 
-const handleSave = async (saveAction) => {
-  loading.value = true;
-  form.errors = {};
+const query = reactive(initialQuery());
 
-  try {
-    await saveAction();
-    showModal.value = false;
-    showSuccessToast();
-  } catch (error) {
-    const errors = error.response?.data?.errors;
-    if (errors) {
-      Object.keys(errors).forEach((key) => {
-        form.errors[key] = errors[key].join(', ');
-      });
-    }
-    showErrorToast();
-  } finally {
-    datatable.value.loadLazyData();
-    loading.value = false;
+const recordToDelete = ref(null);
+const toastMessage = ref(props.toast?.detail || '');
+const toastTone = ref(props.toast?.severity === 'error' ? 'error' : 'success');
+
+let searchTimer = null;
+
+const buildParams = () => {
+  const params = {};
+  if (query.q) params.q = query.q;
+  if (query.page > 1) params.page = query.page;
+  if (query.per_page !== 12) params.per_page = query.per_page;
+  if (query.sort !== 'name') params.sort = query.sort;
+  if (query.direction !== 'asc') params.direction = query.direction;
+  return params;
+};
+
+const reloadList = (extra = {}) => {
+  Object.assign(query, extra);
+  query.page = extra.page ?? 1;
+
+  router.get(route('owners.index', buildParams()), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    preserveScroll: true,
+  });
+};
+
+const onSearchInput = () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => reloadList({ page: 1 }), 250);
+};
+
+const setSort = (sort) => {
+  if (query.sort === sort) {
+    reloadList({ direction: query.direction === 'asc' ? 'desc' : 'asc', page: 1 });
+  } else {
+    reloadList({ sort, direction: 'asc', page: 1 });
   }
 };
 
-const createHandler = () => {
-  const saveAction = () =>
-    ownerService.create({
-      name: form.name,
-      dni: form.dni,
-    });
-
-  handleSave(saveAction);
+const setPage = (page) => {
+  if (page < 1 || page > props.meta.last_page || page === query.page) return;
+  router.get(route('owners.index', { ...buildParams(), page }), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    preserveScroll: true,
+  });
+  query.page = page;
 };
 
-const editHandler = (record) => {
-  form.id = record.id;
-  form.name = record.name;
-  form.dni = record.dni;
-  showModal.value = true;
+const setPerPage = (perPage) => {
+  router.get(route('owners.index', { ...buildParams(), per_page: perPage, page: 1 }), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    preserveScroll: true,
+  });
+  query.per_page = Number(perPage);
+  query.page = 1;
 };
 
-const updateHandler = () => {
-  const saveAction = () =>
-    ownerService.update(form.id, {
-      name: form.name,
-      dni: form.dni,
-    });
-
-  handleSave(saveAction);
+const notify = (message, tone = 'success') => {
+  toastMessage.value = message;
+  toastTone.value = tone;
 };
+
+const deleteRecord = () => {
+  if (!recordToDelete.value) return;
+  const id = recordToDelete.value.id;
+  const name = recordToDelete.value.name || 'el propietario';
+  recordToDelete.value = null;
+
+  router.delete(route('owners.destroy', id), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    onSuccess: () => notify(`Se eliminó a ${name}.`),
+    onError: () => notify('No fue posible eliminar al propietario.', 'error'),
+  });
+};
+
+const totalPropietarios = computed(() => formatNumber(props.summary?.owners || 0, 0));
+const totalConCampos = computed(() => formatNumber(props.summary?.with_fields || 0, 0));
+
+watch(() => props.toast, (next) => {
+  if (next?.detail) notify(next.detail, next.severity === 'error' ? 'error' : 'success');
+});
+
+onMounted(() => {
+  if (props.toast?.detail && !toastMessage.value) {
+    notify(props.toast.detail, props.toast.severity === 'error' ? 'error' : 'success');
+  }
+});
+
+onUnmounted(() => clearTimeout(searchTimer));
 </script>
 
 <template>
-  <AuthenticatedLayout :title="__('owner.titles.entity_breadcrumb')">
-    <HeaderCrud
-      :title="__('owner.titles.entity_breadcrumb')"
-      :breadcrumbs="[{ to: 'owners.index', text: __('owner.titles.entity_breadcrumb') }, { text: __('generics.list') }]"
-    >
-      <Button
-        :label="__('generics.new')"
-        @click="showModal = true"
-        v-if="canCreate"
-      />
-    </HeaderCrud>
+  <AuthenticatedLayout title="Propietarios">
+    <CollectionPageHeader
+      title="Propietarios"
+      description="Administra los propietarios de predios registrados en el sistema."
+      :action-route="canCreate ? route('owners.create') : ''"
+      action-label="Nuevo propietario"
+    />
 
-    <Datatable
-      ref="datatable"
-      :filters="filters"
-      :fetchHandler="fetchHandler"
-      sortField="name"
-      :sortOrder="1"
-    >
-      <Column field="name" :header="__('owner.table.name')" sortable frozen style="min-width: 200px">
-        <template #filter="{ filterModel }">
-          <InputText v-model="filterModel.value" type="text" placeholder="Buscar por nombre" />
-        </template>
-        <template #body="{ data }">
-          {{ data.name }}
-        </template>
-      </Column>
+    <section class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-2" aria-label="Resumen de propietarios">
+      <CollectionMetricCard icon="person" label="Propietarios registrados" :value="totalPropietarios" />
+      <CollectionMetricCard icon="map" label="Con predios asociados" :value="totalConCampos" />
+    </section>
 
-      <Column field="dni" :header="__('owner.table.dni')" sortable style="min-width: 200px">
-        <template #filter="{ filterModel }">
-          <InputText v-model="filterModel.value" type="text" placeholder="Buscar por Dni" />
-        </template>
-        <template #body="{ data }">
-          {{ data.dni }}
-        </template>
-      </Column>
-
-      <Column :exportable="false" style="width: 130px">
-        <template #body="slotProps">
-          <span
-            class="material-symbols-rounded mr-4 cursor-pointer transition-all text-slate-500 hover:text-emerald-600"
-            @click="editHandler(slotProps.data)"
-            v-if="canEdit"
+    <section class="relative rounded-xl border border-[#e1e9e3] bg-white shadow-[0_3px_14px_rgba(24,57,39,0.045)]">
+      <div class="flex flex-col gap-3 border-b border-[#e9efea] p-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-[#102f27]">Propietarios registrados</h2>
+          <p class="mt-1 text-sm text-[#61716c]">Busca por nombre o RUT / documento.</p>
+        </div>
+        <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <label class="relative block sm:flex-1 sm:min-w-[200px]">
+            <span class="sr-only">Buscar propietarios</span>
+            <CollectionIcon name="search" :size="20" class="absolute top-1/2 left-3 -translate-y-1/2 text-[#61716c]" aria-hidden="true" />
+            <input
+              v-model="query.q"
+              class="h-10 w-full rounded-lg border border-[#d7e0d9] bg-white pr-3 pl-10 text-sm text-[#102f27] placeholder:text-[#8a9892] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
+              type="search"
+              placeholder="Buscar nombre o RUT..."
+              @input="onSearchInput"
+            >
+          </label>
+          <select
+            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
+            :value="query.sort"
+            aria-label="Ordenar propietarios"
+            @change="setSort($event.target.value)"
           >
-            edit
-          </span>
-
-          <span
-            class="material-symbols-rounded mr-4 cursor-pointer transition-all text-slate-500 hover:text-pink-600"
-            @click="deleteHandler(slotProps.data)"
-            v-if="canDestroy"
-          >
-            delete
-          </span>
-        </template>
-      </Column>
-    </Datatable>
-
-    <Dialog v-model:visible="showModal" modal :header="form.id ? __('owner.titles.edit') : __('owner.titles.create')" :style="{ width: '25rem' }">
-      <VInput
-        id="name"
-        v-model="form.name"
-        :label="__('owner.form.name.label')"
-        :message="form.errors.name"
-      />
-
-      <VInputDni
-        id="dni"
-        v-model="form.dni"
-        :label="__('owner.form.dni.label')"
-        :message="form.errors.dni"
-      />
-
-      <div class="flex justify-end gap-2 mt-4">
-        <Button
-          type="button"
-          :label="__('generics.buttons.cancel')"
-          severity="secondary"
-          @click="showModal = false"
-          :loading="loading"
-        />
-        <Button
-          type="button"
-          :label="form.id ? __('generics.buttons.save_edit') : __('generics.buttons.create')"
-          @click="form.id ? updateHandler() : createHandler()"
-          :loading="loading"
-        />
+            <option value="name">Ordenar por nombre</option>
+            <option value="dni">Ordenar por RUT</option>
+          </select>
+        </div>
       </div>
-    </Dialog>
+
+      <div v-if="records.length" class="grid gap-3 p-4 md:grid-cols-2">
+        <article
+          v-for="record in records"
+          :key="record.id"
+          class="flex min-w-0 gap-4 rounded-xl border border-[#e3ebe5] bg-[#fcfdfc] p-4 transition hover:border-[#bddcc6] hover:shadow-sm"
+        >
+          <span class="flex size-16 shrink-0 items-center justify-center rounded-lg bg-[#e7f3e9] text-[#17663a]" aria-hidden="true">
+            <CollectionIcon name="person" :size="36" />
+          </span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h3 class="truncate text-base font-bold text-[#102f27]">{{ record.name }}</h3>
+                <p class="mt-1 truncate text-sm text-[#61716c]">RUT: {{ record.dni || 'Sin registrar' }}</p>
+              </div>
+              <CollectionActionMenu
+                :edit-route="canEdit ? route('owners.edit', record.id) : ''"
+                :show-destroy="canDestroy"
+                @destroy="recordToDelete = record"
+              />
+            </div>
+            <dl class="mt-4 grid grid-cols-1 gap-2 border-t border-[#e7eee8] pt-3 text-sm">
+              <div>
+                <dt class="text-[#75847d]">Predios asociados</dt>
+                <dd class="mt-1 font-semibold text-[#284238]">{{ record.fields_count ?? 0 }}</dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+      </div>
+
+      <div v-else class="p-12 text-center">
+        <CollectionIcon name="person" :size="40" class="text-[#9ab5a1]" aria-hidden="true" />
+        <h3 class="mt-3 font-bold text-[#102f27]">No se encontraron propietarios</h3>
+        <p class="mt-1 text-sm text-[#61716c]">Ajusta la búsqueda o crea un nuevo propietario.</p>
+      </div>
+
+      <CollectionPagination :meta="meta" :per-page-options="[12, 24]" @page="setPage" @per-page="setPerPage" />
+    </section>
+
+    <CollectionConfirmDialog
+      :visible="Boolean(recordToDelete)"
+      :message="`Eliminarás al propietario ${recordToDelete?.name || ''}. Esta acción no se puede deshacer.`"
+      @cancel="recordToDelete = null"
+      @confirm="deleteRecord"
+    />
+    <CollectionToast :message="toastMessage" :tone="toastTone" @dismiss="toastMessage = ''" />
   </AuthenticatedLayout>
 </template>
