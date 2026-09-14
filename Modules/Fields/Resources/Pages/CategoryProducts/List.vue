@@ -1,246 +1,255 @@
 <script setup>
-import { ref, reactive } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import { useConfirm } from 'primevue/useconfirm';
-import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
-import Column from 'primevue/column';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import { trans } from 'laravel-vue-i18n';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VCheckbox from '@Core/Components/Form/VCheckbox.vue';
-import Datatable from '@Core/Components/Table/Datatable.vue';
-import categoryProductService from '@Fields/Services/CategoryProductService.js';
-import { deleteRowDatatable } from '@Core/Utils/table.js';
+import CollectionActionMenu from '@Core/Components/Collection/CollectionActionMenu.vue';
+import CollectionConfirmDialog from '@Core/Components/Collection/CollectionConfirmDialog.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
+import CollectionMetricCard from '@Core/Components/Collection/CollectionMetricCard.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
+import CollectionPagination from '@Core/Components/Collection/CollectionPagination.vue';
+import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
+import { formatNumber } from '@Core/Utils/format';
 import { can } from '@Auth/Services/Auth';
 
 const props = defineProps({
   isCommercialOptions: Array,
+  meta: Object,
+  records: Array,
+  summary: Object,
+  toast: Object,
 });
 
-const toast = useToast();
-const confirm = useConfirm();
-
-const showModal = ref(false);
-
-const datatable = ref(null);
-const filters = {
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-  is_commercial: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }] },
-};
-
-const loading = ref(false);
-const form = reactive({
-  id: null,
-  name: null,
-  is_commercial: false,
-  errors: {},
-});
-
-const isCommercialOptions = ref(props.isCommercialOptions);
-
-const canEdit = can('category_products.edit');
-const canDestroy = can('category_products.destroy');
 const canCreate = can('category_products.create');
+const canDestroy = can('category_products.destroy');
+const canEdit = can('category_products.edit');
 
-const showSuccessToast = () => {
-  toast.add({
-    severity: 'success',
-    summary: trans('category_product.titles.entity_breadcrumb'),
-    detail: trans('generics.messages.saved_successfully'),
-    life: 5000,
-  });
+const initialQuery = () => {
+  const params = new URLSearchParams(window.location.search);
 
-  form.id = null;
-  form.name = null;
-  form.is_commercial = false;
-  form.errors = {};
-};
-
-const showErrorToast = () => {
-  toast.add({
-    severity: 'error',
-    summary: trans('category_product.titles.entity_breadcrumb'),
-    detail: trans('generics.errors.trying_to_save'),
-    life: 5000,
-  });
-};
-
-const openModalCreate = () => {
-  form.id = null;
-  form.name = null;
-  form.is_commercial = false;
-  form.errors = {};
-  showModal.value = true;
-};
-
-const fetchHandler = async (params) => {
-  return await categoryProductService.list(params);
-};
-
-const deleteHandler = async (record) => {
-  const options = {
-    datatable,
-    confirm,
-    toast,
-    entity: trans('category_product.titles.entity_breadcrumb'),
-    handler: () => categoryProductService.del(record.id),
+  return {
+    q: params.get('q') || '',
+    is_commercial: params.get('is_commercial') || '',
+    page: Number(params.get('page') || 1),
+    per_page: Number(params.get('per_page') || 12),
+    sort: params.get('sort') || 'name',
+    direction: params.get('direction') || 'asc',
   };
-
-  deleteRowDatatable(options);
 };
 
-const handleSave = async (saveAction) => {
-  loading.value = true;
-  form.errors = {};
+const query = reactive(initialQuery());
 
-  try {
-    await saveAction();
-    showModal.value = false;
-    showSuccessToast();
-  } catch (error) {
-    const errors = error.response?.data?.errors;
-    if (errors) {
-      Object.keys(errors).forEach((key) => {
-        form.errors[key] = errors[key].join(', ');
-      });
-    }
-    showErrorToast();
-  } finally {
-    datatable.value.loadLazyData();
-    loading.value = false;
+const recordToDelete = ref(null);
+const toastMessage = ref(props.toast?.detail || '');
+const toastTone = ref(props.toast?.severity === 'error' ? 'error' : 'success');
+
+let searchTimer = null;
+
+const buildParams = () => {
+  const params = {};
+  if (query.q) params.q = query.q;
+  if (query.is_commercial !== '') params.is_commercial = query.is_commercial;
+  if (query.page > 1) params.page = query.page;
+  if (query.per_page !== 12) params.per_page = query.per_page;
+  if (query.sort !== 'name') params.sort = query.sort;
+  if (query.direction !== 'asc') params.direction = query.direction;
+  return params;
+};
+
+const reloadList = (extra = {}) => {
+  Object.assign(query, extra);
+  query.page = extra.page ?? 1;
+
+  router.get(route('category_products.index', buildParams()), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    preserveScroll: true,
+  });
+};
+
+const onSearchInput = () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => reloadList({ page: 1 }), 250);
+};
+
+const setFilter = (key, value) => {
+  clearTimeout(searchTimer);
+  reloadList({ [key]: value, page: 1 });
+};
+
+const setSort = (sort) => {
+  if (query.sort === sort) {
+    reloadList({ direction: query.direction === 'asc' ? 'desc' : 'asc', page: 1 });
+  } else {
+    reloadList({ sort, direction: 'asc', page: 1 });
   }
 };
 
-const createHandler = () => {
-  const saveAction = () =>
-    categoryProductService.create({
-      name: form.name,
-      is_commercial: form.is_commercial,
-    });
-
-  handleSave(saveAction);
+const setPage = (page) => {
+  if (page < 1 || page > props.meta.last_page || page === query.page) return;
+  router.get(route('category_products.index', { ...buildParams(), page }), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    preserveScroll: true,
+  });
+  query.page = page;
 };
 
-const editHandler = (record) => {
-  form.id = record.id;
-  form.name = record.name;
-  form.is_commercial = record.is_commercial;
-  showModal.value = true;
+const setPerPage = (perPage) => {
+  router.get(route('category_products.index', { ...buildParams(), per_page: perPage, page: 1 }), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    preserveScroll: true,
+  });
+  query.per_page = Number(perPage);
+  query.page = 1;
 };
 
-const updateHandler = () => {
-  const saveAction = () =>
-    categoryProductService.update(form.id, {
-      name: form.name,
-      is_commercial: form.is_commercial,
-    });
-
-  handleSave(saveAction);
+const notify = (message, tone = 'success') => {
+  toastMessage.value = message;
+  toastTone.value = tone;
 };
+
+const deleteRecord = () => {
+  if (!recordToDelete.value) return;
+  const id = recordToDelete.value.id;
+  const name = recordToDelete.value.name || 'la categoría';
+  recordToDelete.value = null;
+
+  router.delete(route('category_products.destroy', id), {
+    only: ['records', 'meta', 'summary'],
+    preserveState: true,
+    onSuccess: () => notify(`Se eliminó ${name}.`),
+    onError: () => notify('No fue posible eliminar la categoría.', 'error'),
+  });
+};
+
+const totalCategorias = computed(() => formatNumber(props.summary?.categories || 0, 0));
+const totalComercial = computed(() => formatNumber(props.summary?.commercial || 0, 0));
+const totalNoComercial = computed(() => formatNumber(props.summary?.non_commercial || 0, 0));
+
+const commercialLabel = (value) => (value ? 'Sí' : 'No');
+const commercialBadgeClass = (value) => (value ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200');
+
+watch(() => props.toast, (next) => {
+  if (next?.detail) notify(next.detail, next.severity === 'error' ? 'error' : 'success');
+});
+
+onMounted(() => {
+  if (props.toast?.detail && !toastMessage.value) {
+    notify(props.toast.detail, props.toast.severity === 'error' ? 'error' : 'success');
+  }
+});
+
+onUnmounted(() => clearTimeout(searchTimer));
 </script>
 
 <template>
-  <AuthenticatedLayout :title="__('category_product.titles.entity_breadcrumb')">
-    <HeaderCrud
-      :title="__('category_product.titles.entity_breadcrumb')"
-      :breadcrumbs="[{ to: 'category_products.index', text: __('category_product.titles.entity_breadcrumb') }, { text: __('generics.list') }]"
-    >
-      <Button
-        :label="__('generics.new')"
-        @click="openModalCreate"
-        v-if="canCreate"
-      />
-    </HeaderCrud>
+  <AuthenticatedLayout title="Categorías de producto">
+    <CollectionPageHeader
+      title="Categorías de producto"
+      description="Administra las categorías de producto usadas en liquidaciones."
+      :action-route="canCreate ? route('category_products.create') : ''"
+      action-label="Nueva categoría"
+    />
 
-    <Datatable
-      ref="datatable"
-      :filters="filters"
-      :fetchHandler="fetchHandler"
-      sortField="name"
-      :sortOrder="1"
-    >
-      <Column field="name" :header="__('category_product.table.name')" sortable frozen style="min-width: 200px">
-        <template #filter="{ filterModel }">
-          <InputText v-model="filterModel.value" type="text" placeholder="Buscar por nombre" />
-        </template>
-        <template #body="{ data }">
-          {{ data.name }}
-        </template>
-      </Column>
+    <section class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-label="Resumen de categorías">
+      <CollectionMetricCard icon="category" label="Categorías registradas" :value="totalCategorias" />
+      <CollectionMetricCard icon="check_circle" label="Comerciales" :value="totalComercial" />
+      <CollectionMetricCard icon="close" label="No comerciales" :value="totalNoComercial" />
+    </section>
 
-      <Column field="is_commercial" :header="__('category_product.table.is_commercial')" sortable style="min-width: 200px">
-        <template #filter="{ filterModel }">
-          <VSelect v-model="filterModel.value" :options="isCommercialOptions" placeholder="Buscar por es comercial" />
-        </template>
-        <template #body="{ data }">
-          <span
-            class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none border rounded-full"
-            :class="data.is_commercial ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+    <section class="relative rounded-xl border border-[#e1e9e3] bg-white shadow-[0_3px_14px_rgba(24,57,39,0.045)]">
+      <div class="flex flex-col gap-3 border-b border-[#e9efea] p-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-[#102f27]">Listado de categorías</h2>
+          <p class="mt-1 text-sm text-[#61716c]">Busca por nombre y filtra por tipo comercial.</p>
+        </div>
+        <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <label class="relative block sm:flex-1 sm:min-w-[200px]">
+            <span class="sr-only">Buscar categorías</span>
+            <CollectionIcon name="search" :size="20" class="absolute top-1/2 left-3 -translate-y-1/2 text-[#61716c]" aria-hidden="true" />
+            <input
+              v-model="query.q"
+              class="h-10 w-full rounded-lg border border-[#d7e0d9] bg-white pr-3 pl-10 text-sm text-[#102f27] placeholder:text-[#8a9892] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
+              type="search"
+              placeholder="Buscar nombre..."
+              @input="onSearchInput"
+            >
+          </label>
+          <select
+            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
+            :value="query.is_commercial"
+            aria-label="Filtrar por tipo comercial"
+            @change="setFilter('is_commercial', $event.target.value)"
           >
-            {{ data.is_commercial ? __('generics.yes') : __('generics.no') }}
-          </span>
-        </template>
-      </Column>
-
-      <Column :exportable="false" style="width: 130px">
-        <template #body="slotProps">
-          <span
-            class="material-symbols-rounded mr-4 cursor-pointer transition-all text-slate-500 hover:text-emerald-600"
-            @click="editHandler(slotProps.data)"
-            v-if="canEdit"
+            <option value="">Todos los tipos</option>
+            <option value="true">Comerciales</option>
+            <option value="false">No comerciales</option>
+          </select>
+          <select
+            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
+            :value="query.sort"
+            aria-label="Ordenar categorías"
+            @change="setSort($event.target.value)"
           >
-            edit
-          </span>
-
-          <span
-            class="material-symbols-rounded mr-4 cursor-pointer transition-all text-slate-500 hover:text-pink-600"
-            @click="deleteHandler(slotProps.data)"
-            v-if="canDestroy"
-          >
-            delete
-          </span>
-        </template>
-      </Column>
-    </Datatable>
-
-    <Dialog v-model:visible="showModal" modal :header="form.id ? __('category_product.titles.edit') : __('category_product.titles.create')" :style="{ width: '25rem' }">
-      <VInput
-        id="name"
-        v-model="form.name"
-        :label="__('category_product.form.name.label')"
-        :message="form.errors.name"
-      />
-
-      <VCheckbox
-        id="is_commercial"
-        v-model="form.is_commercial"
-        classWrapper="my-3"
-        :label="__('category_product.form.is_commercial.label')"
-        :message="form.errors.is_commercial"
-      />
-
-      <div class="flex justify-end gap-2 mt-4">
-        <Button
-          type="button"
-          :label="__('generics.buttons.cancel')"
-          severity="secondary"
-          @click="showModal = false"
-          :loading="loading"
-        />
-        <Button
-          type="button"
-          :label="form.id ? __('generics.buttons.save_edit') : __('generics.buttons.create')"
-          @click="form.id ? updateHandler() : createHandler()"
-          :loading="loading"
-        />
+            <option value="name">Ordenar por nombre</option>
+            <option value="is_commercial">Ordenar por tipo</option>
+          </select>
+        </div>
       </div>
-    </Dialog>
+
+      <div v-if="records.length" class="grid gap-3 p-4 md:grid-cols-2">
+        <article
+          v-for="record in records"
+          :key="record.id"
+          class="flex min-w-0 gap-4 rounded-xl border border-[#e3ebe5] bg-[#fcfdfc] p-4 transition hover:border-[#bddcc6] hover:shadow-sm"
+        >
+          <span class="flex size-16 shrink-0 items-center justify-center rounded-lg bg-[#e7f3e9] text-[#17663a]" aria-hidden="true">
+            <CollectionIcon name="category" :size="36" />
+          </span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h3 class="truncate text-base font-bold text-[#102f27]">{{ record.name }}</h3>
+                <p class="mt-1 truncate text-sm text-[#61716c]">
+                  <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold" :class="commercialBadgeClass(record.is_commercial)">
+                    {{ commercialLabel(record.is_commercial) }}
+                  </span>
+                </p>
+              </div>
+              <CollectionActionMenu
+                :edit-route="canEdit ? route('category_products.edit', record.id) : ''"
+                :show-destroy="canDestroy"
+                @destroy="recordToDelete = record"
+              />
+            </div>
+            <dl class="mt-4 grid grid-cols-1 gap-2 border-t border-[#e7eee8] pt-3 text-sm">
+              <div>
+                <dt class="text-[#75847d]">Productos de liquidación asociados</dt>
+                <dd class="mt-1 font-semibold text-[#284238]">{{ record.liquidation_products_count ?? 0 }}</dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+      </div>
+
+      <div v-else class="p-12 text-center">
+        <CollectionIcon name="category" :size="40" class="text-[#9ab5a1]" aria-hidden="true" />
+        <h3 class="mt-3 font-bold text-[#102f27]">No se encontraron categorías</h3>
+        <p class="mt-1 text-sm text-[#61716c]">Ajusta los filtros o crea una nueva categoría.</p>
+      </div>
+
+      <CollectionPagination :meta="meta" :per-page-options="[12, 24]" @page="setPage" @per-page="setPerPage" />
+    </section>
+
+    <CollectionConfirmDialog
+      :visible="Boolean(recordToDelete)"
+      :message="`Eliminarás la categoría ${recordToDelete?.name || ''}. Esta acción no se puede deshacer.`"
+      @cancel="recordToDelete = null"
+      @confirm="deleteRecord"
+    />
+    <CollectionToast :message="toastMessage" :tone="toastTone" @dismiss="toastMessage = ''" />
   </AuthenticatedLayout>
 </template>
