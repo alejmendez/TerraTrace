@@ -158,10 +158,10 @@ verificar que no exista ya.
 
 ## 6. Migración PrimeVue → Collection UI
 
-**Estado:** tres páginas migradas (`Fields/List`, `Plants/List`,
-`Quarters/List`). Componentes base ya disponibles en
-`Modules/Core/Resources/Components/Collection/` y composable
-`Modules/Core/Resources/Composables/useCollection.js`.
+**Estado:** todas las vistas `List.vue` migradas (Fields, Plants, Quarters,
+Dogs, Users, Tools, SecurityEquipments, Machineries, Owners, PlantTypes,
+Tasks, Harvests, Batches, Liquidations, Importers, CategoryProducts).
+Componentes base disponibles en `Modules/Core/Resources/Components/Collection/`.
 
 **Reglas:**
 
@@ -175,15 +175,21 @@ verificar que no exista ya.
    componente de PrimeVue, evaluar primero si tiene equivalente
    `Collection*` o si vale la pena crearlo.
 5. **Eliminar dependencia sólo al final.** `PrimeVue` permanece en
-   `package.json` hasta que la última vista legacy se haya migrado y
-   borrado.
+   `package.json` hasta que la última vista legacy (Show pages,
+   HarvestTable.vue, etc.) se haya migrado y borrado.
 
-**Orden sugerido** (de menor a mayor riesgo):
+**Próximas tandas pendientes:**
 
-- Users, Dogs (vista simple, sin métricas complejas)
-- Tools, SecurityEquipments, Machineries, Owners, PlantTypes
-- Tasks (comentarios + notificaciones)
-- Harvests, Batches, HarvestDetails, Liquidations, Importers
+- **Show pages** con PrimeVue (`Quarters/Show`, `Plants/Show`,
+  `Fields/Show`, `Tasks/Show`, `Harvests/Show`, `Batches/Show`,
+  `Liquidations/Show`, `Harvests/Show`, etc.).
+- **`HarvestTable.vue`** (componente usado por Quarters/Fields Show).
+- **Componentes `Form*.vue`** (FormDog, FormPlant, etc.) que aún
+  importan PrimeVue `InputText`, `InputNumber`, etc. vía `VInput` y
+  `VInputNumber` (transitivo).
+- **`HeaderCrud` / `CardSection`** y otros componentes compartidos
+  que aún usan PrimeVue.
+- **`Tasks/Comments`** (componente que renderiza PrimeVue `Timeline`).
 
 ---
 
