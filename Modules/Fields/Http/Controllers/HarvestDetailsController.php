@@ -6,15 +6,14 @@ use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreHarvestDetailRequest;
-use Modules\Fields\Services\HarvestDetails\CreateHarvestDetails;
-use Modules\Fields\Services\HarvestDetails\ListHarvestQualities;
+use Modules\Fields\Services\HarvestDetailService;
 use Modules\Fields\Services\Plants\FindPlantByCode;
 
 class HarvestDetailsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly HarvestDetailService $harvestDetails)
     {
         $this->setupPermissionMiddleware();
     }
@@ -25,7 +24,7 @@ class HarvestDetailsController extends Controller
     public function create()
     {
         return Inertia::render('Fields::HarvestDetails/Create', [
-            'qualities' => ListHarvestQualities::call('select'),
+            'qualities' => $this->harvestDetails->qualities('select'),
             'plant_code' => session('plant_code'),
         ]);
     }
@@ -35,13 +34,13 @@ class HarvestDetailsController extends Controller
      */
     public function store(StoreHarvestDetailRequest $request)
     {
-        CreateHarvestDetails::call($request->validated());
+        $this->harvestDetails->create($request->validated());
+
         if ($request->keep_plant_code) {
             return redirect()->route('harvests_details.create')->with('plant_code', $request->plant_code);
-        } else {
-            return redirect()->route('harvests_details.create');
         }
 
+        return redirect()->route('harvests_details.create');
     }
 
     public function find_by_code()

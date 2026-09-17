@@ -13,7 +13,7 @@ use Modules\Fields\Http\Requests\StoreHarvestRequest;
 use Modules\Fields\Http\Requests\UpdateHarvestRequest;
 use Modules\Fields\Http\Resources\HarvestResource;
 use Modules\Fields\Imports\HarvestsImport;
-use Modules\Fields\Services\HarvestDetails\ListHarvestQualities;
+use Modules\Fields\Services\HarvestDetailService;
 use Modules\Fields\Services\Harvests\CreateHarvest;
 use Modules\Fields\Services\Harvests\DeleteHarvest;
 use Modules\Fields\Services\Harvests\FindHarvest;
@@ -24,7 +24,7 @@ class HarvestsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly HarvestDetailService $harvestDetails)
     {
         $this->setupPermissionMiddleware();
     }
@@ -59,7 +59,7 @@ class HarvestsController extends Controller
             'dogs' => ListEntity::call('dog'),
             'users' => ListEntity::call('user'),
             'plant_codes' => ListEntity::call('plant'),
-            'qualities' => ListHarvestQualities::call('select'),
+            'qualities' => $this->harvestDetails->qualities('select'),
         ]);
     }
 
@@ -91,7 +91,7 @@ class HarvestsController extends Controller
             'dogs' => ListEntity::call('dog'),
             'users' => ListEntity::call('user'),
             'plant_codes' => ListEntity::call('plant'),
-            'qualities' => ListHarvestQualities::call('select'),
+            'qualities' => $this->harvestDetails->qualities('select'),
         ]);
     }
 
@@ -108,7 +108,7 @@ class HarvestsController extends Controller
             'dogs' => ListEntity::call('dog'),
             'users' => ListEntity::call('user'),
             'plant_codes' => ListEntity::call('plant'),
-            'qualities' => ListHarvestQualities::call('select'),
+            'qualities' => $this->harvestDetails->qualities('select'),
         ]);
     }
 

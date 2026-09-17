@@ -5,7 +5,7 @@ namespace Modules\Fields\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Modules\Fields\Services\HarvestDetails\ListHarvestQualities;
+use Modules\Fields\Services\HarvestDetailService;
 
 class StoreHarvestDetailRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class StoreHarvestDetailRequest extends FormRequest
     {
         return [
             'plant_code' => 'exists:plants,code',
-            'quality.value' => ['nullable', Rule::in(ListHarvestQualities::call('values'))],
+            'quality.value' => ['nullable', Rule::in(app(HarvestDetailService::class)->qualities('values'))],
             'weight' => 'numeric|between:0,99999',
         ];
     }
