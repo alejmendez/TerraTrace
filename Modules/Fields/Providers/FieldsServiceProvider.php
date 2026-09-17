@@ -6,6 +6,7 @@ use Modules\Core\Providers\CoreServiceProvider;
 use Modules\Fields\Services\FieldService;
 use Modules\Fields\Services\OwnerService;
 use Modules\Fields\Services\PlantService;
+use Modules\Fields\Services\QuarterService;
 
 class FieldsServiceProvider extends CoreServiceProvider
 {
@@ -21,6 +22,7 @@ class FieldsServiceProvider extends CoreServiceProvider
         $this->app->singleton(FieldService::class);
         $this->app->singleton(OwnerService::class);
         $this->app->singleton(PlantService::class);
+        $this->app->singleton(QuarterService::class);
 
         EntityRegistrations::register();
     }

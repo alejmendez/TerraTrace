@@ -9,19 +9,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreQuarterRequest;
 use Modules\Fields\Http\Requests\UpdateQuarterRequest;
 use Modules\Fields\Http\Resources\QuarterResource;
-use Modules\Fields\Services\Quarters\CreateQuarter;
-use Modules\Fields\Services\Quarters\DeleteQuarter;
-use Modules\Fields\Services\Quarters\FindQuarter;
-use Modules\Fields\Services\Quarters\ListQuarter;
-use Modules\Fields\Services\Quarters\ListQuarterPlants;
-use Modules\Fields\Services\Quarters\PlantsUpdatePositionQuarter;
-use Modules\Fields\Services\Quarters\UpdateQuarter;
+use Modules\Fields\Services\QuarterService;
 
 class QuartersController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly QuarterService $quarters)
     {
         $this->setupPermissionMiddleware();
     }
@@ -32,13 +26,13 @@ class QuartersController extends Controller
     public function index()
     {
         if (request()->boolean('collection')) {
-            return response()->json(ListQuarter::collection(request()->all()));
+            return response()->json($this->quarters->collection(request()->all()));
         }
 
         if (request()->exists('dt_params')) {
             $params = json_decode(request('dt_params', '[]'), true);
 
-            return response()->json(ListQuarter::call($params));
+            return response()->json($this->quarters->list($params));
         }
 
         return Inertia::render('Fields::Quarters/List', [
@@ -65,7 +59,7 @@ class QuartersController extends Controller
     {
         $data = $request->validated();
         $data['blueprint'] = $this->storeBlueprint($request);
-        CreateQuarter::call($data);
+        $this->quarters->create($data);
 
         return redirect()->route('quarters.index')->with('toast', [
             'severity' => 'success',
@@ -81,7 +75,7 @@ class QuartersController extends Controller
     public function show(string $id)
     {
         $current_tab = request('current_tab', 'file');
-        $quarter = FindQuarter::call($id);
+        $quarter = $this->quarters->find($id);
 
         return Inertia::render('Fields::Quarters/Show', [
             'data' => new QuarterResource($quarter),
@@ -100,7 +94,7 @@ class QuartersController extends Controller
      */
     public function edit(string $id)
     {
-        $quarter = FindQuarter::call($id);
+        $quarter = $this->quarters->find($id);
 
         return Inertia::render('Fields::Quarters/Edit', [
             'data' => new QuarterResource($quarter),
@@ -116,7 +110,7 @@ class QuartersController extends Controller
     {
         $data = $request->validated();
         $data['blueprint'] = $this->storeBlueprint($request);
-        UpdateQuarter::call($id, $data);
+        $this->quarters->update($id, $data);
 
         return redirect()->route('quarters.index')->with('toast', [
             'severity' => 'success',
@@ -131,19 +125,19 @@ class QuartersController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteQuarter::call($id);
+        $this->quarters->delete($id);
 
         return response()->noContent();
     }
 
     public function plants(string $id)
     {
-        return response()->json(ListQuarterPlants::call($id));
+        return response()->json($this->quarters->plantsWithHarvests($id));
     }
 
     public function plants_update_position(string $id)
     {
-        PlantsUpdatePositionQuarter::call($id, request('data', []));
+        $this->quarters->updatePlantPositions($id, request('data', []));
 
         return response()->noContent();
     }
