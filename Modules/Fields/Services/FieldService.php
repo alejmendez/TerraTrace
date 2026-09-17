@@ -179,4 +179,17 @@ class FieldService
             'summary' => $summary,
         ];
     }
+
+    /**
+     * Flat {value, text} list for <select> options in cross-module
+     * consumers (Tasks, Harvests, etc.). Keeps the entity-registry
+     * dispatcher alive only for SelectsController's HTTP endpoint.
+     */
+    public function forSelect(): array
+    {
+        return Field::select('id as value', 'name as text')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
 }

@@ -4,19 +4,33 @@ namespace Modules\Tasks\Http\Controllers;
 
 use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
+use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\MachineryService;
+use Modules\Fields\Services\PlantService;
+use Modules\Fields\Services\QuarterService;
+use Modules\Fields\Services\SecurityEquipmentService;
+use Modules\Fields\Services\ToolService;
 use Modules\Tasks\Http\Requests\StoreTaskRequest;
 use Modules\Tasks\Http\Requests\UpdateTaskRequest;
 use Modules\Tasks\Http\Resources\TaskResource;
 use Modules\Tasks\Services\TaskService;
+use Modules\Users\Services\UserService;
 
 class TasksController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly TaskService $tasks)
-    {
+    public function __construct(
+        private readonly TaskService $tasks,
+        private readonly UserService $users,
+        private readonly FieldService $fields,
+        private readonly QuarterService $quarters,
+        private readonly PlantService $plants,
+        private readonly ToolService $tools,
+        private readonly SecurityEquipmentService $securityEquipments,
+        private readonly MachineryService $machineries,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -32,7 +46,7 @@ class TasksController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'responsibles' => ListEntity::call('responsible'),
+            'responsibles' => $this->users->responsibles(),
             'task_priorities' => $this->tasks->priorities(),
             'task_states' => $this->tasks->states(),
         ]);
@@ -44,11 +58,11 @@ class TasksController extends Controller
     public function create()
     {
         return Inertia::render('Tasks::Create', [
-            'fields' => ListEntity::call('field'),
-            'responsibles' => ListEntity::call('responsible'),
-            'tools' => ListEntity::call('tool'),
-            'security_equipments' => ListEntity::call('security_equipment'),
-            'machineries' => ListEntity::call('machinery'),
+            'fields' => $this->fields->forSelect(),
+            'responsibles' => $this->users->responsibles(),
+            'tools' => $this->tools->forSelect(),
+            'security_equipments' => $this->securityEquipments->forSelect(),
+            'machineries' => $this->machineries->forSelect(),
             'task_priorities' => $this->tasks->priorities(),
             'task_states' => $this->tasks->states(),
             'task_repeat_type' => $this->tasks->repeatTypes(),
@@ -82,17 +96,13 @@ class TasksController extends Controller
 
         return Inertia::render('Tasks::Show', [
             'data' => new TaskResource($task),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter', ['field_id' => $task->field_id]),
-            'plants' => ListEntity::call('plant', ['quarter_id' => $task->quarters->map(fn ($q) => $q->id)->toArray()]),
-            'responsibles' => ListEntity::call('responsible'),
-            'tools' => ListEntity::call('tool'),
-            'security_equipments' => ListEntity::call('security_equipment'),
-            'machineries' => ListEntity::call('machinery'),
-            'task_priorities' => $this->tasks->priorities(),
-            'task_states' => $this->tasks->states(),
-            'task_repeat_type' => $this->tasks->repeatTypes(),
-            'task_supplies_units' => $this->tasks->suppliesUnits(),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->byField($task->field_id),
+            'plants' => $this->plants->byQuarter($task->quarters->map(fn ($q) => $q->id)->toArray()),
+            'responsibles' => $this->users->responsibles(),
+            'tools' => $this->tools->forSelect(),
+            'security_equipments' => $this->securityEquipments->forSelect(),
+            'machineries' => $this->machineries->forSelect(),
             'current_tab' => $current_tab,
         ]);
     }
@@ -106,13 +116,13 @@ class TasksController extends Controller
 
         return Inertia::render('Tasks::Edit', [
             'data' => new TaskResource($task),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter', ['field_id' => $task->field_id]),
-            'plants' => ListEntity::call('plant', ['quarter_id' => $task->quarters->map(fn ($q) => $q->id)->toArray()]),
-            'responsibles' => ListEntity::call('responsible'),
-            'tools' => ListEntity::call('tool'),
-            'security_equipments' => ListEntity::call('security_equipment'),
-            'machineries' => ListEntity::call('machinery'),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->byField($task->field_id),
+            'plants' => $this->plants->byQuarter($task->quarters->map(fn ($q) => $q->id)->toArray()),
+            'responsibles' => $this->users->responsibles(),
+            'tools' => $this->tools->forSelect(),
+            'security_equipments' => $this->securityEquipments->forSelect(),
+            'machineries' => $this->machineries->forSelect(),
             'task_priorities' => $this->tasks->priorities(),
             'task_states' => $this->tasks->states(),
             'task_repeat_type' => $this->tasks->repeatTypes(),

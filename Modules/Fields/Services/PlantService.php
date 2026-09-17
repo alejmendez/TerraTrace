@@ -181,4 +181,38 @@ class PlantService
             'summary' => $summary,
         ];
     }
+
+    /**
+     * Flat {value, text} list for cross-module consumers. The value
+     * is the plant id; the text is the printable code so the form can
+     * display the plant identifier (e.g. "A-01-04") in the <select>.
+     */
+    public function forSelect(): array
+    {
+        return Plant::select('id as value', 'code as text')
+            ->orderBy('code')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Filtered variant: plants whose quarter_id is in the supplied
+     * list. Mirrors the
+     *
+     *   ListEntity::call('plant', ['quarter_id' => $quarterIds])
+     *
+     * lazy dispatch that Tasks used to rely on.
+     */
+    public function byQuarter(array $quarterIds): array
+    {
+        if (empty($quarterIds)) {
+            return [];
+        }
+
+        return Plant::select('id as value', 'code as text')
+            ->whereIn('quarter_id', $quarterIds)
+            ->orderBy('code')
+            ->get()
+            ->toArray();
+    }
 }

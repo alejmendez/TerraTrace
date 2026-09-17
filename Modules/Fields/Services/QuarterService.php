@@ -221,4 +221,32 @@ class QuarterService
             });
         });
     }
+
+    /**
+     * Flat {value, text} list for cross-module consumers. Used by
+     * Tasks, Harvests, etc. via constructor injection instead of the
+     * EntityRegistry dispatcher.
+     */
+    public function forSelect(): array
+    {
+        return Quarter::select('id as value', 'name as text')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Filtered variant for the Tasks create/edit form: list quarters
+     * belonging to the given field so the user only sees relevant
+     * options. Mirrors what EntityRegistry::call('quarter',
+     * ['field_id' => X]) used to do lazily.
+     */
+    public function byField(int $fieldId): array
+    {
+        return Quarter::select('id as value', 'name as text')
+            ->where('field_id', $fieldId)
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
 }
