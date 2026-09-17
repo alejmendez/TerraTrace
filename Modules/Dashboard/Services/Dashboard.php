@@ -3,24 +3,25 @@
 namespace Modules\Dashboard\Services;
 
 use Modules\Core\Services\ListEntity;
+use Modules\Fields\Models\Field;
 use Modules\Fields\Services\FieldsStatsProvider;
 use Modules\Tasks\Services\TasksStatsProvider;
 
 /**
  * Dashboard data assembler.
  *
- * After the cross-module refactor, this class no longer imports
- * Fields or Tasks models. It composes data from two "stats providers":
+ * This class does not import Fields or Tasks models, queries or
+ * per-action services. It composes data from two "stats providers":
  *
  *   - FieldsStatsProvider (Fields module):  harvest / yield stats
- *   - TasksStatsProvider  (Tasks module):   task counters
+ *   - TasksStatsProvider  (Tasks module):   global task counters
  *
  * Adding a new dashboard widget = adding a method to the relevant
  * provider, NOT adding a new cross-module import here.
  *
- * Injected via the DashboardController constructor.
+ * Cross-module communication pattern documented in AGENTS.md.
  */
-class ShowDashboard
+class Dashboard
 {
     public function __construct(
         private FieldsStatsProvider $fieldsStats,
@@ -32,22 +33,21 @@ class ShowDashboard
      *
      * @return array{
      *   fields: array,
-     *   field: mixed,
+     *   field: Field,
      *   harvest_data: array,
      *   task_data: array
      * }
      */
-    public function call($id = null)
+    public function show(int|string|null $fieldId = null): array
     {
-        $current_user = auth()->user();
         $fields = ListEntity::call('field');
-        $field = $this->fieldsStats->findField($id ?? $fields[0]['value']);
+        $field = $this->fieldsStats->findField($fieldId ?? $fields[0]['value']);
 
         return [
             'fields' => $fields,
             'field' => $field,
             'harvest_data' => $this->fieldsStats->harvestStatsForField($field),
-            'task_data' => $this->tasksStats->userTaskStats($current_user),
+            'task_data' => $this->tasksStats->taskCounters(),
         ];
     }
 }

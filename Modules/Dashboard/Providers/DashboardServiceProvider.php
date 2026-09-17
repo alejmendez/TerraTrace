@@ -3,6 +3,7 @@
 namespace Modules\Dashboard\Providers;
 
 use Modules\Core\Providers\CoreServiceProvider;
+use Modules\Dashboard\Services\Dashboard;
 
 class DashboardServiceProvider extends CoreServiceProvider
 {
@@ -11,7 +12,10 @@ class DashboardServiceProvider extends CoreServiceProvider
      */
     public function register(): void
     {
-        //
+        // Dashboard is a singleton because the only thing it carries is
+        // its two stats-provider collaborators (also singletons). No
+        // per-request state, no need to rebuild on every resolve.
+        $this->app->singleton(Dashboard::class);
     }
 
     /**

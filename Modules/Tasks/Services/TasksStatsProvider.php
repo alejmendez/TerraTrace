@@ -3,15 +3,20 @@
 namespace Modules\Tasks\Services;
 
 use Modules\Tasks\Models\Task;
-use Modules\Users\Models\User;
 
 /**
  * Cross-module "stats" provider for the Tasks domain.
  *
- * Dashboard needs aggregated task counts per user; rather than
- * reaching into the Tasks model from Dashboard, this provider
- * exposes a single `userTaskStats()` method that returns the three
- * counters the dashboard cares about.
+ * Dashboard needs aggregated task counters; rather than reaching
+ * into the Tasks model from Dashboard, this provider exposes
+ * `taskCounters()` returning the three counters the dashboard
+ * cares about.
+ *
+ * Note: counters are GLOBAL by design. The dashboard's CardsDashboard
+ * displays "X tareas" company-wide (per the click-through filters
+ * `status=overdued`, `status=started,overdued`, etc.). Filtering by
+ * responsible would change the displayed totals and break the UI's
+ * promise.
  *
  * Adding new task-related dashboard widgets = adding methods here
  * (not new imports in Dashboard).
@@ -23,7 +28,7 @@ use Modules\Users\Models\User;
 class TasksStatsProvider
 {
     /**
-     * Aggregated task counters for the dashboard.
+     * Global task counters for the dashboard.
      *
      * @return array{
      *   pending_tasks: int,
@@ -31,7 +36,7 @@ class TasksStatsProvider
      *   tasks_totals: int
      * }
      */
-    public function userTaskStats(?User $user): array
+    public function taskCounters(): array
     {
         return [
             'pending_tasks' => Task::where('status', 'overdued')->count(),
