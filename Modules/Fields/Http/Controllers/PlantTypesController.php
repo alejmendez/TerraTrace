@@ -7,17 +7,13 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StorePlantTypeRequest;
 use Modules\Fields\Http\Requests\UpdatePlantTypeRequest;
-use Modules\Fields\Services\PlantTypes\CreatePlantType;
-use Modules\Fields\Services\PlantTypes\DeletePlantType;
-use Modules\Fields\Services\PlantTypes\FindPlantType;
-use Modules\Fields\Services\PlantTypes\ListPlantType;
-use Modules\Fields\Services\PlantTypes\UpdatePlantType;
+use Modules\Fields\Services\PlantTypeService;
 
 class PlantTypesController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly PlantTypeService $plantTypes)
     {
         $this->setupPermissionMiddleware();
     }
@@ -27,7 +23,7 @@ class PlantTypesController extends Controller
      */
     public function index()
     {
-        $payload = ListPlantType::collection(request()->all());
+        $payload = $this->plantTypes->collection(request()->all());
 
         return Inertia::render('Fields::PlantTypes/List', [
             'toast' => session('toast'),
@@ -50,7 +46,7 @@ class PlantTypesController extends Controller
      */
     public function store(StorePlantTypeRequest $request)
     {
-        CreatePlantType::call($request->validated());
+        $this->plantTypes->create($request->validated());
 
         return redirect()->route('plant_types.index')->with('toast', [
             'severity' => 'success',
@@ -65,7 +61,7 @@ class PlantTypesController extends Controller
      */
     public function edit(string $id)
     {
-        $plantType = FindPlantType::call($id);
+        $plantType = $this->plantTypes->find($id);
 
         return Inertia::render('Fields::PlantTypes/Edit', [
             'data' => $plantType,
@@ -77,7 +73,7 @@ class PlantTypesController extends Controller
      */
     public function update(UpdatePlantTypeRequest $request, string $id)
     {
-        UpdatePlantType::call($id, $request->validated());
+        $this->plantTypes->update($id, $request->validated());
 
         return redirect()->route('plant_types.index')->with('toast', [
             'severity' => 'success',
@@ -92,7 +88,7 @@ class PlantTypesController extends Controller
      */
     public function destroy(string $id)
     {
-        DeletePlantType::call($id);
+        $this->plantTypes->delete($id);
 
         return response()->noContent();
     }

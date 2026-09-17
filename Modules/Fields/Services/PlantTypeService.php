@@ -1,27 +1,66 @@
 <?php
 
-namespace Modules\Fields\Services\PlantTypes;
+namespace Modules\Fields\Services;
 
+use Illuminate\Support\Str;
 use Modules\Core\Services\PrimevueDatatables;
 use Modules\Fields\Models\PlantType;
 
-class ListPlantType
+class PlantTypeService
 {
-    public static function call($params = [])
+    private const SEARCHABLE_COLUMNS = ['name', 'slug'];
+
+    public function find(string|int $id): PlantType
     {
-        $searchableColumns = ['name', 'slug'];
-
-        $query = PlantType::query();
-
-        $datatable = new PrimevueDatatables($params, $searchableColumns);
-        $plantTypes = $datatable->of($query)->make();
-
-        return $plantTypes;
+        return PlantType::findOrFail($id);
     }
 
-    public static function collection(array $params = []): array
+    public function create(array $data): PlantType
     {
-        $query = PlantType::query()->select('plant_types.id', 'plant_types.name', 'plant_types.slug')->withCount('plants');
+        $slug = Str::slug($data['name']);
+
+        // Idempotent on slug -- create-or-reuse so duplicate POSTs
+        // with the same name don't 500. Mirrors the original CreatePlantType.
+        $type = PlantType::where('slug', $slug)->first();
+        if (! $type) {
+            $type = new PlantType;
+            $type->name = $data['name'];
+            $type->slug = $slug;
+            $type->save();
+        }
+
+        return $type;
+    }
+
+    public function update(string|int $id, array $data): PlantType
+    {
+        $type = PlantType::findOrFail($id);
+        $type->name = $data['name'];
+        $type->slug = Str::slug($data['name']);
+        $type->save();
+
+        return $type;
+    }
+
+    public function delete(string|int $id): void
+    {
+        PlantType::destroy($id);
+    }
+
+    public function list(array $params = []): mixed
+    {
+        $query = PlantType::query();
+
+        $datatable = new PrimevueDatatables($params, self::SEARCHABLE_COLUMNS);
+
+        return $datatable->of($query)->make();
+    }
+
+    public function collection(array $params = []): array
+    {
+        $query = PlantType::query()
+            ->select('plant_types.id', 'plant_types.name', 'plant_types.slug')
+            ->withCount('plants');
 
         $search = trim($params['q'] ?? '');
 
