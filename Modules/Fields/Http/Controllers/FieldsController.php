@@ -9,17 +9,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreFieldRequest;
 use Modules\Fields\Http\Requests\UpdateFieldRequest;
 use Modules\Fields\Http\Resources\FieldResource;
-use Modules\Fields\Services\Fields\CreateField;
-use Modules\Fields\Services\Fields\DeleteField;
-use Modules\Fields\Services\Fields\FindField;
-use Modules\Fields\Services\Fields\ListField;
-use Modules\Fields\Services\Fields\UpdateField;
+use Modules\Fields\Services\FieldService;
 
 class FieldsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly FieldService $fields)
     {
         $this->setupPermissionMiddleware();
     }
@@ -30,13 +26,13 @@ class FieldsController extends Controller
     public function index()
     {
         if (request()->boolean('collection')) {
-            return response()->json(ListField::collection(request()->all()));
+            return response()->json($this->fields->collection(request()->all()));
         }
 
         if (request()->exists('dt_params')) {
             $params = json_decode(request('dt_params', '[]'), true);
 
-            return response()->json(ListField::call($params));
+            return response()->json($this->fields->list($params));
         }
 
         return Inertia::render('Fields::Fields/List', [
@@ -60,7 +56,7 @@ class FieldsController extends Controller
         $data = $request->validated();
         $data['blueprint'] = $this->storeBlueprint($request);
         $data['documents'] = $this->storeDocuments($request);
-        CreateField::call($data);
+        $this->fields->create($data);
 
         return redirect()->route('fields.index')->with('toast', [
             'severity' => 'success',
@@ -76,7 +72,7 @@ class FieldsController extends Controller
     public function show(string $id)
     {
         $current_tab = request('current_tab', 'file');
-        $field = FindField::call($id);
+        $field = $this->fields->find($id);
 
         return Inertia::render('Fields::Fields/Show', [
             'current_tab' => $current_tab,
@@ -94,7 +90,7 @@ class FieldsController extends Controller
      */
     public function edit(string $id)
     {
-        $field = FindField::call($id);
+        $field = $this->fields->find($id);
 
         return Inertia::render('Fields::Fields/Edit', [
             'data' => new FieldResource($field),
@@ -109,7 +105,7 @@ class FieldsController extends Controller
         $data = $request->validated();
         $data['blueprint'] = $this->storeBlueprint($request);
         $data['documents'] = $this->storeDocuments($request);
-        UpdateField::call($id, $data);
+        $this->fields->update($id, $data);
 
         return redirect()->route('fields.index')->with('toast', [
             'severity' => 'success',
@@ -124,7 +120,7 @@ class FieldsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteField::call($id);
+        $this->fields->delete($id);
 
         return response()->noContent();
     }
