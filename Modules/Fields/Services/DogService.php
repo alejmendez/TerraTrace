@@ -1,19 +1,73 @@
 <?php
 
-namespace Modules\Fields\Services\Dogs;
+namespace Modules\Fields\Services;
 
 use Modules\Core\Services\PrimevueDatatables;
 use Modules\Fields\Models\Dog;
+use Modules\Fields\Models\DogVaccine;
 
-class ListDog
+class DogService
 {
-    public static function call($params = [])
+    private const SEARCHABLE_COLUMNS = ['name', 'birthdate', 'field.name', 'gender', 'breed', 'veterinary', 'couple.full_name'];
+
+    public function find(string|int $id): Dog
     {
-        $searchableColumns = ['name', 'birthdate', 'field.name', 'gender', 'breed', 'veterinary', 'couple.full_name'];
+        return Dog::findOrFail($id);
+    }
 
+    public function create(array $data): Dog
+    {
+        $dog = new Dog;
+        $dog->name = $data['name'];
+        $dog->breed = $data['breed'];
+        $dog->gender = $data['gender']['value'];
+        $dog->birthdate = $data['birthdate'];
+        $dog->veterinary = $data['veterinary'];
+        $dog->field_id = $data['field_id']['value'];
+        $dog->couple_id = $data['couple_id']['value'];
+        $dog->avatar = $data['avatar'];
+        $dog->save();
+
+        $this->saveVaccines($dog, $data['vaccines'] ?? []);
+
+        return $dog;
+    }
+
+    public function update(string|int $id, array $data): Dog
+    {
+        $dog = Dog::findOrFail($id);
+        $dog->name = $data['name'];
+        $dog->breed = $data['breed'];
+        $dog->gender = $data['gender']['value'];
+        $dog->birthdate = $data['birthdate'];
+        $dog->veterinary = $data['veterinary'];
+        $dog->field_id = $data['field_id']['value'];
+        $dog->couple_id = $data['couple_id']['value'];
+
+        if (! empty($data['avatar'])) {
+            $dog->avatar = $data['avatar'];
+        }
+
+        if (($data['avatarRemove'] ?? null) === '1') {
+            $dog->avatar = null;
+        }
+
+        $dog->save();
+
+        $this->saveVaccines($dog, $data['vaccines'] ?? []);
+
+        return $dog;
+    }
+
+    public function delete(string|int $id): void
+    {
+        Dog::destroy($id);
+    }
+
+    public function list(array $params = []): mixed
+    {
         $query = Dog::query();
-
-        $datatable = new PrimevueDatatables($params, $searchableColumns);
+        $datatable = new PrimevueDatatables($params, self::SEARCHABLE_COLUMNS);
         $dogs = $datatable->of($query)->make();
 
         $dogs->map(function ($dog) {
@@ -23,7 +77,7 @@ class ListDog
         return $dogs;
     }
 
-    public static function collection(array $params = []): array
+    public function collection(array $params = []): array
     {
         $query = Dog::query()
             ->select('dogs.id', 'dogs.name', 'dogs.birthdate', 'dogs.gender', 'dogs.breed', 'dogs.veterinary', 'dogs.field_id', 'dogs.couple_id')
@@ -96,5 +150,34 @@ class ListDog
             ],
             'summary' => $summary,
         ];
+    }
+
+    /**
+     * Idempotent save of the dog's vaccines. Any existing vaccine
+     * not present in the incoming payload is destroyed; vaccines
+     * with matching ids are updated, others are created.
+     */
+    private function saveVaccines(Dog $dog, array $vaccines): void
+    {
+        $vaccines = collect($vaccines);
+
+        $existingIds = $dog->vaccines()->pluck('id');
+        $idsToDestroy = $existingIds->filter(fn ($id) => ! $vaccines->firstWhere('id', $id))->toArray();
+
+        DogVaccine::destroy($idsToDestroy);
+
+        foreach ($vaccines as $vaccine) {
+            if (($vaccine['name'] ?? null) == null && ($vaccine['date'] ?? null) == null) {
+                continue;
+            }
+            $dogVaccine = ! empty($vaccine['id'])
+                ? DogVaccine::firstWhere('id', $vaccine['id']) ?? new DogVaccine
+                : new DogVaccine;
+
+            $dogVaccine->name = $vaccine['name'];
+            $dogVaccine->date = $vaccine['date'];
+            $dogVaccine->dog_id = $dog->id;
+            $dogVaccine->save();
+        }
     }
 }

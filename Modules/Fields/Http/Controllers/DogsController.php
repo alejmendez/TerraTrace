@@ -9,17 +9,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreDogRequest;
 use Modules\Fields\Http\Requests\UpdateDogRequest;
 use Modules\Fields\Http\Resources\DogResource;
-use Modules\Fields\Services\Dogs\CreateDog;
-use Modules\Fields\Services\Dogs\DeleteDog;
-use Modules\Fields\Services\Dogs\FindDog;
-use Modules\Fields\Services\Dogs\ListDog;
-use Modules\Fields\Services\Dogs\UpdateDog;
+use Modules\Fields\Services\DogService;
 
 class DogsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly DogService $dogs)
     {
         $this->setupPermissionMiddleware();
     }
@@ -29,7 +25,7 @@ class DogsController extends Controller
      */
     public function index()
     {
-        $payload = ListDog::collection(request()->all());
+        $payload = $this->dogs->collection(request()->all());
 
         return Inertia::render('Fields::Dogs/List', [
             'toast' => session('toast'),
@@ -61,7 +57,7 @@ class DogsController extends Controller
     {
         $data = $request->validated();
         $data['avatar'] = $this->storeAvatar($request);
-        CreateDog::call($data);
+        $this->dogs->create($data);
 
         return redirect()->route('dogs.index')->with('toast', [
             'severity' => 'success',
@@ -76,7 +72,7 @@ class DogsController extends Controller
      */
     public function show(string $id)
     {
-        $dog = FindDog::call($id);
+        $dog = $this->dogs->find($id);
 
         return Inertia::render('Fields::Dogs/Show', [
             'data' => new DogResource($dog),
@@ -88,7 +84,7 @@ class DogsController extends Controller
      */
     public function edit(string $id)
     {
-        $dog = FindDog::call($id);
+        $dog = $this->dogs->find($id);
 
         return Inertia::render('Fields::Dogs/Edit', [
             'data' => new DogResource($dog),
@@ -105,7 +101,7 @@ class DogsController extends Controller
     {
         $data = $request->validated();
         $data['avatar'] = $this->storeAvatar($request);
-        UpdateDog::call($id, $data);
+        $this->dogs->update($id, $data);
 
         return redirect()->route('dogs.index')->with('toast', [
             'severity' => 'success',
@@ -120,7 +116,7 @@ class DogsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteDog::call($id);
+        $this->dogs->delete($id);
 
         return response()->noContent();
     }
