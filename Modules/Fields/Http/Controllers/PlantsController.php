@@ -14,18 +14,13 @@ use Modules\Fields\Http\Requests\StorePlantRequest;
 use Modules\Fields\Http\Requests\UpdatePlantRequest;
 use Modules\Fields\Http\Resources\PlantResource;
 use Modules\Fields\Imports\PlantsImport;
-use Modules\Fields\Services\Plants\CreatePlant;
-use Modules\Fields\Services\Plants\CreatePlantNote;
-use Modules\Fields\Services\Plants\DeletePlant;
-use Modules\Fields\Services\Plants\FindPlant;
-use Modules\Fields\Services\Plants\ListPlant;
-use Modules\Fields\Services\Plants\UpdatePlant;
+use Modules\Fields\Services\PlantService;
 
 class PlantsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly PlantService $plants)
     {
         $this->setupPermissionMiddleware();
     }
@@ -36,13 +31,13 @@ class PlantsController extends Controller
     public function index()
     {
         if (request()->boolean('collection')) {
-            return response()->json(ListPlant::collection(request()->all()));
+            return response()->json($this->plants->collection(request()->all()));
         }
 
         if (request()->exists('dt_params')) {
             $params = json_decode(request('dt_params', '[]'), true);
 
-            return response()->json(ListPlant::call($params));
+            return response()->json($this->plants->list($params));
         }
 
         return Inertia::render('Fields::Plants/List', [
@@ -70,8 +65,7 @@ class PlantsController extends Controller
      */
     public function store(StorePlantRequest $request)
     {
-        $data = $request->validated();
-        CreatePlant::call($data);
+        $this->plants->create($request->validated());
 
         return redirect()->route('plants.index')->with('toast', [
             'severity' => 'success',
@@ -86,7 +80,7 @@ class PlantsController extends Controller
      */
     public function show(string $id)
     {
-        $plant = FindPlant::call($id);
+        $plant = $this->plants->find($id);
         $current_tab = request()->get('current_tab', 'file');
 
         return Inertia::render('Fields::Plants/Show', [
@@ -101,7 +95,7 @@ class PlantsController extends Controller
      */
     public function edit(string $id)
     {
-        $plant = FindPlant::call($id);
+        $plant = $this->plants->find($id);
 
         return Inertia::render('Fields::Plants/Edit', [
             'data' => new PlantResource($plant),
@@ -116,8 +110,7 @@ class PlantsController extends Controller
      */
     public function update(UpdatePlantRequest $request, string $id)
     {
-        $data = $request->validated();
-        UpdatePlant::call($id, $data);
+        $this->plants->update($id, $request->validated());
 
         return redirect()->route('plants.index')->with('toast', [
             'severity' => 'success',
@@ -132,7 +125,7 @@ class PlantsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeletePlant::call($id);
+        $this->plants->delete($id);
 
         return response()->noContent();
     }
@@ -144,7 +137,7 @@ class PlantsController extends Controller
             'note' => 'required|string',
         ]);
 
-        CreatePlantNote::call($data);
+        $this->plants->addNote($data['plant_id'], $data['note']);
 
         return response()->json(['message' => 'Nota creada correctamente']);
     }

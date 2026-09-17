@@ -5,6 +5,7 @@ namespace Modules\Fields\Providers;
 use Modules\Core\Providers\CoreServiceProvider;
 use Modules\Fields\Services\FieldService;
 use Modules\Fields\Services\OwnerService;
+use Modules\Fields\Services\PlantService;
 
 class FieldsServiceProvider extends CoreServiceProvider
 {
@@ -19,6 +20,7 @@ class FieldsServiceProvider extends CoreServiceProvider
         // rebuilding the dependency graph on every resolve.
         $this->app->singleton(FieldService::class);
         $this->app->singleton(OwnerService::class);
+        $this->app->singleton(PlantService::class);
 
         EntityRegistrations::register();
     }

@@ -5,7 +5,6 @@ namespace Modules\Fields\Services;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Fields\Models\PlantDetail;
-use Modules\Fields\Services\Plants\FindPlantByCode;
 
 class PlantDetailService
 {
@@ -36,13 +35,15 @@ class PlantDetailService
      * by code. Any existing active row for the same type is deactivated
      * (the new one wins, but history is preserved).
      *
-     * Cross-module call to FindPlantByCode::call() stays static: Plants
-     * module has not been consolidated yet, so the transversal lookup
-     * still lives in a plain static class.
+     * PlantService (injected via constructor) is the cross-module
+     * resolver for plant-by-code -- the printable-code formatting
+     * details (trim / strtoupper) live there.
      */
+    public function __construct(private readonly PlantService $plants) {}
+
     public function create(array $data): void
     {
-        $plant = FindPlantByCode::call($data['plant_code']);
+        $plant = $this->plants->findByCode($data['plant_code']);
 
         if (! $plant) {
             throw new \Exception('Planta no encontrada con el código proporcionado.');

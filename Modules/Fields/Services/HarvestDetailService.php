@@ -5,7 +5,6 @@ namespace Modules\Fields\Services;
 use Illuminate\Support\Str;
 use Modules\Fields\Models\Harvest;
 use Modules\Fields\Models\HarvestDetail;
-use Modules\Fields\Services\Plants\FindPlantByCode;
 
 class HarvestDetailService
 {
@@ -27,9 +26,11 @@ class HarvestDetailService
         'Industrial',
     ];
 
+    public function __construct(private readonly PlantService $plants) {}
+
     public function create(array $data): HarvestDetail
     {
-        $plant = FindPlantByCode::call($data['plant_code']);
+        $plant = $this->plants->findByCode($data['plant_code']);
 
         $harvestDetail = new HarvestDetail;
         $harvestDetail->harvest_id = Harvest::latest()->first()->id;

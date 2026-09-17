@@ -7,14 +7,16 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreHarvestDetailRequest;
 use Modules\Fields\Services\HarvestDetailService;
-use Modules\Fields\Services\Plants\FindPlantByCode;
+use Modules\Fields\Services\PlantService;
 
 class HarvestDetailsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly HarvestDetailService $harvestDetails)
-    {
+    public function __construct(
+        private readonly HarvestDetailService $harvestDetails,
+        private readonly PlantService $plants,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -45,7 +47,7 @@ class HarvestDetailsController extends Controller
 
     public function find_by_code()
     {
-        $plant = FindPlantByCode::call(request('code', ''));
+        $plant = $this->plants->findByCode(request('code', ''));
         if (! $plant) {
             return response()->json([
                 'error' => 'Plant not found',

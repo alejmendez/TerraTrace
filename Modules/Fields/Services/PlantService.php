@@ -1,25 +1,105 @@
 <?php
 
-namespace Modules\Fields\Services\Plants;
+namespace Modules\Fields\Services;
 
 use Modules\Core\Services\PrimevueDatatables;
 use Modules\Fields\Models\Plant;
+use Modules\Fields\Models\PlantDetail;
 
-class ListPlant
+class PlantService
 {
-    public static function call($params = [])
+    private const SEARCHABLE_COLUMNS = ['plants.code', 'quarter.name', 'quarter.field.name', 'plant_type.name', 'plants.age', 'quarter.responsible.full_name'];
+
+    public function find(string|int $id): Plant
     {
-        $searchableColumns = ['plants.code', 'quarter.name', 'quarter.field.name', 'plant_type.name', 'plants.age', 'quarter.responsible.full_name'];
-
-        $query = Plant::query();
-
-        $datatable = new PrimevueDatatables($params, $searchableColumns);
-        $plants = $datatable->of($query)->make();
-
-        return $plants;
+        return Plant::findOrFail($id);
     }
 
-    public static function collection(array $params = []): array
+    /**
+     * Cross-module lookup by the plant's printable code (e.g.
+     * "A-01-04"). Used by HarvestDetailService::create() and
+     * PlantDetailService::create() (and historically by a
+     * controller) so they don't have to know how codes are
+     * formatted (uppercased, trimmed) -- that detail lives here.
+     */
+    public function findByCode(string $code): ?Plant
+    {
+        return Plant::firstWhere('code', trim(strtoupper($code)));
+    }
+
+    public function create(array $data): Plant
+    {
+        $plant = new Plant;
+
+        $plant->quarter_id = $data['quarter_id']['value'];
+        $plant->code = $data['code'];
+        $plant->row = $data['row'];
+        $plant->plant_type_id = $data['plant_type_id']['value'];
+        $plant->age = 0;
+        $plant->planned_at = $data['planned_at'];
+        $plant->nursery_origin = $data['nursery_origin'];
+
+        $plant->save();
+
+        return $plant;
+    }
+
+    public function update(string|int $id, array $data): Plant
+    {
+        $plant = Plant::findOrFail($id);
+
+        $plant->quarter_id = $data['quarter_id']['value'];
+        $plant->code = $data['code'];
+        $plant->row = $data['row'];
+        $plant->plant_type_id = $data['plant_type_id']['value'];
+        $plant->planned_at = $data['planned_at'];
+        $plant->nursery_origin = $data['nursery_origin'];
+
+        $plant->save();
+
+        return $plant;
+    }
+
+    public function delete(string|int $id): void
+    {
+        Plant::destroy($id);
+    }
+
+    /**
+     * Add a "note" detail row for a plant, deactivating any previous
+     * active note for the same plant. Stored as a PlantDetail row
+     * with type='note' so the existing PlantDetailCollection JSON
+     * endpoint picks it up.
+     *
+     * Moved from a transversal static helper
+     * (Modules\Fields\Services\Plants\CreatePlantNote) so the cross-
+     * module consumers can inject PlantService directly.
+     */
+    public function addNote(int $plantId, string $note): PlantDetail
+    {
+        PlantDetail::where('plant_id', $plantId)
+            ->where('type', 'note')
+            ->update(['is_active' => false]);
+
+        $plantDetail = new PlantDetail;
+        $plantDetail->plant_id = $plantId;
+        $plantDetail->type = 'note';
+        $plantDetail->value = $note;
+        $plantDetail->is_active = true;
+        $plantDetail->save();
+
+        return $plantDetail;
+    }
+
+    public function list(array $params = []): mixed
+    {
+        $query = Plant::query();
+        $datatable = new PrimevueDatatables($params, self::SEARCHABLE_COLUMNS);
+
+        return $datatable->of($query)->make();
+    }
+
+    public function collection(array $params = []): array
     {
         $query = Plant::query()
             ->select('plants.id', 'plants.code', 'plants.quarter_id', 'plants.plant_type_id', 'plants.age', 'plants.planned_at', 'plants.row')
@@ -29,6 +109,7 @@ class ListPlant
                 'quarter.field:id,name',
                 'quarter.responsible:id,full_name',
             ]);
+
         $search = trim($params['q'] ?? '');
 
         if ($search !== '') {
