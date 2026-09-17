@@ -4,19 +4,25 @@ namespace Modules\Fields\Http\Controllers;
 
 use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreLiquidationRequest;
 use Modules\Fields\Http\Requests\UpdateLiquidationRequest;
 use Modules\Fields\Http\Resources\LiquidationResource;
+use Modules\Fields\Services\CategoryProductService;
+use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\ImporterService;
 use Modules\Fields\Services\LiquidationService;
 
 class LiquidationsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly LiquidationService $liquidations)
-    {
+    public function __construct(
+        private readonly LiquidationService $liquidations,
+        private readonly ImporterService $importers,
+        private readonly FieldService $fields,
+        private readonly CategoryProductService $categoryProducts,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -32,7 +38,7 @@ class LiquidationsController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'importers' => ListEntity::call('importer'),
+            'importers' => $this->importers->forSelect(),
             'liquidation_available_years' => $this->liquidations->availableYears(),
         ]);
     }
@@ -43,9 +49,9 @@ class LiquidationsController extends Controller
     public function create()
     {
         return Inertia::render('Fields::Liquidations/Create', [
-            'importers' => ListEntity::call('importer'),
-            'fields' => ListEntity::call('field'),
-            'category_products' => ListEntity::call('category_products'),
+            'importers' => $this->importers->forSelect(),
+            'fields' => $this->fields->forSelect(),
+            'category_products' => $this->categoryProducts->forSelect(),
         ]);
     }
 
@@ -73,9 +79,9 @@ class LiquidationsController extends Controller
 
         return Inertia::render('Fields::Liquidations/Show', [
             'data' => new LiquidationResource($liquidation),
-            'importers' => ListEntity::call('importer'),
-            'fields' => ListEntity::call('field'),
-            'category_products' => ListEntity::call('category_products'),
+            'importers' => $this->importers->forSelect(),
+            'fields' => $this->fields->forSelect(),
+            'category_products' => $this->categoryProducts->forSelect(),
         ]);
     }
 
@@ -88,9 +94,9 @@ class LiquidationsController extends Controller
 
         return Inertia::render('Fields::Liquidations/Edit', [
             'data' => new LiquidationResource($liquidation),
-            'importers' => ListEntity::call('importer'),
-            'fields' => ListEntity::call('field'),
-            'category_products' => ListEntity::call('category_products'),
+            'importers' => $this->importers->forSelect(),
+            'fields' => $this->fields->forSelect(),
+            'category_products' => $this->categoryProducts->forSelect(),
         ]);
     }
 

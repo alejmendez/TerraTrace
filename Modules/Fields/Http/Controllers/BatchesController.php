@@ -4,19 +4,21 @@ namespace Modules\Fields\Http\Controllers;
 
 use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreBatchRequest;
 use Modules\Fields\Http\Requests\UpdateBatchRequest;
 use Modules\Fields\Http\Resources\BatchResource;
 use Modules\Fields\Services\BatchService;
+use Modules\Fields\Services\ImporterService;
 
 class BatchesController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly BatchService $batches)
-    {
+    public function __construct(
+        private readonly BatchService $batches,
+        private readonly ImporterService $importers,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -32,7 +34,7 @@ class BatchesController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'importers' => ListEntity::call('importer'),
+            'importers' => $this->importers->forSelect(),
         ]);
     }
 
@@ -42,7 +44,7 @@ class BatchesController extends Controller
     public function create()
     {
         return Inertia::render('Fields::Batches/Create', [
-            'importers' => ListEntity::call('importer'),
+            'importers' => $this->importers->forSelect(),
             'harvests' => $this->batches->availableHarvests(),
         ]);
     }
@@ -74,7 +76,7 @@ class BatchesController extends Controller
         }
 
         return Inertia::render('Fields::Batches/Show', [
-            'importers' => ListEntity::call('importer'),
+            'importers' => $this->importers->forSelect(),
             'harvests' => $this->batches->availableHarvests($id),
         ]);
     }
@@ -88,7 +90,7 @@ class BatchesController extends Controller
 
         return Inertia::render('Fields::Batches/Edit', [
             'data' => new BatchResource($batch),
-            'importers' => ListEntity::call('importer'),
+            'importers' => $this->importers->forSelect(),
             'harvests' => $this->batches->availableHarvests($id),
         ]);
     }
