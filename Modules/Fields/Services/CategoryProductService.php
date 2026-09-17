@@ -107,4 +107,32 @@ class CategoryProductService
             ->get()
             ->toArray();
     }
+
+    /**
+     * Shape consumed by the importer bulk-load form: each row keeps
+     * `id`, `name`, and the `is_commercial` flag so the picker can
+     * show a commercial / non-commercial badge per option. Distinct
+     * from `forSelect()` above because the frontend needs the raw
+     * columns, not the {value, text} alias.
+     */
+    public function categoryProductsForSelect(): array
+    {
+        return CategoryProduct::select('id', 'name', 'is_commercial')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Static "is commercial" filter options (all / yes / no). Used by
+     * the CategoryProducts index filter dropdown.
+     */
+    public function isCommercialOptions(): array
+    {
+        return [
+            ['value' => null, 'text' => trans('generics.all')],
+            ['value' => true, 'text' => trans('generics.yes')],
+            ['value' => false, 'text' => trans('generics.no')],
+        ];
+    }
 }

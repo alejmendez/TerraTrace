@@ -4,7 +4,6 @@ namespace Modules\Fields\Http\Controllers;
 
 use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreCategoryProductRequest;
 use Modules\Fields\Http\Requests\UpdateCategoryProductRequest;
@@ -31,7 +30,7 @@ class CategoryProductsController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'isCommercialOptions' => ListEntity::call('is_commercial_options'),
+            'isCommercialOptions' => $this->categoryProducts->isCommercialOptions(),
         ]);
     }
 

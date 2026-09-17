@@ -16,6 +16,20 @@ class UserService
     }
 
     /**
+     * Flat {value, text} list for cross-module consumers and the
+     * SelectsController HTTP endpoint. Same shape for `user`,
+     * `responsible`, and `couple` (the three named aliases the
+     * dispatcher maps to this single method).
+     */
+    public function forSelect(): array
+    {
+        return User::select('id as value', 'full_name as text')
+            ->orderBy('full_name')
+            ->get()
+            ->toArray();
+    }
+
+    /**
      * Public self-registration: minimal fields, fires the framework
      * `Registered` event so the email-verification listener can pick it up.
      *

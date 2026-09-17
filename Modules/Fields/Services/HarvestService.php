@@ -354,4 +354,32 @@ class HarvestService
             ])
             ->all();
     }
+
+    /**
+     * Year-grouped harvest multiselect payload. Replaces the static
+     * EntityRegistry::register('harvest_multiselect', ...) closure
+     * that the SelectsController HTTP endpoint used to call lazily.
+     */
+    public function harvestMultiselect(): array
+    {
+        return Harvest::select('year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->get()
+            ->map(function ($h) {
+                return [
+                    'items' => Harvest::select('id', 'week', 'batch')
+                        ->where('year', $h->year)
+                        ->orderBy('date', 'desc')
+                        ->get()
+                        ->map(fn ($harvest) => [
+                            'value' => $harvest->id,
+                            'label' => __('harvest.form.batch.renderText', ['week' => $harvest->week, 'batch' => $harvest->batch]),
+                        ])->values(),
+                    'label' => $h->year,
+                ];
+            })
+            ->values()
+            ->all();
+    }
 }

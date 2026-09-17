@@ -197,11 +197,8 @@ class PlantService
 
     /**
      * Filtered variant: plants whose quarter_id is in the supplied
-     * list. Mirrors the
-     *
-     *   ListEntity::call('plant', ['quarter_id' => $quarterIds])
-     *
-     * lazy dispatch that Tasks used to rely on.
+     * list. Mirrors the lazy dispatch Tasks used to rely on through
+     * `EntityRegistry::query('plant', …)`.
      */
     public function byQuarter(array $quarterIds): array
     {

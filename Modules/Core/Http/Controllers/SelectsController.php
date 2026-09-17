@@ -2,8 +2,7 @@
 
 namespace Modules\Core\Http\Controllers;
 
-use Modules\Core\Services\ListEntities;
-use Modules\Core\Services\ListEntity;
+use Modules\Core\Registry\EntityDispatcher;
 use Modules\Core\Traits\HasPermissionMiddleware;
 
 class SelectsController extends Controller
@@ -23,9 +22,9 @@ class SelectsController extends Controller
         if ($entity === 'multiple') {
             $entities = json_decode(request('entities', '{}'));
 
-            return response()->json(ListEntities::call($entities));
+            return response()->json(EntityDispatcher::dispatchMany((array) $entities));
         }
 
-        return response()->json(ListEntity::call($entity, $filter));
+        return response()->json(EntityDispatcher::dispatch($entity, (array) $filter));
     }
 }

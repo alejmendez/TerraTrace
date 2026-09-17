@@ -18,15 +18,11 @@ class UsersServiceProvider extends CoreServiceProvider
             return new UserService;
         });
 
-        // Users module owns these named entities. Registering here means
-        // ListEntity::call('user') resolves via the registry without
-        // Core having to import the User model.
-        EntityRegistry::register('user', User::class, static fn () => User::select('id as value', 'full_name as text')->orderBy('full_name'));
-        EntityRegistry::register('responsible', User::class, static fn () => User::select('id as value', 'full_name as text')->orderBy('full_name'));
-        EntityRegistry::register('couple', User::class, static fn () => User::select('id as value', 'full_name as text')->orderBy('full_name'));
-
-        // Roles come from Spatie; Auth module registers them (it owns
-        // authentication).
+        // Bare model-class mapping consumed by cross-module
+        // belongsTo relations (see Modules\Tasks\Models\Task::responsible()).
+        // The data-shape lookups (`user`, `responsible`, `couple`) are
+        // served by EntityDispatcher → UserService::forSelect().
+        EntityRegistry::register('user', User::class);
     }
 
     /**
