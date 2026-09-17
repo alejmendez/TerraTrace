@@ -8,17 +8,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreSecurityEquipmentRequest;
 use Modules\Fields\Http\Requests\UpdateSecurityEquipmentRequest;
 use Modules\Fields\Http\Resources\SecurityEquipmentResource;
-use Modules\Fields\Services\SecurityEquipments\CreateSecurityEquipment;
-use Modules\Fields\Services\SecurityEquipments\DeleteSecurityEquipment;
-use Modules\Fields\Services\SecurityEquipments\FindSecurityEquipment;
-use Modules\Fields\Services\SecurityEquipments\ListSecurityEquipment;
-use Modules\Fields\Services\SecurityEquipments\UpdateSecurityEquipment;
+use Modules\Fields\Services\SecurityEquipmentService;
 
 class SecurityEquipmentsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly SecurityEquipmentService $securityEquipments)
     {
         $this->setupPermissionMiddleware();
     }
@@ -28,7 +24,7 @@ class SecurityEquipmentsController extends Controller
      */
     public function index()
     {
-        $payload = ListSecurityEquipment::collection(request()->all());
+        $payload = $this->securityEquipments->collection(request()->all());
 
         return Inertia::render('Fields::SecurityEquipments/List', [
             'toast' => session('toast'),
@@ -51,7 +47,7 @@ class SecurityEquipmentsController extends Controller
      */
     public function store(StoreSecurityEquipmentRequest $request)
     {
-        CreateSecurityEquipment::call($request->validated());
+        $this->securityEquipments->create($request->validated());
 
         return redirect()->route('security_equipments.index')->with('toast', [
             'severity' => 'success',
@@ -66,7 +62,7 @@ class SecurityEquipmentsController extends Controller
      */
     public function show(string $id)
     {
-        $security_equipment = FindSecurityEquipment::call($id);
+        $security_equipment = $this->securityEquipments->find($id);
 
         return Inertia::render('Fields::SecurityEquipments/Show', [
             'data' => new SecurityEquipmentResource($security_equipment),
@@ -78,7 +74,7 @@ class SecurityEquipmentsController extends Controller
      */
     public function edit(string $id)
     {
-        $security_equipment = FindSecurityEquipment::call($id);
+        $security_equipment = $this->securityEquipments->find($id);
 
         return Inertia::render('Fields::SecurityEquipments/Edit', [
             'data' => new SecurityEquipmentResource($security_equipment),
@@ -90,7 +86,7 @@ class SecurityEquipmentsController extends Controller
      */
     public function update(UpdateSecurityEquipmentRequest $request, string $id)
     {
-        UpdateSecurityEquipment::call($id, $request->validated());
+        $this->securityEquipments->update($id, $request->validated());
 
         return redirect()->route('security_equipments.index')->with('toast', [
             'severity' => 'success',
@@ -105,7 +101,7 @@ class SecurityEquipmentsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteSecurityEquipment::call($id);
+        $this->securityEquipments->delete($id);
 
         return response()->noContent();
     }
