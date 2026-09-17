@@ -9,15 +9,13 @@ use Modules\Tasks\Http\Requests\StoreTaskCommentRequest;
 use Modules\Tasks\Http\Requests\UpdateTaskCommentRequest;
 use Modules\Tasks\Http\Resources\TaskCommentResource;
 use Modules\Tasks\Models\TaskComment;
-use Modules\Tasks\Services\CreateTaskComment;
-use Modules\Tasks\Services\DeleteTaskComment;
-use Modules\Tasks\Services\UpdateTaskComment;
+use Modules\Tasks\Services\TaskCommentService;
 
 class TaskCommentsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly TaskCommentService $taskComments)
     {
         $this->setupPermissionMiddleware();
     }
@@ -25,7 +23,7 @@ class TaskCommentsController extends Controller
     public function store(StoreTaskCommentRequest $request)
     {
         $data = $request->validated();
-        $taskComment = CreateTaskComment::call($data, auth()->user());
+        $taskComment = $this->taskComments->create($data, auth()->user());
 
         return response()->json([
             'data' => new TaskCommentResource($taskComment),
@@ -47,7 +45,7 @@ class TaskCommentsController extends Controller
             );
         }
 
-        $taskComment = UpdateTaskComment::call($taskComment, $data);
+        $taskComment = $this->taskComments->update($taskComment, $data);
 
         return response()->json([
             'data' => new TaskCommentResource($taskComment),
@@ -55,11 +53,11 @@ class TaskCommentsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource in storage.
      */
     public function destroy(string $id)
     {
-        DeleteTaskComment::call($id);
+        $this->taskComments->delete($id);
 
         return response()->noContent();
     }

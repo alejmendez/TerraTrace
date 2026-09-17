@@ -9,18 +9,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Tasks\Http\Requests\StoreTaskRequest;
 use Modules\Tasks\Http\Requests\UpdateTaskRequest;
 use Modules\Tasks\Http\Resources\TaskResource;
-use Modules\Tasks\Services\CreateTask;
-use Modules\Tasks\Services\DeleteTask;
-use Modules\Tasks\Services\FindTask;
-use Modules\Tasks\Services\ListTask;
-use Modules\Tasks\Services\MarkTaskNotificationAsRead;
-use Modules\Tasks\Services\UpdateTask;
+use Modules\Tasks\Services\TaskService;
 
 class TasksController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly TaskService $tasks)
     {
         $this->setupPermissionMiddleware();
     }
@@ -30,7 +25,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $payload = ListTask::collection(request()->all());
+        $payload = $this->tasks->collection(request()->all());
 
         return Inertia::render('Tasks::List', [
             'toast' => session('toast'),
@@ -66,8 +61,7 @@ class TasksController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $data = $request->validated();
-        $task = CreateTask::call($data);
+        $this->tasks->create($request->validated());
 
         return redirect()->route('tasks.index')->with('toast', [
             'severity' => 'success',
@@ -82,9 +76,7 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        $task = FindTask::call($id);
-        $current_user = auth()->user();
-        MarkTaskNotificationAsRead::call($task, $current_user);
+        $task = $this->tasks->find($id);
 
         $current_tab = request()->get('current_tab', 'detail');
 
@@ -110,7 +102,7 @@ class TasksController extends Controller
      */
     public function edit(string $id)
     {
-        $task = FindTask::call($id);
+        $task = $this->tasks->find($id);
 
         return Inertia::render('Tasks::Edit', [
             'data' => new TaskResource($task),
@@ -133,7 +125,7 @@ class TasksController extends Controller
      */
     public function update(UpdateTaskRequest $request, string $id)
     {
-        UpdateTask::call($id, $request->validated());
+        $this->tasks->update($id, $request->validated());
 
         return redirect()->route('tasks.index')->with('toast', [
             'severity' => 'success',
@@ -148,7 +140,7 @@ class TasksController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteTask::call($id);
+        $this->tasks->delete($id);
 
         return response()->noContent();
     }
