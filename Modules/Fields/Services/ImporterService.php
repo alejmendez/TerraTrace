@@ -1,27 +1,62 @@
 <?php
 
-namespace Modules\Fields\Services\Importers;
+namespace Modules\Fields\Services;
 
+use Illuminate\Support\Str;
 use Modules\Core\Services\PrimevueDatatables;
 use Modules\Fields\Models\Importer;
 
-class ListImporter
+class ImporterService
 {
-    public static function call($params = [])
+    private const SEARCHABLE_COLUMNS = ['name', 'slug'];
+
+    public function find(string|int $id): Importer
     {
-        $searchableColumns = ['name', 'slug'];
-
-        $query = Importer::query();
-
-        $datatable = new PrimevueDatatables($params, $searchableColumns);
-        $importers = $datatable->of($query)->make();
-
-        return $importers;
+        return Importer::findOrFail($id);
     }
 
-    public static function collection(array $params = []): array
+    public function create(array $data): Importer
     {
-        $query = Importer::query()->select('importers.id', 'importers.name', 'importers.slug')->withCount(['batches', 'liquidations']);
+        $slug = Str::slug($data['name']);
+        $importer = Importer::where('slug', $slug)->first();
+        if (! $importer) {
+            $importer = new Importer;
+            $importer->name = $data['name'];
+            $importer->slug = $slug;
+            $importer->save();
+        }
+
+        return $importer;
+    }
+
+    public function update(string|int $id, array $data): Importer
+    {
+        $importer = Importer::findOrFail($id);
+        $importer->name = $data['name'];
+        $importer->slug = Str::slug($data['name']);
+        $importer->save();
+
+        return $importer;
+    }
+
+    public function delete(string|int $id): void
+    {
+        Importer::destroy($id);
+    }
+
+    public function list(array $params = []): mixed
+    {
+        $query = Importer::query();
+        $datatable = new PrimevueDatatables($params, self::SEARCHABLE_COLUMNS);
+
+        return $datatable->of($query)->make();
+    }
+
+    public function collection(array $params = []): array
+    {
+        $query = Importer::query()
+            ->select('importers.id', 'importers.name', 'importers.slug')
+            ->withCount(['batches', 'liquidations']);
 
         $search = trim($params['q'] ?? '');
 

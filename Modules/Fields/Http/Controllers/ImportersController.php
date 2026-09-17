@@ -7,17 +7,13 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreImporterRequest;
 use Modules\Fields\Http\Requests\UpdateImporterRequest;
-use Modules\Fields\Services\Importers\CreateImporter;
-use Modules\Fields\Services\Importers\DeleteImporter;
-use Modules\Fields\Services\Importers\FindImporter;
-use Modules\Fields\Services\Importers\ListImporter;
-use Modules\Fields\Services\Importers\UpdateImporter;
+use Modules\Fields\Services\ImporterService;
 
 class ImportersController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly ImporterService $importers)
     {
         $this->setupPermissionMiddleware();
     }
@@ -27,7 +23,7 @@ class ImportersController extends Controller
      */
     public function index()
     {
-        $payload = ListImporter::collection(request()->all());
+        $payload = $this->importers->collection(request()->all());
 
         return Inertia::render('Fields::Importers/List', [
             'toast' => session('toast'),
@@ -50,7 +46,7 @@ class ImportersController extends Controller
      */
     public function store(StoreImporterRequest $request)
     {
-        CreateImporter::call($request->validated());
+        $this->importers->create($request->validated());
 
         return redirect()->route('importers.index')->with('toast', [
             'severity' => 'success',
@@ -65,7 +61,7 @@ class ImportersController extends Controller
      */
     public function edit(string $id)
     {
-        $importer = FindImporter::call($id);
+        $importer = $this->importers->find($id);
 
         return Inertia::render('Fields::Importers/Edit', [
             'data' => $importer,
@@ -77,7 +73,7 @@ class ImportersController extends Controller
      */
     public function update(UpdateImporterRequest $request, string $id)
     {
-        UpdateImporter::call($id, $request->validated());
+        $this->importers->update($id, $request->validated());
 
         return redirect()->route('importers.index')->with('toast', [
             'severity' => 'success',
@@ -92,7 +88,7 @@ class ImportersController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteImporter::call($id);
+        $this->importers->delete($id);
 
         return response()->noContent();
     }
