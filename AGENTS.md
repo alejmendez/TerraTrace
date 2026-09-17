@@ -92,7 +92,94 @@ Módulos actuales: `Auth`, `Core`, `Dashboard`, `Fields`, `Tasks`, `Users`.
 
 ---
 
-## 4. Convenciones backend
+## 4. Comunicación entre módulos
+
+TerraTrace es un monolito modular: cada módulo es dueño de sus entidades y
+de su acceso a datos. Cuando un módulo necesita información de otro, hay tres
+niveles, cada uno apropiado para un caso. **El nivel más alto que aplique**;
+nunca se mezcla un nivel con otro.
+
+### 4.1 Datos planos / entidades nombradas → `EntityRegistry`
+
+Para cuando un módulo necesita una **lista plana** de otro módulo (combos,
+selects, tablas de sólo lectura).
+
+- El módulo productor registra la entidad en su `ServiceProvider::register()`
+  con `EntityRegistry::register('name', ModelClass, queryClosure)`.
+- El consumidor llama `ListEntity::call('name')`.
+- **Acoplamiento: cero.** El consumidor no conoce el modelo, sólo el nombre.
+
+```php
+// Modules/Tasks/Providers/TasksServiceProvider.php
+EntityRegistry::register('task_state', TaskState::class,
+    static fn () => TaskState::orderBy('name')->get());
+
+// Modules/Fields/Http/Controllers/FieldsController.php (consumidor)
+'task_states' => ListEntity::call('task_state'),
+```
+
+### 4.2 Agregaciones / datos computados → `*StatsProvider`
+
+Para cuando un módulo necesita **datos derivados** (contadores, sumas,
+promedios, comparaciones) sobre los datos de otro.
+
+- El módulo productor expone un `XxxStatsProvider` con métodos públicos.
+- El consumidor lo inyecta por DI en su service y llama sólo lo que necesita.
+- **Acoplamiento: por interfaz pública del provider.** El consumidor no toca
+  queries, joins ni esquema del productor — sólo recibe valores calculados.
+
+```php
+// Modules/Dashboard/Services/Dashboard.php
+public function __construct(
+    private FieldsStatsProvider $fieldsStats,
+    private TasksStatsProvider $tasksStats,
+) {}
+
+$data = [
+    'harvest_data' => $this->fieldsStats->harvestStatsForField($field),
+    'task_data'    => $this->tasksStats->taskCounters(),
+];
+```
+
+Cada provider encapsula los joins y agregaciones que su módulo dueño conoce.
+**Si una nueva pantalla necesita un contador cross-module, se añade un método
+al `StatsProvider` correspondiente — no se importa el modelo desde el
+consumidor.**
+
+### 4.3 Eventos / notificaciones
+
+Para cuando un módulo necesita notificar a destinatarios sobre cambios
+(usuarios vía `Notification`, otros módulos vía eventos de Eloquent).
+
+- El productor dispara el evento/notificación.
+- Los suscriptores se registran en sus propios providers.
+- **Acoplamiento: por evento.** Nadie sabe quién escucha.
+
+```php
+// Modules/Tasks/Services/NotifyTaskComment.php (transversal)
+$user->notify(new TaskNotification([...]));
+```
+
+### 4.4 Anti-patrones
+
+| ❌ No | ✅ Sí |
+|---|---|
+| `use Modules\Fields\Models\Field` desde Dashboard | `FieldsStatsProvider::findField()` |
+| Query directa cross-módulo en service propio | Llamar método del provider del módulo dueño |
+| "Core services" centralizadores (`Core\FieldsQueries`) | El módulo dueño expone su propio provider |
+| Importar `XxxService` completo cuando sólo se quiere una vista parcial | Usar el provider específico |
+
+### 4.5 Excepciones controladas donde SÍ se cruzan módulos
+
+- **Events de framework** con modelos en el payload (`Registered(User $user)`).
+- **El provider mismo** — sí importa su modelo (es interno al productor).
+- **Tests de integración** cross-module.
+- **Cross-module auth**: Auth importa `Modules\Users\Models\User` porque el
+  dominio Auth requiere el modelo del dominio Users. Legítimo.
+
+---
+
+## 5. Convenciones backend
 
 ### Permisos
 
@@ -120,11 +207,11 @@ o `List<Entity>::collection()` del servicio. Por convención:
   para la UI `Collection*`.
 
 No se devuelve `JsonResponse` desde el controlador sin verificar antes si la
-página ya está migrada al nuevo flujo (ver §6).
+página ya está migrada al nuevo flujo (ver §7).
 
 ---
 
-## 5. Convenciones frontend
+## 6. Convenciones frontend
 
 ### Aliases
 
@@ -214,7 +301,7 @@ verificar que no exista ya.
 
 ---
 
-## 6. Migración PrimeVue → Collection UI
+## 7. Migración PrimeVue → Collection UI
 
 **Estado:** todas las vistas `List.vue` migradas (Fields, Plants, Quarters,
 Dogs, Users, Tools, SecurityEquipments, Machineries, Owners, PlantTypes,
@@ -251,7 +338,7 @@ Componentes base disponibles en `Modules/Core/Resources/Components/Collection/`.
 
 ---
 
-## 7. Lo que NO se hace en este proyecto
+## 8. Lo que NO se hace en este proyecto
 
 - ❌ Añadir PrimeVue, PrimeIcons, Material Symbols en código nuevo.
 - ❌ Añadir `axios` como dependencia de feature (sólo queda el global
@@ -265,7 +352,7 @@ Componentes base disponibles en `Modules/Core/Resources/Components/Collection/`.
 
 ---
 
-## 8. Verificación previa a commit
+## 9. Verificación previa a commit
 
 Antes de pedir review:
 
