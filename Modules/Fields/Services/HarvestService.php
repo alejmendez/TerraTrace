@@ -335,4 +335,23 @@ class HarvestService
             'summary' => $summary,
         ];
     }
+
+    /**
+     * Flat list for the bulk-load harvest selector. Same shape as
+     * the static EntityRegistry::register('harvest', ...) had:
+     * the displayed text is the i18n-rendered "week N · batch X"
+     * so the picker can show the human label without further work.
+     */
+    public function forSelect(): array
+    {
+        return Harvest::select('id', 'week', 'batch', 'year')
+            ->orderBy('date')
+            ->get()
+            ->map(fn ($harvest) => [
+                'value' => $harvest->id,
+                'year' => $harvest->year,
+                'text' => __('harvest.form.batch.renderText', ['week' => $harvest->week, 'batch' => $harvest->batch]),
+            ])
+            ->all();
+    }
 }
