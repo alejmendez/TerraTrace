@@ -14,18 +14,16 @@ use Modules\Fields\Http\Requests\UpdateHarvestRequest;
 use Modules\Fields\Http\Resources\HarvestResource;
 use Modules\Fields\Imports\HarvestsImport;
 use Modules\Fields\Services\HarvestDetailService;
-use Modules\Fields\Services\Harvests\CreateHarvest;
-use Modules\Fields\Services\Harvests\DeleteHarvest;
-use Modules\Fields\Services\Harvests\FindHarvest;
-use Modules\Fields\Services\Harvests\ListHarvest;
-use Modules\Fields\Services\Harvests\UpdateHarvest;
+use Modules\Fields\Services\HarvestService;
 
 class HarvestsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly HarvestDetailService $harvestDetails)
-    {
+    public function __construct(
+        private readonly HarvestService $harvests,
+        private readonly HarvestDetailService $harvestDetails,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -34,15 +32,15 @@ class HarvestsController extends Controller
      */
     public function index()
     {
-        $payload = ListHarvest::collection(request()->all());
+        $payload = $this->harvests->collection(request()->all());
 
         return Inertia::render('Fields::Harvests/List', [
             'toast' => session('toast'),
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'harvest_available_years' => ListEntity::call('harvest_available_years'),
-            'harvest_available_weeks' => ListEntity::call('harvest_available_weeks'),
+            'harvest_available_years' => $this->harvests->availableYears(),
+            'harvest_available_weeks' => $this->harvests->availableWeeks(),
             'fields' => ListEntity::call('field'),
             'quarters' => ListEntity::call('quarter'),
             'users' => ListEntity::call('user'),
@@ -68,7 +66,7 @@ class HarvestsController extends Controller
      */
     public function store(StoreHarvestRequest $request)
     {
-        CreateHarvest::call($request->validated());
+        $this->harvests->create($request->validated());
 
         return redirect()->route('harvests.index')->with('toast', [
             'severity' => 'success',
@@ -83,7 +81,7 @@ class HarvestsController extends Controller
      */
     public function show(string $id)
     {
-        $harvest = FindHarvest::call($id);
+        $harvest = $this->harvests->find($id);
 
         return Inertia::render('Fields::Harvests/Show', [
             'data' => new HarvestResource($harvest),
@@ -100,7 +98,7 @@ class HarvestsController extends Controller
      */
     public function edit(string $id)
     {
-        $harvest = FindHarvest::call($id);
+        $harvest = $this->harvests->find($id);
 
         return Inertia::render('Fields::Harvests/Edit', [
             'data' => new HarvestResource($harvest),
@@ -117,7 +115,7 @@ class HarvestsController extends Controller
      */
     public function update(UpdateHarvestRequest $request, string $id)
     {
-        UpdateHarvest::call($id, $request->validated());
+        $this->harvests->update($id, $request->validated());
 
         return redirect()->route('harvests.index')->with('toast', [
             'severity' => 'success',
@@ -132,7 +130,7 @@ class HarvestsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteHarvest::call($id);
+        $this->harvests->delete($id);
 
         return response()->noContent();
     }
@@ -152,7 +150,7 @@ class HarvestsController extends Controller
             'error_message' => session('error_message', ''),
             'import_errors' => session('import_errors', []),
             'harvests' => ListEntity::call('harvest'),
-            'harvest_available_years' => ListEntity::call('harvest_available_years'),
+            'harvest_available_years' => $this->harvests->availableYears(),
         ]);
     }
 
