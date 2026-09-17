@@ -4,22 +4,20 @@ namespace Modules\Auth\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\CacheService;
+use Modules\Users\Services\UserService;
 
 class PasswordController extends Controller
 {
+    public function __construct(private readonly UserService $userService) {}
+
     /**
      * Update the user's password.
      *
-     * IMPORTANT: invalidate the user cache after the update. The cached
-     * `CachedAuthUserProvider` entry (Modules\\Users model) lives for
-     * 2 hours and would otherwise serve the OLD password hash until
-     * it expires, breaking downstream `Hash::check()` on the cached
-     * instance. `CacheService::clearUserCache()` also drops the user
-     * data session, menu and unread-notifications caches.
+     * `current_password` validation uses the standard Laravel rule so the
+     * hash check stays in the validator. The actual update + cache
+     * invalidation lives in UserService::updatePassword.
      */
     public function update(Request $request): RedirectResponse
     {
@@ -28,12 +26,7 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $user = $request->user();
-        $user->update([
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        CacheService::clearUserCache($user);
+        $this->userService->updatePassword($request->user(), $validated['password']);
 
         return back();
     }

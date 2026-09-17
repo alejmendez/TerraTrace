@@ -2,6 +2,7 @@
 
 namespace Modules\Users\Services;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Modules\Core\Services\CacheService;
@@ -12,6 +13,28 @@ class UserService
     public function find($id): User
     {
         return User::with('roles')->findOrFail($id);
+    }
+
+    /**
+     * Public self-registration: minimal fields, fires the framework
+     * `Registered` event so the email-verification listener can pick it up.
+     *
+     * `Auth::login()` deliberately NOT called here — that is HTTP-flow
+     * specific and belongs in the controller.
+     */
+    public function register(array $data): User
+    {
+        $user = new User;
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = Hash::make($data['password']);
+        $user->save();
+
+        event(new Registered($user));
+
+        CacheService::clearUserCache($user);
+
+        return $user;
     }
 
     public function collection(array $params = []): array
@@ -142,6 +165,30 @@ class UserService
         CacheService::clearUserCache($user);
 
         return $user;
+    }
+
+    /**
+     * Update a user's password and invalidate every cache that depends
+     * on the password hash.
+     *
+     * IMPORTANT: must invalidate the user cache after the update. The
+     * cached `CachedAuthUserProvider` entry (Modules\\Users model) lives
+     * for 2 hours (TTL aligned with CacheService::getUserDataSession at
+     * 600s after commit d7f84c5) and would otherwise serve the OLD
+     * password hash until it expires, breaking downstream `Hash::check()`
+     * on the cached instance. `CacheService::clearUserCache()` also
+     * drops the user data session, menu and unread-notifications caches.
+     *
+     * Caller is expected to validate `current_password` before invoking
+     * this method (the standard Laravel `current_password` rule is the
+     * idiomatic way).
+     */
+    public function updatePassword(User $user, string $newPassword): void
+    {
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        CacheService::clearUserCache($user);
     }
 
     public function delete($id): void

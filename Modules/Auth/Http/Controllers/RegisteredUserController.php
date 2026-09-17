@@ -3,20 +3,21 @@
 namespace Modules\Auth\Http\Controllers;
 
 use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Users\Models\User;
+use Modules\Users\Services\UserService;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(private readonly UserService $userService) {}
+
     /**
      * Display the registration view.
      */
@@ -38,13 +39,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
+        $user = $this->userService->register($request->only(['name', 'email', 'password']));
 
         Auth::login($user);
 
