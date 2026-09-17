@@ -101,4 +101,15 @@ class PlantTypeService
             'summary' => $summary,
         ];
     }
+
+    /**
+     * Flat {value, text} list for cross-module consumers.
+     */
+    public function forSelect(): array
+    {
+        return PlantType::select('id as value', 'name as text')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
 }

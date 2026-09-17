@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Exports\PlantsTemplateExport;
 use Modules\Fields\Http\Requests\BulkPlantRequest;
@@ -14,14 +13,25 @@ use Modules\Fields\Http\Requests\StorePlantRequest;
 use Modules\Fields\Http\Requests\UpdatePlantRequest;
 use Modules\Fields\Http\Resources\PlantResource;
 use Modules\Fields\Imports\PlantsImport;
+use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\HarvestService;
 use Modules\Fields\Services\PlantService;
+use Modules\Fields\Services\PlantTypeService;
+use Modules\Fields\Services\QuarterService;
+use Modules\Users\Services\UserService;
 
 class PlantsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly PlantService $plants)
-    {
+    public function __construct(
+        private readonly PlantService $plants,
+        private readonly FieldService $fields,
+        private readonly QuarterService $quarters,
+        private readonly PlantTypeService $plantTypes,
+        private readonly HarvestService $harvests,
+        private readonly UserService $users,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -42,10 +52,10 @@ class PlantsController extends Controller
 
         return Inertia::render('Fields::Plants/List', [
             'toast' => session('toast'),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter'),
-            'plant_types' => ListEntity::call('plant_type'),
-            'responsible' => ListEntity::call('responsible'),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->forSelect(),
+            'plant_types' => $this->plantTypes->forSelect(),
+            'responsible' => $this->users->responsibles(),
         ]);
     }
 
@@ -55,8 +65,8 @@ class PlantsController extends Controller
     public function create()
     {
         return Inertia::render('Fields::Plants/Create', [
-            'types' => ListEntity::call('plant_type'),
-            'fields' => ListEntity::call('field'),
+            'types' => $this->plantTypes->forSelect(),
+            'fields' => $this->fields->forSelect(),
         ]);
     }
 
@@ -86,7 +96,7 @@ class PlantsController extends Controller
         return Inertia::render('Fields::Plants/Show', [
             'data' => new PlantResource($plant),
             'current_tab' => $current_tab,
-            'harvest_available_years' => ListEntity::call('harvest_available_years'),
+            'harvest_available_years' => $this->harvests->availableYears(),
         ]);
     }
 
@@ -99,9 +109,9 @@ class PlantsController extends Controller
 
         return Inertia::render('Fields::Plants/Edit', [
             'data' => new PlantResource($plant),
-            'types' => ListEntity::call('plant_type'),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter', ['field_id' => $plant->quarter->field_id]),
+            'types' => $this->plantTypes->forSelect(),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->byField($plant->quarter->field_id),
         ]);
     }
 
@@ -150,7 +160,7 @@ class PlantsController extends Controller
     public function create_bulk()
     {
         return Inertia::render('Fields::Plants/Bulk/Create', [
-            'fields' => ListEntity::call('field'),
+            'fields' => $this->fields->forSelect(),
             'message_success' => session('message_success', ''),
             'unprocessed_message' => session('unprocessed_message', ''),
             'unprocessed_details' => session('unprocessed_details', []),
