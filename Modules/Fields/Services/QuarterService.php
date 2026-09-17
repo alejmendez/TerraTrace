@@ -249,4 +249,31 @@ class QuarterService
             ->get()
             ->toArray();
     }
+
+    /**
+     * Grouped quarters payload used by the Harvests create / show /
+     * edit forms. Each field becomes a top-level group with its
+     * quarters as children. Replaces the static
+     * EntityRegistry::register('quarterMultiselect', ...) closure.
+     */
+    public function quartersByFieldGrouped(): array
+    {
+        return Quarter::leftJoin('fields', 'quarters.field_id', '=', 'fields.id')
+            ->select('fields.id as field_id', 'fields.name as field_name', 'quarters.id', 'quarters.name')
+            ->orderBy('fields.name')
+            ->orderBy('quarters.name')
+            ->get()
+            ->groupBy('field_id')
+            ->map(function ($group) {
+                return [
+                    'text' => $group[0]->field_name,
+                    'items' => collect($group)->map(fn ($quarter) => [
+                        'value' => $quarter->id,
+                        'text' => $quarter->name,
+                    ])->values(),
+                ];
+            })
+            ->values()
+            ->toArray();
+    }
 }

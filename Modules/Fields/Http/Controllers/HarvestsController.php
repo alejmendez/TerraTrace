@@ -5,7 +5,6 @@ namespace Modules\Fields\Http\Controllers;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Exports\HarvestsTemplateExport;
 use Modules\Fields\Http\Requests\BulkHarvestRequest;
@@ -13,8 +12,13 @@ use Modules\Fields\Http\Requests\StoreHarvestRequest;
 use Modules\Fields\Http\Requests\UpdateHarvestRequest;
 use Modules\Fields\Http\Resources\HarvestResource;
 use Modules\Fields\Imports\HarvestsImport;
+use Modules\Fields\Services\DogService;
+use Modules\Fields\Services\FieldService;
 use Modules\Fields\Services\HarvestDetailService;
 use Modules\Fields\Services\HarvestService;
+use Modules\Fields\Services\PlantService;
+use Modules\Fields\Services\QuarterService;
+use Modules\Users\Services\UserService;
 
 class HarvestsController extends Controller
 {
@@ -23,6 +27,11 @@ class HarvestsController extends Controller
     public function __construct(
         private readonly HarvestService $harvests,
         private readonly HarvestDetailService $harvestDetails,
+        private readonly FieldService $fields,
+        private readonly QuarterService $quarters,
+        private readonly DogService $dogs,
+        private readonly PlantService $plants,
+        private readonly UserService $users,
     ) {
         $this->setupPermissionMiddleware();
     }
@@ -41,9 +50,9 @@ class HarvestsController extends Controller
             'summary' => $payload['summary'],
             'harvest_available_years' => $this->harvests->availableYears(),
             'harvest_available_weeks' => $this->harvests->availableWeeks(),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter'),
-            'users' => ListEntity::call('user'),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->forSelect(),
+            'users' => $this->users->responsibles(),
         ]);
     }
 
@@ -53,10 +62,10 @@ class HarvestsController extends Controller
     public function create()
     {
         return Inertia::render('Fields::Harvests/Create', [
-            'quarters' => ListEntity::call('quarterMultiselect'),
-            'dogs' => ListEntity::call('dog'),
-            'users' => ListEntity::call('user'),
-            'plant_codes' => ListEntity::call('plant'),
+            'quarters' => $this->quarters->quartersByFieldGrouped(),
+            'dogs' => $this->dogs->forSelect(),
+            'users' => $this->users->responsibles(),
+            'plant_codes' => $this->plants->forSelect(),
             'qualities' => $this->harvestDetails->qualities('select'),
         ]);
     }
@@ -85,10 +94,10 @@ class HarvestsController extends Controller
 
         return Inertia::render('Fields::Harvests/Show', [
             'data' => new HarvestResource($harvest),
-            'quarters' => ListEntity::call('quarterMultiselect'),
-            'dogs' => ListEntity::call('dog'),
-            'users' => ListEntity::call('user'),
-            'plant_codes' => ListEntity::call('plant'),
+            'quarters' => $this->quarters->quartersByFieldGrouped(),
+            'dogs' => $this->dogs->forSelect(),
+            'users' => $this->users->responsibles(),
+            'plant_codes' => $this->plants->forSelect(),
             'qualities' => $this->harvestDetails->qualities('select'),
         ]);
     }
@@ -102,10 +111,10 @@ class HarvestsController extends Controller
 
         return Inertia::render('Fields::Harvests/Edit', [
             'data' => new HarvestResource($harvest),
-            'quarters' => ListEntity::call('quarterMultiselect'),
-            'dogs' => ListEntity::call('dog'),
-            'users' => ListEntity::call('user'),
-            'plant_codes' => ListEntity::call('plant'),
+            'quarters' => $this->quarters->quartersByFieldGrouped(),
+            'dogs' => $this->dogs->forSelect(),
+            'users' => $this->users->responsibles(),
+            'plant_codes' => $this->plants->forSelect(),
             'qualities' => $this->harvestDetails->qualities('select'),
         ]);
     }
@@ -149,7 +158,7 @@ class HarvestsController extends Controller
             'unprocessed_details' => session('unprocessed_details', []),
             'error_message' => session('error_message', ''),
             'import_errors' => session('import_errors', []),
-            'harvests' => ListEntity::call('harvest'),
+            'harvests' => $this->harvests->forSelect(),
             'harvest_available_years' => $this->harvests->availableYears(),
         ]);
     }
