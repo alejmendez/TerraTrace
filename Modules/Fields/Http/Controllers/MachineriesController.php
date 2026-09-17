@@ -8,17 +8,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreMachineryRequest;
 use Modules\Fields\Http\Requests\UpdateMachineryRequest;
 use Modules\Fields\Http\Resources\MachineryResource;
-use Modules\Fields\Services\Machineries\CreateMachinery;
-use Modules\Fields\Services\Machineries\DeleteMachinery;
-use Modules\Fields\Services\Machineries\FindMachinery;
-use Modules\Fields\Services\Machineries\ListMachinery;
-use Modules\Fields\Services\Machineries\UpdateMachinery;
+use Modules\Fields\Services\MachineryService;
 
 class MachineriesController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly MachineryService $machineries)
     {
         $this->setupPermissionMiddleware();
     }
@@ -28,7 +24,7 @@ class MachineriesController extends Controller
      */
     public function index()
     {
-        $payload = ListMachinery::collection(request()->all());
+        $payload = $this->machineries->collection(request()->all());
 
         return Inertia::render('Fields::Machineries/List', [
             'toast' => session('toast'),
@@ -51,7 +47,7 @@ class MachineriesController extends Controller
      */
     public function store(StoreMachineryRequest $request)
     {
-        CreateMachinery::call($request->validated());
+        $this->machineries->create($request->validated());
 
         return redirect()->route('machineries.index')->with('toast', [
             'severity' => 'success',
@@ -66,7 +62,7 @@ class MachineriesController extends Controller
      */
     public function show(string $id)
     {
-        $machinery = FindMachinery::call($id);
+        $machinery = $this->machineries->find($id);
 
         return Inertia::render('Fields::Machineries/Show', [
             'data' => new MachineryResource($machinery),
@@ -78,7 +74,7 @@ class MachineriesController extends Controller
      */
     public function edit(string $id)
     {
-        $machinery = FindMachinery::call($id);
+        $machinery = $this->machineries->find($id);
 
         return Inertia::render('Fields::Machineries/Edit', [
             'data' => new MachineryResource($machinery),
@@ -90,7 +86,7 @@ class MachineriesController extends Controller
      */
     public function update(UpdateMachineryRequest $request, string $id)
     {
-        UpdateMachinery::call($id, $request->validated());
+        $this->machineries->update($id, $request->validated());
 
         return redirect()->route('machineries.index')->with('toast', [
             'severity' => 'success',
@@ -105,7 +101,7 @@ class MachineriesController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteMachinery::call($id);
+        $this->machineries->delete($id);
 
         return response()->noContent();
     }
