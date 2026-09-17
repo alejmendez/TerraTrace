@@ -4,19 +4,25 @@ namespace Modules\Fields\Http\Controllers;
 
 use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreQuarterRequest;
 use Modules\Fields\Http\Requests\UpdateQuarterRequest;
 use Modules\Fields\Http\Resources\QuarterResource;
+use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\HarvestService;
 use Modules\Fields\Services\QuarterService;
+use Modules\Users\Services\UserService;
 
 class QuartersController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly QuarterService $quarters)
-    {
+    public function __construct(
+        private readonly QuarterService $quarters,
+        private readonly FieldService $fields,
+        private readonly HarvestService $harvests,
+        private readonly UserService $users,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -37,7 +43,7 @@ class QuartersController extends Controller
 
         return Inertia::render('Fields::Quarters/List', [
             'toast' => session('toast'),
-            'fields' => ListEntity::call('field'),
+            'fields' => $this->fields->forSelect(),
         ]);
     }
 
@@ -47,8 +53,8 @@ class QuartersController extends Controller
     public function create()
     {
         return Inertia::render('Fields::Quarters/Create', [
-            'fields' => ListEntity::call('field'),
-            'responsibles' => ListEntity::call('responsible'),
+            'fields' => $this->fields->forSelect(),
+            'responsibles' => $this->users->responsibles(),
         ]);
     }
 
@@ -80,12 +86,12 @@ class QuartersController extends Controller
         return Inertia::render('Fields::Quarters/Show', [
             'data' => new QuarterResource($quarter),
             'current_tab' => $current_tab,
-            'harvest_available_years' => ListEntity::call('harvest_available_years'),
-            'harvest_available_weeks' => ListEntity::call('harvest_available_weeks'),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter'),
-            'users' => ListEntity::call('user'),
-            'scale_types' => ListEntity::call('scale_type'),
+            'harvest_available_years' => $this->harvests->availableYears(),
+            'harvest_available_weeks' => $this->harvests->availableWeeks(),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->forSelect(),
+            'users' => $this->users->responsibles(),
+            'scale_types' => $this->scaleTypesForSelect(),
         ]);
     }
 
@@ -98,8 +104,8 @@ class QuartersController extends Controller
 
         return Inertia::render('Fields::Quarters/Edit', [
             'data' => new QuarterResource($quarter),
-            'fields' => ListEntity::call('field'),
-            'responsibles' => ListEntity::call('responsible'),
+            'fields' => $this->fields->forSelect(),
+            'responsibles' => $this->users->responsibles(),
         ]);
     }
 
@@ -140,6 +146,19 @@ class QuartersController extends Controller
         $this->quarters->updatePlantPositions($id, request('data', []));
 
         return response()->noContent();
+    }
+
+    /**
+     * Static scale-type option list from translations. Kept on the
+     * controller because the values are fixed and promoting to a
+     * dedicated service would be over-engineering.
+     */
+    private function scaleTypesForSelect(): array
+    {
+        return [
+            ['value' => 'weight', 'text' => trans('quarter.show.statistics.scale_type.options.weight')],
+            ['value' => 'quantity', 'text' => trans('quarter.show.statistics.scale_type.options.quantity')],
+        ];
     }
 
     protected function storeBlueprint(UpdateQuarterRequest|StoreQuarterRequest $request)
