@@ -18,6 +18,47 @@ class TaskService
 
     public function __construct(private readonly TaskCommentService $taskComments) {}
 
+    /**
+     * Tasks-owned select options. Source: config/tasks.php.
+     *
+     * These used to be registered in EntityRegistry via
+     * TasksServiceProvider; moved here per the cross-module pattern
+     * (each module is the owner of its own lists, AGENTS.md §4).
+     * Cross-module lists (field, quarter, plant, user, tool, etc.)
+     * still resolve through EntityRegistry / ListEntity.
+     */
+    public function priorities(): array
+    {
+        return collect(config('tasks.priorities'))->map(fn ($priority) => [
+            'value' => $priority,
+            'text' => __("task.form.priority.options.{$priority}"),
+        ])->values()->toArray();
+    }
+
+    public function states(): array
+    {
+        return collect(config('tasks.states'))->map(fn ($state) => [
+            'value' => $state,
+            'text' => __("task.form.status.options.{$state}"),
+        ])->values()->toArray();
+    }
+
+    public function repeatTypes(): array
+    {
+        return collect(config('tasks.repeat_type'))->map(fn ($type) => [
+            'value' => $type,
+            'text' => __("task.form.repeat_type.options.{$type}"),
+        ])->values()->toArray();
+    }
+
+    public function suppliesUnits(): array
+    {
+        return collect(config('tasks.supplies_units'))->map(fn ($unit) => [
+            'value' => $unit,
+            'text' => __("task.form.supplies.unit.options.{$unit}"),
+        ])->values()->toArray();
+    }
+
     public function create(array $data): Task
     {
         DB::beginTransaction();

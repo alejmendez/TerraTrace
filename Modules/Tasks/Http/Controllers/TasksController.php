@@ -33,8 +33,8 @@ class TasksController extends Controller
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
             'responsibles' => ListEntity::call('responsible'),
-            'task_priorities' => ListEntity::call('task_priorities'),
-            'task_states' => ListEntity::call('task_states'),
+            'task_priorities' => $this->tasks->priorities(),
+            'task_states' => $this->tasks->states(),
         ]);
     }
 
@@ -49,10 +49,10 @@ class TasksController extends Controller
             'tools' => ListEntity::call('tool'),
             'security_equipments' => ListEntity::call('security_equipment'),
             'machineries' => ListEntity::call('machinery'),
-            'task_priorities' => ListEntity::call('task_priorities'),
-            'task_states' => ListEntity::call('task_states'),
-            'task_repeat_type' => ListEntity::call('task_repeat_type'),
-            'task_supplies_units' => ListEntity::call('task_supplies_units'),
+            'task_priorities' => $this->tasks->priorities(),
+            'task_states' => $this->tasks->states(),
+            'task_repeat_type' => $this->tasks->repeatTypes(),
+            'task_supplies_units' => $this->tasks->suppliesUnits(),
         ]);
     }
 
@@ -89,10 +89,10 @@ class TasksController extends Controller
             'tools' => ListEntity::call('tool'),
             'security_equipments' => ListEntity::call('security_equipment'),
             'machineries' => ListEntity::call('machinery'),
-            'task_priorities' => ListEntity::call('task_priorities'),
-            'task_states' => ListEntity::call('task_states'),
-            'task_repeat_type' => ListEntity::call('task_repeat_type'),
-            'task_supplies_units' => ListEntity::call('task_supplies_units'),
+            'task_priorities' => $this->tasks->priorities(),
+            'task_states' => $this->tasks->states(),
+            'task_repeat_type' => $this->tasks->repeatTypes(),
+            'task_supplies_units' => $this->tasks->suppliesUnits(),
             'current_tab' => $current_tab,
         ]);
     }
@@ -113,10 +113,10 @@ class TasksController extends Controller
             'tools' => ListEntity::call('tool'),
             'security_equipments' => ListEntity::call('security_equipment'),
             'machineries' => ListEntity::call('machinery'),
-            'task_priorities' => ListEntity::call('task_priorities'),
-            'task_states' => ListEntity::call('task_states'),
-            'task_repeat_type' => ListEntity::call('task_repeat_type'),
-            'task_supplies_units' => ListEntity::call('task_supplies_units'),
+            'task_priorities' => $this->tasks->priorities(),
+            'task_states' => $this->tasks->states(),
+            'task_repeat_type' => $this->tasks->repeatTypes(),
+            'task_supplies_units' => $this->tasks->suppliesUnits(),
         ]);
     }
 
