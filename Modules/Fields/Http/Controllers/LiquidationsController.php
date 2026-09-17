@@ -9,17 +9,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreLiquidationRequest;
 use Modules\Fields\Http\Requests\UpdateLiquidationRequest;
 use Modules\Fields\Http\Resources\LiquidationResource;
-use Modules\Fields\Services\Liquidations\CreateLiquidation;
-use Modules\Fields\Services\Liquidations\DeleteLiquidation;
-use Modules\Fields\Services\Liquidations\FindLiquidation;
-use Modules\Fields\Services\Liquidations\ListLiquidation;
-use Modules\Fields\Services\Liquidations\UpdateLiquidation;
+use Modules\Fields\Services\LiquidationService;
 
 class LiquidationsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly LiquidationService $liquidations)
     {
         $this->setupPermissionMiddleware();
     }
@@ -29,7 +25,7 @@ class LiquidationsController extends Controller
      */
     public function index()
     {
-        $payload = ListLiquidation::collection(request()->all());
+        $payload = $this->liquidations->collection(request()->all());
 
         return Inertia::render('Fields::Liquidations/List', [
             'toast' => session('toast'),
@@ -37,7 +33,7 @@ class LiquidationsController extends Controller
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
             'importers' => ListEntity::call('importer'),
-            'liquidation_available_years' => ListEntity::call('liquidation_available_years'),
+            'liquidation_available_years' => $this->liquidations->availableYears(),
         ]);
     }
 
@@ -58,7 +54,7 @@ class LiquidationsController extends Controller
      */
     public function store(StoreLiquidationRequest $request)
     {
-        CreateLiquidation::call($request->validated());
+        $this->liquidations->create($request->validated());
 
         return redirect()->route('liquidations.index')->with('toast', [
             'severity' => 'success',
@@ -73,7 +69,7 @@ class LiquidationsController extends Controller
      */
     public function show(string $id)
     {
-        $liquidation = FindLiquidation::call($id);
+        $liquidation = $this->liquidations->find($id);
 
         return Inertia::render('Fields::Liquidations/Show', [
             'data' => new LiquidationResource($liquidation),
@@ -88,7 +84,7 @@ class LiquidationsController extends Controller
      */
     public function edit(string $id)
     {
-        $liquidation = FindLiquidation::call($id);
+        $liquidation = $this->liquidations->find($id);
 
         return Inertia::render('Fields::Liquidations/Edit', [
             'data' => new LiquidationResource($liquidation),
@@ -103,7 +99,7 @@ class LiquidationsController extends Controller
      */
     public function update(UpdateLiquidationRequest $request, string $id)
     {
-        UpdateLiquidation::call($id, $request->validated());
+        $this->liquidations->update($id, $request->validated());
 
         return redirect()->route('liquidations.index')->with('toast', [
             'severity' => 'success',
@@ -118,7 +114,7 @@ class LiquidationsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteLiquidation::call($id);
+        $this->liquidations->delete($id);
 
         return response()->noContent();
     }
