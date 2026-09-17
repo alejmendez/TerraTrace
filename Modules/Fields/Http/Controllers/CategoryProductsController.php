@@ -8,17 +8,13 @@ use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreCategoryProductRequest;
 use Modules\Fields\Http\Requests\UpdateCategoryProductRequest;
-use Modules\Fields\Services\CategoryProducts\CreateCategoryProduct;
-use Modules\Fields\Services\CategoryProducts\DeleteCategoryProduct;
-use Modules\Fields\Services\CategoryProducts\FindCategoryProduct;
-use Modules\Fields\Services\CategoryProducts\ListCategoryProduct;
-use Modules\Fields\Services\CategoryProducts\UpdateCategoryProduct;
+use Modules\Fields\Services\CategoryProductService;
 
 class CategoryProductsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly CategoryProductService $categoryProducts)
     {
         $this->setupPermissionMiddleware();
     }
@@ -28,7 +24,7 @@ class CategoryProductsController extends Controller
      */
     public function index()
     {
-        $payload = ListCategoryProduct::collection(request()->all());
+        $payload = $this->categoryProducts->collection(request()->all());
 
         return Inertia::render('Fields::CategoryProducts/List', [
             'toast' => session('toast'),
@@ -52,7 +48,7 @@ class CategoryProductsController extends Controller
      */
     public function store(StoreCategoryProductRequest $request)
     {
-        CreateCategoryProduct::call($request->validated());
+        $this->categoryProducts->create($request->validated());
 
         return redirect()->route('category_products.index')->with('toast', [
             'severity' => 'success',
@@ -67,7 +63,7 @@ class CategoryProductsController extends Controller
      */
     public function edit(string $id)
     {
-        $categoryProduct = FindCategoryProduct::call($id);
+        $categoryProduct = $this->categoryProducts->find($id);
 
         return Inertia::render('Fields::CategoryProducts/Edit', [
             'data' => $categoryProduct,
@@ -79,7 +75,7 @@ class CategoryProductsController extends Controller
      */
     public function update(UpdateCategoryProductRequest $request, string $id)
     {
-        UpdateCategoryProduct::call($id, $request->validated());
+        $this->categoryProducts->update($id, $request->validated());
 
         return redirect()->route('category_products.index')->with('toast', [
             'severity' => 'success',
@@ -94,7 +90,7 @@ class CategoryProductsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteCategoryProduct::call($id);
+        $this->categoryProducts->delete($id);
 
         return response()->noContent();
     }

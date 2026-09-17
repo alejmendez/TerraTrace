@@ -1,27 +1,58 @@
 <?php
 
-namespace Modules\Fields\Services\CategoryProducts;
+namespace Modules\Fields\Services;
 
 use Modules\Core\Services\PrimevueDatatables;
 use Modules\Fields\Models\CategoryProduct;
 
-class ListCategoryProduct
+class CategoryProductService
 {
-    public static function call($params = [])
+    private const SEARCHABLE_COLUMNS = ['name', 'is_commercial'];
+
+    public function find(string|int $id): CategoryProduct
     {
-        $searchableColumns = ['name', 'is_commercial'];
-
-        $query = CategoryProduct::query();
-
-        $datatable = new PrimevueDatatables($params, $searchableColumns);
-        $categoryProducts = $datatable->of($query)->make();
-
-        return $categoryProducts;
+        return CategoryProduct::findOrFail($id);
     }
 
-    public static function collection(array $params = []): array
+    public function create(array $data): CategoryProduct
     {
-        $query = CategoryProduct::query()->select('category_products.id', 'category_products.name', 'category_products.is_commercial')->withCount('liquidationProducts');
+        $categoryProduct = new CategoryProduct;
+        $categoryProduct->name = $data['name'];
+        $categoryProduct->is_commercial = $data['is_commercial'];
+        $categoryProduct->save();
+
+        return $categoryProduct;
+    }
+
+    public function update(string|int $id, array $data): CategoryProduct
+    {
+        $categoryProduct = CategoryProduct::findOrFail($id);
+
+        $categoryProduct->name = $data['name'];
+        $categoryProduct->is_commercial = $data['is_commercial'];
+        $categoryProduct->save();
+
+        return $categoryProduct;
+    }
+
+    public function delete(string|int $id): void
+    {
+        CategoryProduct::destroy($id);
+    }
+
+    public function list(array $params = []): mixed
+    {
+        $query = CategoryProduct::query();
+        $datatable = new PrimevueDatatables($params, self::SEARCHABLE_COLUMNS);
+
+        return $datatable->of($query)->make();
+    }
+
+    public function collection(array $params = []): array
+    {
+        $query = CategoryProduct::query()
+            ->select('category_products.id', 'category_products.name', 'category_products.is_commercial')
+            ->withCount('liquidationProducts');
 
         $search = trim($params['q'] ?? '');
 
