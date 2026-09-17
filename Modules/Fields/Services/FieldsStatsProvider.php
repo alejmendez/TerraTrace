@@ -4,7 +4,6 @@ namespace Modules\Fields\Services;
 
 use Modules\Fields\Models\Field;
 use Modules\Fields\Models\Liquidation;
-use Modules\Fields\Services\Harvests\HarvestAvailableLastYear;
 
 /**
  * Cross-module "stats" provider for the Fields domain.
@@ -23,6 +22,8 @@ use Modules\Fields\Services\Harvests\HarvestAvailableLastYear;
  */
 class FieldsStatsProvider
 {
+    public function __construct(private readonly HarvestService $harvests) {}
+
     /**
      * Locate a field by id, eager-loading the relations Dashboard needs.
      *
@@ -50,7 +51,7 @@ class FieldsStatsProvider
      */
     public function harvestStatsForField(Field $field): array
     {
-        $currentYear = (int) HarvestAvailableLastYear::call();
+        $currentYear = (int) $this->harvests->lastYear();
         $lastYear = $currentYear - 1;
 
         $currentYearWeight = (float) $this->liquidationWeightSumForYear($field, $currentYear);

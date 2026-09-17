@@ -14,9 +14,8 @@ use Modules\Fields\Models\PlantType;
 use Modules\Fields\Models\Quarter;
 use Modules\Fields\Models\SecurityEquipment;
 use Modules\Fields\Models\Tool;
-use Modules\Fields\Services\Harvests\HarvestAvailableWeeks;
-use Modules\Fields\Services\Harvests\HarvestAvailableYears;
-use Modules\Fields\Services\Liquidations\LiquidationAvailableYears;
+use Modules\Fields\Services\HarvestService;
+use Modules\Fields\Services\LiquidationService;
 
 /**
  * Centralised entity registrations for the Fields module.
@@ -97,10 +96,12 @@ class EntityRegistrations
                 ->toArray();
         });
 
-        // Aggregations provided by dedicated services.
-        EntityRegistry::register('harvest_available_years', null, static fn () => HarvestAvailableYears::call());
-        EntityRegistry::register('harvest_available_weeks', null, static fn () => HarvestAvailableWeeks::call());
-        EntityRegistry::register('liquidation_available_years', null, static fn () => LiquidationAvailableYears::call());
+        // Aggregations provided by dedicated services. The closures
+        // resolve the singleton through the container so they don't
+        // need a static helper class.
+        EntityRegistry::register('harvest_available_years', null, static fn () => app(HarvestService::class)->availableYears());
+        EntityRegistry::register('harvest_available_weeks', null, static fn () => app(HarvestService::class)->availableWeeks());
+        EntityRegistry::register('liquidation_available_years', null, static fn () => app(LiquidationService::class)->availableYears());
 
         // Static option lists from translations.
         EntityRegistry::register('scale_type', null, static fn () => [

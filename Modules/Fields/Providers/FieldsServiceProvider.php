@@ -4,6 +4,7 @@ namespace Modules\Fields\Providers;
 
 use Modules\Core\Providers\CoreServiceProvider;
 use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\GraphDataService;
 use Modules\Fields\Services\HarvestService;
 use Modules\Fields\Services\LiquidationService;
 use Modules\Fields\Services\OwnerService;
@@ -27,6 +28,7 @@ class FieldsServiceProvider extends CoreServiceProvider
         $this->app->singleton(QuarterService::class);
         $this->app->singleton(HarvestService::class);
         $this->app->singleton(LiquidationService::class);
+        $this->app->singleton(GraphDataService::class);
 
         EntityRegistrations::register();
     }
