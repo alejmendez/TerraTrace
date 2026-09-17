@@ -3,8 +3,8 @@
 namespace Modules\Users\Http\Controllers;
 
 use Inertia\Inertia;
+use Modules\Auth\Services\AuthService;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Users\Http\Requests\StoreUserRequest;
 use Modules\Users\Http\Requests\UpdateUserRequest;
@@ -15,8 +15,10 @@ class UsersController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly UserService $userService)
-    {
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly AuthService $auth,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -32,7 +34,7 @@ class UsersController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'roles' => ListEntity::call('role'),
+            'roles' => $this->auth->roles(),
         ]);
     }
 
@@ -42,7 +44,7 @@ class UsersController extends Controller
     public function create()
     {
         return Inertia::render('Users::Create', [
-            'roles' => ListEntity::call('role'),
+            'roles' => $this->auth->roles(),
         ]);
     }
 
@@ -86,7 +88,7 @@ class UsersController extends Controller
 
         return Inertia::render('Users::Edit', [
             'data' => new UserResource($user),
-            'roles' => ListEntity::call('role'),
+            'roles' => $this->auth->roles(),
         ]);
     }
 

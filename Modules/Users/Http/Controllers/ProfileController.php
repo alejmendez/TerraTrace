@@ -7,26 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Modules\Auth\Services\AuthService;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Users\Http\Requests\ProfileUpdateRequest;
 use Modules\Users\Http\Resources\UserResource;
 use Modules\Users\Services\UserService;
 
 class ProfileController extends Controller
 {
-    protected $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly AuthService $auth,
+    ) {}
 
     public function edit(Request $request): Response
     {
         return Inertia::render('Users::Profile/Edit', [
             'data' => new UserResource($request->user()),
-            'roles' => ListEntity::call('role'),
+            'roles' => $this->auth->roles(),
             'toast' => session('toast'),
         ]);
     }
