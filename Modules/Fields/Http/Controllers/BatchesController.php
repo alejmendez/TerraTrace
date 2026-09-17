@@ -9,18 +9,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreBatchRequest;
 use Modules\Fields\Http\Requests\UpdateBatchRequest;
 use Modules\Fields\Http\Resources\BatchResource;
-use Modules\Fields\Models\Harvest;
-use Modules\Fields\Services\Batches\CreateBatch;
-use Modules\Fields\Services\Batches\DeleteBatch;
-use Modules\Fields\Services\Batches\FindBatch;
-use Modules\Fields\Services\Batches\ListBatch;
-use Modules\Fields\Services\Batches\UpdateBatch;
+use Modules\Fields\Services\BatchService;
 
 class BatchesController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly BatchService $batches)
     {
         $this->setupPermissionMiddleware();
     }
@@ -30,7 +25,7 @@ class BatchesController extends Controller
      */
     public function index()
     {
-        $payload = ListBatch::collection(request()->all());
+        $payload = $this->batches->collection(request()->all());
 
         return Inertia::render('Fields::Batches/List', [
             'toast' => session('toast'),
@@ -48,7 +43,7 @@ class BatchesController extends Controller
     {
         return Inertia::render('Fields::Batches/Create', [
             'importers' => ListEntity::call('importer'),
-            'harvests' => $this->getHarvests(),
+            'harvests' => $this->batches->availableHarvests(),
         ]);
     }
 
@@ -57,7 +52,7 @@ class BatchesController extends Controller
      */
     public function store(StoreBatchRequest $request)
     {
-        CreateBatch::call($request->validated());
+        $this->batches->create($request->validated());
 
         return redirect()->route('batches.index')->with('toast', [
             'severity' => 'success',
@@ -72,7 +67,7 @@ class BatchesController extends Controller
      */
     public function show(string $id)
     {
-        $batch = FindBatch::call($id);
+        $batch = $this->batches->find($id);
 
         if (request()->exists('print')) {
             return new BatchResource($batch);
@@ -80,7 +75,7 @@ class BatchesController extends Controller
 
         return Inertia::render('Fields::Batches/Show', [
             'importers' => ListEntity::call('importer'),
-            'harvests' => $this->getHarvests($id),
+            'harvests' => $this->batches->availableHarvests($id),
         ]);
     }
 
@@ -89,12 +84,12 @@ class BatchesController extends Controller
      */
     public function edit(string $id)
     {
-        $batch = FindBatch::call($id);
+        $batch = $this->batches->find($id);
 
         return Inertia::render('Fields::Batches/Edit', [
             'data' => new BatchResource($batch),
             'importers' => ListEntity::call('importer'),
-            'harvests' => $this->getHarvests($id),
+            'harvests' => $this->batches->availableHarvests($id),
         ]);
     }
 
@@ -103,7 +98,7 @@ class BatchesController extends Controller
      */
     public function update(UpdateBatchRequest $request, string $id)
     {
-        UpdateBatch::call($id, $request->validated());
+        $this->batches->update($id, $request->validated());
 
         return redirect()->route('batches.index')->with('toast', [
             'severity' => 'success',
@@ -118,35 +113,8 @@ class BatchesController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteBatch::call($id);
+        $this->batches->delete($id);
 
         return response()->noContent();
-    }
-
-    protected function getHarvests($batch_id = null)
-    {
-        return Harvest::select('year')->distinct()->orderBy('year', 'desc')->get()->map(function ($harvest) use ($batch_id) {
-            $harvests = Harvest::select('id', 'week', 'batch')
-                ->where('year', $harvest->year)
-                ->whereDoesntHave('batches', function ($query) use ($batch_id) {
-                    if ($batch_id) {
-                        $query->where('batch_id', '!=', $batch_id);
-                    }
-                })
-                ->orderBy('date', 'desc')
-                ->get();
-
-            return [
-                'items' => $harvests->map(function ($harvest) {
-                    return [
-                        'value' => $harvest->id,
-                        'label' => __('harvest.form.batch.renderText', ['week' => $harvest->week, 'batch' => $harvest->batch]),
-                    ];
-                }),
-                'label' => $harvest->year,
-            ];
-        })->filter(function ($harvest) {
-            return $harvest['items']->isNotEmpty();
-        })->values();
     }
 }
