@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private ShowDashboard $dashboard)
     {
         $this->setupPermissionMiddleware();
     }
@@ -20,7 +20,7 @@ class DashboardController extends Controller
     public function index()
     {
         $field_id = request('field_id');
-        $data = ShowDashboard::call($field_id);
+        $data = $this->dashboard->call($field_id);
         $data['field'] = new FieldResource($data['field']);
 
         return Inertia::render('Dashboard::Index', $data);
