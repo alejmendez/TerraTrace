@@ -6,14 +6,13 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StorePlantDetailRequest;
 use Modules\Fields\Http\Resources\PlantDetailCollection;
-use Modules\Fields\Services\PlantDetails\CreatePlantDetails;
-use Modules\Fields\Services\PlantDetails\FindPlantDetails;
+use Modules\Fields\Services\PlantDetailService;
 
 class PlantDetailsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly PlantDetailService $plantDetails)
     {
         $this->setupPermissionMiddleware();
     }
@@ -28,36 +27,42 @@ class PlantDetailsController extends Controller
         $data['trunk_sanitation_photo'] = $this->storeFile($request, 'trunk_sanitation_photo');
         $data['soil_sanitation_photo'] = $this->storeFile($request, 'soil_sanitation_photo');
 
-        CreatePlantDetails::call($data);
+        $this->plantDetails->create($data);
 
         return redirect()->back()->with('success', 'Variables agregadas correctamente');
     }
 
     public function index(int $id)
     {
-        $show_harvests = request('show_harvests') === 'true';
-        $year = request('year');
-        $plant_details = FindPlantDetails::get_by_plant_id($id, $year, $show_harvests);
-
-        return new PlantDetailCollection($plant_details);
+        return new PlantDetailCollection(
+            $this->plantDetails->getByPlant(
+                $id,
+                request('year'),
+                request('show_harvests') === 'true'
+            )
+        );
     }
 
     public function index_by_quarter(int $id)
     {
-        $show_harvests = request('show_harvests') === 'true';
-        $year = request('year');
-        $plant_details = FindPlantDetails::get_by_quarter_id($id, $year, $show_harvests);
-
-        return new PlantDetailCollection($plant_details);
+        return new PlantDetailCollection(
+            $this->plantDetails->getByQuarter(
+                $id,
+                request('year'),
+                request('show_harvests') === 'true'
+            )
+        );
     }
 
     public function index_by_field(int $id)
     {
-        $show_harvests = request('show_harvests') === 'true';
-        $year = request('year');
-        $plant_details = FindPlantDetails::get_by_field_id($id, $year, $show_harvests);
-
-        return new PlantDetailCollection($plant_details);
+        return new PlantDetailCollection(
+            $this->plantDetails->getByField(
+                $id,
+                request('year'),
+                request('show_harvests') === 'true'
+            )
+        );
     }
 
     protected function storeFile($request, $field)
