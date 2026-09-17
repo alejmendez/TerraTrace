@@ -7,11 +7,12 @@ use Modules\Core\Services\PrimevueDatatables;
 use Modules\Fields\Models\Field;
 use Modules\Fields\Models\Plant;
 use Modules\Fields\Models\Quarter;
-use Modules\Fields\Services\Owners\CreateOrUpdateOwner;
 
 class FieldService
 {
     private const SEARCHABLE_COLUMNS = ['name', 'location', 'size'];
+
+    public function __construct(private readonly OwnerService $owners) {}
 
     public function find(string|int $id): Field
     {
@@ -42,7 +43,7 @@ class FieldService
             $field->blueprint = $data['blueprint'];
 
             if (isset($data['owner_dni'])) {
-                $owner = CreateOrUpdateOwner::call($data['owner_dni'], $data['owner_name']);
+                $owner = $this->owners->createOrUpdate($data['owner_dni'], $data['owner_name']);
                 $field->owner_id = $owner->id;
             }
 
@@ -79,7 +80,7 @@ class FieldService
             $field->size = $data['size'];
 
             if (isset($data['owner_dni'])) {
-                $owner = CreateOrUpdateOwner::call($data['owner_dni'], $data['owner_name']);
+                $owner = $this->owners->createOrUpdate($data['owner_dni'], $data['owner_name']);
                 $field->owner_id = $owner->id;
             }
 

@@ -3,6 +3,8 @@
 namespace Modules\Fields\Providers;
 
 use Modules\Core\Providers\CoreServiceProvider;
+use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\OwnerService;
 
 class FieldsServiceProvider extends CoreServiceProvider
 {
@@ -11,6 +13,13 @@ class FieldsServiceProvider extends CoreServiceProvider
      */
     public function register(): void
     {
+        // FieldService and OwnerService are singletons: both are stateless
+        // and only carry collaborators (also singletons). Explicit
+        // registration keeps the wiring visible and prevents Laravel from
+        // rebuilding the dependency graph on every resolve.
+        $this->app->singleton(FieldService::class);
+        $this->app->singleton(OwnerService::class);
+
         EntityRegistrations::register();
     }
 

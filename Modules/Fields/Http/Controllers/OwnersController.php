@@ -7,17 +7,13 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreOwnerRequest;
 use Modules\Fields\Http\Requests\UpdateOwnerRequest;
-use Modules\Fields\Services\Owners\CreateOwner;
-use Modules\Fields\Services\Owners\DeleteOwner;
-use Modules\Fields\Services\Owners\FindOwner;
-use Modules\Fields\Services\Owners\ListOwner;
-use Modules\Fields\Services\Owners\UpdateOwner;
+use Modules\Fields\Services\OwnerService;
 
 class OwnersController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly OwnerService $owners)
     {
         $this->setupPermissionMiddleware();
     }
@@ -27,7 +23,7 @@ class OwnersController extends Controller
      */
     public function index()
     {
-        $payload = ListOwner::collection(request()->all());
+        $payload = $this->owners->collection(request()->all());
 
         return Inertia::render('Fields::Owners/List', [
             'toast' => session('toast'),
@@ -50,7 +46,7 @@ class OwnersController extends Controller
      */
     public function store(StoreOwnerRequest $request)
     {
-        CreateOwner::call($request->validated());
+        $this->owners->create($request->validated());
 
         return redirect()->route('owners.index')->with('toast', [
             'severity' => 'success',
@@ -65,7 +61,7 @@ class OwnersController extends Controller
      */
     public function edit(string $id)
     {
-        $owner = FindOwner::call($id);
+        $owner = $this->owners->find($id);
 
         return Inertia::render('Fields::Owners/Edit', [
             'data' => $owner,
@@ -77,7 +73,7 @@ class OwnersController extends Controller
      */
     public function update(UpdateOwnerRequest $request, string $id)
     {
-        UpdateOwner::call($id, $request->validated());
+        $this->owners->update($id, $request->validated());
 
         return redirect()->route('owners.index')->with('toast', [
             'severity' => 'success',
@@ -92,7 +88,7 @@ class OwnersController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteOwner::call($id);
+        $this->owners->delete($id);
 
         return response()->noContent();
     }
