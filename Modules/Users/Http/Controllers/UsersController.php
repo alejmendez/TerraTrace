@@ -9,18 +9,14 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Users\Http\Requests\StoreUserRequest;
 use Modules\Users\Http\Requests\UpdateUserRequest;
 use Modules\Users\Http\Resources\UserResource;
-use Modules\Users\Services\Users\ListUser;
 use Modules\Users\Services\UserService;
 
 class UsersController extends Controller
 {
     use HasPermissionMiddleware;
 
-    protected $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(private readonly UserService $userService)
     {
-        $this->userService = $userService;
         $this->setupPermissionMiddleware();
     }
 
@@ -29,7 +25,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $payload = ListUser::collection(request()->all());
+        $payload = $this->userService->collection(request()->all());
 
         return Inertia::render('Users::List', [
             'toast' => session('toast'),
