@@ -4,19 +4,25 @@ namespace Modules\Fields\Http\Controllers;
 
 use Inertia\Inertia;
 use Modules\Core\Http\Controllers\Controller;
-use Modules\Core\Services\ListEntity;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreFieldRequest;
 use Modules\Fields\Http\Requests\UpdateFieldRequest;
 use Modules\Fields\Http\Resources\FieldResource;
 use Modules\Fields\Services\FieldService;
+use Modules\Fields\Services\HarvestService;
+use Modules\Fields\Services\QuarterService;
+use Modules\Users\Services\UserService;
 
 class FieldsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct(private readonly FieldService $fields)
-    {
+    public function __construct(
+        private readonly FieldService $fields,
+        private readonly HarvestService $harvests,
+        private readonly QuarterService $quarters,
+        private readonly UserService $users,
+    ) {
         $this->setupPermissionMiddleware();
     }
 
@@ -77,11 +83,11 @@ class FieldsController extends Controller
         return Inertia::render('Fields::Fields/Show', [
             'current_tab' => $current_tab,
             'field' => new FieldResource($field),
-            'harvest_available_years' => ListEntity::call('harvest_available_years'),
-            'harvest_available_weeks' => ListEntity::call('harvest_available_weeks'),
-            'fields' => ListEntity::call('field'),
-            'quarters' => ListEntity::call('quarter'),
-            'users' => ListEntity::call('user'),
+            'harvest_available_years' => $this->harvests->availableYears(),
+            'harvest_available_weeks' => $this->harvests->availableWeeks(),
+            'fields' => $this->fields->forSelect(),
+            'quarters' => $this->quarters->forSelect(),
+            'users' => $this->users->responsibles(),
         ]);
     }
 
