@@ -2,6 +2,7 @@
 
 namespace Modules\Tasks\Http\Controllers;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Tasks\Http\Requests\StoreTaskCommentRequest;
@@ -41,7 +42,7 @@ class TaskCommentsController extends Controller
 
         // Verificar si el usuario actual es el propietario del comentario
         if ($taskComment->user_id !== auth()->id()) {
-            throw new \Illuminate\Auth\Access\AuthorizationException(
+            throw new AuthorizationException(
                 'No estás autorizado para actualizar este comentario.'
             );
         }

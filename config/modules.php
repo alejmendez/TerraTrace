@@ -1,12 +1,19 @@
 <?php
 
+use Modules\Auth\Providers\AuthServiceProvider;
+use Modules\Core\Providers\CoreServiceProvider;
+use Modules\Dashboard\Providers\DashboardServiceProvider;
+use Modules\Fields\Providers\FieldsServiceProvider;
+use Modules\Tasks\Providers\TasksServiceProvider;
+use Modules\Users\Providers\UsersServiceProvider;
+
 return [
     'providers' => [
-        Modules\Core\Providers\CoreServiceProvider::class,
-        Modules\Users\Providers\UsersServiceProvider::class,
-        Modules\Auth\Providers\AuthServiceProvider::class,
-        Modules\Dashboard\Providers\DashboardServiceProvider::class,
-        Modules\Fields\Providers\FieldsServiceProvider::class,
-        Modules\Tasks\Providers\TasksServiceProvider::class,
+        CoreServiceProvider::class,
+        UsersServiceProvider::class,
+        AuthServiceProvider::class,
+        DashboardServiceProvider::class,
+        FieldsServiceProvider::class,
+        TasksServiceProvider::class,
     ],
 ];

@@ -12,8 +12,11 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response(): void
     {
+        // The home route redirects to /login for guests (Breeze). The
+        // default Laravel example test expects a 200, which assumes a
+        // public landing page — TerraTrace doesn't have one.
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/login');
     }
 }

@@ -52,24 +52,27 @@ class UserService
         $user = User::findOrFail($id);
 
         $user->name = $data['name'];
-        $user->last_name = $data['last_name'];
-        $user->dni = $data['dni'];
+        // last_name / dni / phone are nullable in the schema; use null
+        // coalescing so the service tolerates partial updates (e.g. the
+        // Breeze-style profile tests that only send name + email).
+        $user->last_name = $data['last_name'] ?? null;
+        $user->dni = $data['dni'] ?? null;
         $user->email = $data['email'];
-        $user->phone = $data['phone'];
+        $user->phone = $data['phone'] ?? null;
 
-        if ($data['avatar']) {
+        if (! empty($data['avatar'])) {
             $user->avatar = $data['avatar'];
         }
 
-        if ($data['avatarRemove'] === '1') {
+        if (($data['avatarRemove'] ?? null) === '1') {
             $user->avatar = null;
         }
 
-        if ($data['password'] != '') {
+        if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
 
-        if ($user->email !== $data['email']) {
+        if ($user->getOriginal('email') !== $data['email']) {
             $user->email_verified_at = null;
         }
 

@@ -38,7 +38,7 @@ class ListQuarter
             });
         }
 
-        if (!empty($params['field_id'])) {
+        if (! empty($params['field_id'])) {
             $query->where('quarters.field_id', $params['field_id']);
         }
 

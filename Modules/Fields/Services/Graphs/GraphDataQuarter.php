@@ -2,6 +2,7 @@
 
 namespace Modules\Fields\Services\Graphs;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Fields\Models\Harvest;
@@ -23,7 +24,7 @@ class GraphDataQuarter
             default => [],
         };
 
-        if (is_array($typeQuery) || $typeQuery instanceof \Illuminate\Support\Collection) {
+        if (is_array($typeQuery) || $typeQuery instanceof Collection) {
             return $typeQuery;
         }
 

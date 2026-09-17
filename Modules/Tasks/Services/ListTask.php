@@ -47,15 +47,15 @@ class ListTask
             ->values()
             ->all();
 
-        if (!empty($statuses)) {
+        if (! empty($statuses)) {
             $query->whereIn('tasks.status', $statuses);
         }
 
-        if (!empty($params['priority'])) {
+        if (! empty($params['priority'])) {
             $query->where('tasks.priority', $params['priority']);
         }
 
-        if (!empty($params['responsible_id'])) {
+        if (! empty($params['responsible_id'])) {
             $query->where('tasks.responsible_id', $params['responsible_id']);
         }
 

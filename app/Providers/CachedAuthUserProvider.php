@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Modules\Users\Models\User;
 
@@ -15,7 +16,7 @@ class CachedAuthUserProvider extends EloquentUserProvider
 
     /**
      * @param  mixed  $identifier
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
      */
     public function retrieveById($identifier)
     {

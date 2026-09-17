@@ -54,11 +54,11 @@ class ListLiquidation
             });
         }
 
-        if (!empty($params['importer_id'])) {
+        if (! empty($params['importer_id'])) {
             $query->where('liquidations.importer_id', $params['importer_id']);
         }
 
-        if (!empty($params['year'])) {
+        if (! empty($params['year'])) {
             $query->whereYear('liquidations.delivery_date', $params['year']);
         }
 

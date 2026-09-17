@@ -51,7 +51,7 @@ class UpdateDog
             }
             $dog_vaccine = DogVaccine::where('id', $vaccine['id'])->first();
             if (! $dog_vaccine) {
-                $dog_vaccine = new DogVaccine();
+                $dog_vaccine = new DogVaccine;
             }
 
             $dog_vaccine->name = $vaccine['name'];

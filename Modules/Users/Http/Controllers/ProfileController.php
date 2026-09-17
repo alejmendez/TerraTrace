@@ -47,6 +47,10 @@ class ProfileController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
         $user = $request->user();
 
         Auth::logout();
@@ -56,7 +60,9 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        // Breeze's default test expects a redirect to `/`. The route
+        // name `home` resolves to the post-login landing (dashboard).
+        return redirect('/');
     }
 
     protected function storeAvatar(ProfileUpdateRequest $request)

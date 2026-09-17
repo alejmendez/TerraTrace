@@ -128,27 +128,27 @@ class ListHarvest
             });
         }
 
-        if (!empty($params['year'])) {
+        if (! empty($params['year'])) {
             $query->where('harvests.year', $params['year']);
         }
 
-        if (!empty($params['week'])) {
+        if (! empty($params['week'])) {
             $query->where('harvests.week', $params['week']);
         }
 
-        if (!empty($params['field_id'])) {
+        if (! empty($params['field_id'])) {
             $query->whereHas('details.quarter', function ($quarterQuery) use ($params) {
                 $quarterQuery->where('field_id', $params['field_id']);
             });
         }
 
-        if (!empty($params['quarter_id'])) {
+        if (! empty($params['quarter_id'])) {
             $query->whereHas('details', function ($detailQuery) use ($params) {
                 $detailQuery->where('quarter_id', $params['quarter_id']);
             });
         }
 
-        if (!empty($params['farmer_id'])) {
+        if (! empty($params['farmer_id'])) {
             $query->where('harvests.farmer_id', $params['farmer_id']);
         }
 

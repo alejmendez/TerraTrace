@@ -10,9 +10,9 @@ return new class extends Migration
     public function up(): void
     {
         DB::table('modules')->insert([
-            'name' => 'Dashboard',
-            'slug' => 'dashboard',
-            'description' => 'Dashboard module',
+            'name' => 'Auth',
+            'slug' => 'auth',
+            'description' => 'Auth module',
             'version' => '1.0.0',
             'is_active' => true,
         ]);
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::table('modules')->where('slug', 'dashboard')->delete();
+        DB::table('modules')->where('slug', 'auth')->delete();
     }
 };

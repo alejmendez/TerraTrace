@@ -2,6 +2,7 @@
 
 namespace Modules\Fields\Services\Graphs;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\Fields\Models\Field;
 use Modules\Fields\Models\Liquidation;
@@ -24,7 +25,7 @@ class GraphDataField
             default => [],
         };
 
-        if (is_array($typeQuery) || $typeQuery instanceof \Illuminate\Support\Collection) {
+        if (is_array($typeQuery) || $typeQuery instanceof Collection) {
             return $typeQuery;
         }
 

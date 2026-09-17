@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Fields\Models\Quarter;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Fields\Models\Quarter>
+ * @extends Factory<Quarter>
  */
 class QuarterFactory extends Factory
 {

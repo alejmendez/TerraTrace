@@ -7,7 +7,7 @@ use Modules\Fields\Models\Field;
 use Modules\Fields\Models\Owner;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Fields\Models\Field>
+ * @extends Factory<Field>
  */
 class FieldFactory extends Factory
 {

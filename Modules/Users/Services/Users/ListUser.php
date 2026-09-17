@@ -2,6 +2,7 @@
 
 namespace Modules\Users\Services\Users;
 
+use Illuminate\Support\Str;
 use Modules\Core\Services\PrimevueDatatables;
 use Modules\Users\Models\User;
 
@@ -40,7 +41,7 @@ class ListUser
             });
         }
 
-        if (!empty($params['role'])) {
+        if (! empty($params['role'])) {
             $query->whereHas('roles', function ($roleQuery) use ($params) {
                 $roleQuery->where('name', $params['role']);
             });
@@ -68,7 +69,7 @@ class ListUser
             $user->role = $firstRole ? [
                 'id' => $firstRole->id,
                 'name' => $firstRole->name,
-                'slug' => \Illuminate\Support\Str::slug($firstRole->name),
+                'slug' => Str::slug($firstRole->name),
             ] : null;
 
             return $user;

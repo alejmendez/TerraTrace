@@ -9,13 +9,12 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreBatchRequest;
 use Modules\Fields\Http\Requests\UpdateBatchRequest;
 use Modules\Fields\Http\Resources\BatchResource;
+use Modules\Fields\Models\Harvest;
 use Modules\Fields\Services\Batches\CreateBatch;
 use Modules\Fields\Services\Batches\DeleteBatch;
 use Modules\Fields\Services\Batches\FindBatch;
 use Modules\Fields\Services\Batches\ListBatch;
 use Modules\Fields\Services\Batches\UpdateBatch;
-use Modules\Fields\Models\Harvest;
-
 
 class BatchesController extends Controller
 {
@@ -124,7 +123,6 @@ class BatchesController extends Controller
         return response()->noContent();
     }
 
-
     protected function getHarvests($batch_id = null)
     {
         return Harvest::select('year')->distinct()->orderBy('year', 'desc')->get()->map(function ($harvest) use ($batch_id) {
@@ -137,6 +135,7 @@ class BatchesController extends Controller
                 })
                 ->orderBy('date', 'desc')
                 ->get();
+
             return [
                 'items' => $harvests->map(function ($harvest) {
                     return [

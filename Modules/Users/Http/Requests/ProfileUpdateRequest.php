@@ -15,12 +15,17 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->user()?->id;
+
         return [
             'name' => 'required|string|min:3|max:80',
-            'last_name' => 'required|min:3|max:80',
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:200', Rule::unique(User::class)->ignore($this->id)],
-            'dni' => ['required', 'regex:/^\d?\d\.\d{3}\.\d{3}\-[\d|k|K]$/', Rule::unique(User::class)->ignore($this->id)],
-            'phone' => 'required|min:11|max:20',
+            'last_name' => 'nullable|min:3|max:80',
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:200', Rule::unique(User::class)->ignore($userId)],
+            // dni / phone are nullable: collected later via the dedicated
+            // profile fields, not at basic profile-update time. The
+            // regex is enforced when present.
+            'dni' => ['nullable', 'regex:/^\d?\d\.\d{3}\.\d{3}\-[\d|k|K]$/', Rule::unique(User::class)->ignore($userId)],
+            'phone' => 'nullable|min:11|max:20',
             'password' => [],
             'avatar' => '',
             'avatarRemove' => 'boolean',

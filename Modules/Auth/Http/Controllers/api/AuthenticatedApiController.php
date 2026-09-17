@@ -2,11 +2,11 @@
 
 namespace Modules\Auth\Http\Controllers\Api;
 
-use Modules\Users\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Http\Controllers\Controller;
+use Modules\Users\Models\User;
 
 class AuthenticatedApiController extends Controller
 {

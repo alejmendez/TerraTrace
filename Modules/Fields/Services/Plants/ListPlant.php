@@ -45,21 +45,21 @@ class ListPlant
             });
         }
 
-        if (!empty($params['field_id'])) {
+        if (! empty($params['field_id'])) {
             $query->whereHas('quarter', function ($quarterQuery) use ($params) {
                 $quarterQuery->where('field_id', $params['field_id']);
             });
         }
 
-        if (!empty($params['quarter_id'])) {
+        if (! empty($params['quarter_id'])) {
             $query->where('plants.quarter_id', $params['quarter_id']);
         }
 
-        if (!empty($params['plant_type_id'])) {
+        if (! empty($params['plant_type_id'])) {
             $query->where('plants.plant_type_id', $params['plant_type_id']);
         }
 
-        if (!empty($params['responsible_id'])) {
+        if (! empty($params['responsible_id'])) {
             $query->whereHas('quarter', function ($quarterQuery) use ($params) {
                 $quarterQuery->where('responsible_id', $params['responsible_id']);
             });

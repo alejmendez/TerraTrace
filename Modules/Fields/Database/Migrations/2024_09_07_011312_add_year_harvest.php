@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -16,7 +17,7 @@ return new class extends Migration
         });
 
         DB::table('harvests')->get()->each(function ($harvest) {
-            $year = \Illuminate\Support\Carbon::parse($harvest->date)->year;
+            $year = Carbon::parse($harvest->date)->year;
             DB::table('harvests')
                 ->where('id', $harvest->id)
                 ->update(['year' => $year]);

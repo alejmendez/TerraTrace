@@ -2,7 +2,6 @@
 
 namespace Modules\Fields\Services\Harvests;
 
-use Modules\Fields\Models\Field;
 use Modules\Fields\Models\Harvest;
 
 class HarvestAvailableLastYear

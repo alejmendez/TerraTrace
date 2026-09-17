@@ -2,6 +2,7 @@
 
 namespace Modules\Tasks\Services;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Modules\Core\Models\Notification;
 use Modules\Tasks\Models\TaskComment;
 
@@ -13,7 +14,7 @@ class DeleteTaskComment
 
         // Verificar si el usuario actual es el propietario del comentario
         if ($taskComment->user_id !== auth()->id()) {
-            throw new \Illuminate\Auth\Access\AuthorizationException(
+            throw new AuthorizationException(
                 'No estás autorizado para eliminar este comentario.'
             );
         }

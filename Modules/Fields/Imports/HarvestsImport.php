@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Modules\Fields\Models\HarvestDetail;
 use Modules\Fields\Models\Plant;
-use Modules\Fields\Services\Plants\FindPlantByCode;
+use Modules\Fields\Services\PlantService;
 
 class HarvestsImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
 {
@@ -70,7 +70,7 @@ class HarvestsImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHea
 
     public function getPlantIdByCode($code)
     {
-        return optional(FindPlantByCode::call($code), fn (Plant $plant) => $plant->id);
+        return optional(app(PlantService::class)->findByCode($code), fn (Plant $plant) => $plant->id);
     }
 
     public function rules(): array

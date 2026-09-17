@@ -38,7 +38,7 @@ class ListBatch
             });
         }
 
-        if (!empty($params['importer_id'])) {
+        if (! empty($params['importer_id'])) {
             $query->where('batches.importer_id', $params['importer_id']);
         }
 

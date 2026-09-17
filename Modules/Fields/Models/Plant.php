@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Tasks\Models\Task;
 
 class Plant extends Model
 {
@@ -24,10 +23,10 @@ class Plant extends Model
         return $this->belongsTo(PlantType::class);
     }
 
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class);
-    }
+    // The previous `tasks()` belongsToMany was removed: it forced a
+    // Fields → Tasks cross-module dependency that nothing actually used.
+    // If a feature needs "plants in task X", expose it from Tasks via
+    // a service that depends on Fields rather than the reverse.
 
     public function harvest_details(): HasMany
     {

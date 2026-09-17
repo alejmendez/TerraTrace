@@ -49,15 +49,15 @@ class ListDog
             });
         }
 
-        if (!empty($params['field_id'])) {
+        if (! empty($params['field_id'])) {
             $query->where('dogs.field_id', $params['field_id']);
         }
 
-        if (!empty($params['gender'])) {
+        if (! empty($params['gender'])) {
             $query->where('dogs.gender', $params['gender']);
         }
 
-        if (!empty($params['couple_id'])) {
+        if (! empty($params['couple_id'])) {
             $query->where('dogs.couple_id', $params['couple_id']);
         }
 

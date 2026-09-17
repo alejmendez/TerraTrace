@@ -2,12 +2,11 @@
 
 namespace Modules\Tasks\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Modules\Tasks\Models\SupplyTask;
 use Modules\Tasks\Models\Task;
 use Modules\Tasks\Models\TaskCorrelative;
-use Modules\Tasks\Models\TaskComment;
-use Carbon\Carbon;
 
 class CreateTask
 {

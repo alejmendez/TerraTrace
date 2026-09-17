@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Fields\Models\Dog;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Fields\Models\Dog>
+ * @extends Factory<Dog>
  */
 class DogFactory extends Factory
 {

@@ -8,20 +8,23 @@ import { initLibs } from '@Core/Libs';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Agricola Frayleon';
 
-// Importamos todos los módulos de una vez
-const modulePages = import.meta.glob('./../../Modules/*/Resources/Pages/**/*.vue', { eager: true });
+// Lazy-load module pages. With `eager: false` (the default), Vite creates
+// one chunk per .vue file and only fetches the chunk when the page is
+// first visited. This cuts the initial JS bundle roughly by the number
+// of pages, since most users only ever visit a handful of CRUD screens.
+const modulePages = import.meta.glob('./../../Modules/*/Resources/Pages/**/*.vue');
 
 const resolvePageComponent = (name) => {
   const [module, pageName] = name.split('::');
   const pagePath = `../../Modules/${module}/Resources/Pages/${pageName}.vue`;
 
-  if (!modulePages[pagePath]) {
+  const importPage = modulePages[pagePath];
+
+  if (! importPage) {
     throw new Error(`Page "${pagePath}" not found`);
   }
 
-  const page = modulePages[pagePath];
-
-  return typeof page === 'function' ? page() : page;
+  return importPage().then((m) => m.default);
 };
 
 createInertiaApp({

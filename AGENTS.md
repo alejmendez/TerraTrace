@@ -43,12 +43,8 @@ Modules/<Context>/
 │   ├── Controllers/   → un controlador por recurso
 │   ├── Requests/      → FormRequests por create/update
 │   └── Resources/     → JsonResource para show/edit
-├── Services/<Entity>/
-│   ├── Create<Ent>.php
-│   ├── List<Ent>.php
-│   ├── Find<Ent>.php
-│   ├── Update<Ent>.php
-│   └── Delete<Ent>.php
+├── Services/
+│   └── <Entity>Service.php   ← clase única por entidad, métodos de instancia
 ├── Models/
 └── Resources/         ← recursos frontend (Vue)
     ├── Pages/<Ent>/{List,Create,Edit,Show}.vue
@@ -56,9 +52,41 @@ Modules/<Context>/
     └── Components/    ← componentes propios del módulo
 ```
 
-**Convención de servicios:** una clase por acción, método estático `call()`
-o `collection()`. Evitar servicios "manager" con varias acciones; mantener
-las clases pequeñas y enfocadas.
+**Convención de servicios:** una clase manager-style por entidad, con todos
+sus métodos de acción expuestos como métodos de instancia
+(`create`, `update`, `delete`, `find`, `list`, `collection`, etc.).
+Se inyecta vía constructor del controlador; nunca se llama con `::call()`
+estático. Esto evita el ruido de una clase-archivo por acción y centraliza
+la lógica CRUD por dominio.
+
+Ejemplo:
+
+```php
+class PlantService
+{
+    public function list(array $params = []): mixed { /* … */ }
+    public function find(int $id): Plant { /* … */ }
+    public function findByCode(string $code): ?Plant { /* … */ }
+    public function create(array $data): Plant { /* … */ }
+    public function update(int $id, array $data): Plant { /* … */ }
+    public function delete(int $id): void { /* … */ }
+    public function createNote(array $data): PlantDetail { /* … */ }
+}
+
+class PlantsController
+{
+    public function __construct(private PlantService $plants) {}
+
+    public function index(Request $request): JsonResponse
+    {
+        return response()->json($this->plants->list($request->all()));
+    }
+}
+```
+
+Los servicios transversales (no asociados a una sola entidad) viven como
+clases planas en `Services/` — ej. `Modules\Core\Services\ListEntity`,
+`Modules\Core\Services\CacheService`, `Modules\Tasks\Services\NotifyTaskComment`.
 
 Módulos actuales: `Auth`, `Core`, `Dashboard`, `Fields`, `Tasks`, `Users`.
 
@@ -98,18 +126,28 @@ página ya está migrada al nuevo flujo (ver §6).
 
 ## 5. Convenciones frontend
 
-### Aliases Vite
+### Aliases
 
-Configurados en `package.json#imports`:
+`config/modules.php` es la **única fuente de verdad** de qué módulos existen.
+Los aliases de import se generan/regeneran con:
 
-- `@Core/...` → `Modules/Core/Resources/...`
-- `@Auth/...` → `Modules/Auth/Resources/...`
-- `@Fields/...` → `Modules/Fields/Resources/...`
-- `@Users/...` → `Modules/Users/Resources/...`
-- `@Tasks/...` → `Modules/Tasks/Resources/...`
-- `@Dashboard/...` → `Modules/Dashboard/Resources/...`
+```bash
+php artisan modules:sync          # aplica cambios
+php artisan modules:sync --dry-run # revisa antes de aplicar
+```
 
-Usar siempre el alias, nunca rutas relativas entre módulos.
+El comando reescribe dos archivos derivados (no editarlos a mano):
+
+- `jsconfig.json` → `compilerOptions.paths` con `@<Modulo>/*` apuntando a
+  `./Modules/<Modulo>/Resources/*`. Otros paths (ej. `ziggy-js`) se preservan.
+- `vite.config.js` → array `const modules = [...]` que se usa para generar
+  los aliases de Vite (`@<Modulo>`) y las rutas de i18n (`additionalLangPaths`).
+
+Tras añadir un módulo a `config/modules.php`, correr `php artisan modules:sync`
+es obligatorio para que el bundler y el editor lo vean. El orden de los
+providers en `config/modules.php` define el orden en ambos archivos derivados.
+
+Usar siempre el alias (`@Fields/...`), nunca rutas relativas entre módulos.
 
 ### Layout y header
 
@@ -147,6 +185,26 @@ interno (`add`, `landscape`, `potted_plant`, `grid_view`, `map`, etc.).
 Usar `useForm` de `@inertiajs/vue3`. POST/PUT a `route('<ent>.store')` /
 `route('<ent>.update', id)`. **No** usar `axios.post` ni `fetch` para
 submit.
+
+### Rutas API por módulo
+
+Cada módulo puede declarar rutas API en `Modules/<Modulo>/Routes/api.php`.
+`ModulesServiceProvider` las carga automáticamente con el middleware group
+`api` y el prefijo URL `/api`. Declarar las rutas **sin** el prefijo:
+
+```php
+// Modules/Auth/Routes/api.php
+Route::post('auth/sign_in', [AuthenticatedApiController::class, 'store']);
+// → POST /api/auth/sign_in (middleware: api)
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user', [AuthenticatedApiController::class, 'user']);
+    // → GET /api/user (middleware: api, auth:sanctum)
+});
+```
+
+**No** poner rutas API dentro de `Routes/web.php` ni envolverlas en
+`Route::prefix('api')` — el loader ya aplica ambos.
 
 ### Composables y componentes compartidos
 

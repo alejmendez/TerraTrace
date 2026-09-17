@@ -10,7 +10,6 @@ use Modules\Auth\Http\Controllers\PasswordController;
 use Modules\Auth\Http\Controllers\PasswordResetLinkController;
 use Modules\Auth\Http\Controllers\RegisteredUserController;
 use Modules\Auth\Http\Controllers\VerifyEmailController;
-use Modules\Auth\Http\Controllers\Api\AuthenticatedApiController;
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -40,18 +39,4 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-});
-
-
-Route::prefix('api')
-    ->group(function () {
-    Route::middleware('guest')->group(function () {
-        Route::post('auth/sign_in', [AuthenticatedApiController::class, 'store']);
-    });
-
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('auth/validate_token', [AuthenticatedApiController::class, 'validate_token']);
-        Route::post('auth/sign_out', [AuthenticatedApiController::class, 'destroy']);
-        Route::get('user', [AuthenticatedApiController::class, 'user']);
-    });
 });
