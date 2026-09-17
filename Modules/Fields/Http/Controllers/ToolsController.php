@@ -8,17 +8,13 @@ use Modules\Core\Traits\HasPermissionMiddleware;
 use Modules\Fields\Http\Requests\StoreToolRequest;
 use Modules\Fields\Http\Requests\UpdateToolRequest;
 use Modules\Fields\Http\Resources\ToolResource;
-use Modules\Fields\Services\Tools\CreateTool;
-use Modules\Fields\Services\Tools\DeleteTool;
-use Modules\Fields\Services\Tools\FindTool;
-use Modules\Fields\Services\Tools\ListTool;
-use Modules\Fields\Services\Tools\UpdateTool;
+use Modules\Fields\Services\ToolService;
 
 class ToolsController extends Controller
 {
     use HasPermissionMiddleware;
 
-    public function __construct()
+    public function __construct(private readonly ToolService $tools)
     {
         $this->setupPermissionMiddleware();
     }
@@ -28,7 +24,7 @@ class ToolsController extends Controller
      */
     public function index()
     {
-        $payload = ListTool::collection(request()->all());
+        $payload = $this->tools->collection(request()->all());
 
         return Inertia::render('Fields::Tools/List', [
             'toast' => session('toast'),
@@ -51,7 +47,7 @@ class ToolsController extends Controller
      */
     public function store(StoreToolRequest $request)
     {
-        CreateTool::call($request->validated());
+        $this->tools->create($request->validated());
 
         return redirect()->route('tools.index')->with('toast', [
             'severity' => 'success',
@@ -66,7 +62,7 @@ class ToolsController extends Controller
      */
     public function show(string $id)
     {
-        $tool = FindTool::call($id);
+        $tool = $this->tools->find($id);
 
         return Inertia::render('Fields::Tools/Show', [
             'data' => new ToolResource($tool),
@@ -78,7 +74,7 @@ class ToolsController extends Controller
      */
     public function edit(string $id)
     {
-        $tool = FindTool::call($id);
+        $tool = $this->tools->find($id);
 
         return Inertia::render('Fields::Tools/Edit', [
             'data' => new ToolResource($tool),
@@ -90,7 +86,7 @@ class ToolsController extends Controller
      */
     public function update(UpdateToolRequest $request, string $id)
     {
-        UpdateTool::call($id, $request->validated());
+        $this->tools->update($id, $request->validated());
 
         return redirect()->route('tools.index')->with('toast', [
             'severity' => 'success',
@@ -105,7 +101,7 @@ class ToolsController extends Controller
      */
     public function destroy(string $id)
     {
-        DeleteTool::call($id);
+        $this->tools->delete($id);
 
         return response()->noContent();
     }
