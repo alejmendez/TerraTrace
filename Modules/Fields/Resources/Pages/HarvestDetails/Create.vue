@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import QrCodeReader from '@Fields/Pages/HarvestDetails/QrCodeReader.vue';
 import HarvestView from '@Fields/Pages/HarvestDetails/Views/HarvestView.vue';
 import VariablesView from '@Fields/Pages/HarvestDetails/Views/VariablesView.vue';
@@ -127,7 +127,7 @@ const optionViewHandler = (option) => {
 
 <template>
   <AuthenticatedLayout :title="__('harvest.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }]"
     />
     <h3 class="text-2xl mb-3 input-label">
