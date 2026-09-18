@@ -41,6 +41,14 @@ export function useToast() {
             }, opts.life ?? 3000);
         },
 
+        /**
+         * PrimeVue-compat alias for `show()`. Lets existing call
+         * sites use `toast.add({...})` directly.
+         */
+        add(opts) {
+            this.show(opts);
+        },
+
         dismiss() {
             if (hideTimer) clearTimeout(hideTimer);
             state.visible.value = false;
