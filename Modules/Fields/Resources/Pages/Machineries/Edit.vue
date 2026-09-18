@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormMachineries from '@Fields/Pages/Machineries/Form.vue';
 
 import { stringToDate } from '@Core/Utils/date';
@@ -30,7 +30,7 @@ const submitHandler = () => form.post(route('machineries.update', data.id));
 
 <template>
   <AuthenticatedLayout :title="__('machinery.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('machinery.titles.edit')"
       :breadcrumbs="[{ to: 'machineries.index', text: __('machinery.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.save_edit'), hrefCancel: route('machineries.index') }"
