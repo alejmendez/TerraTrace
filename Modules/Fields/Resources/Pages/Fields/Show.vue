@@ -5,7 +5,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { deleteRowTable } from '@Core/Utils/table';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FileCard from '@Fields/Pages/Fields/ShowComponents/FileCard.vue';
 import LogbookCard from '@Fields/Pages/Fields/ShowComponents/LogbookCard.vue';
 import HarvestCard from '@Fields/Pages/Fields/ShowComponents/HarvestCard.vue';
@@ -65,7 +65,7 @@ const deleteHandler = async (id) => {
 
 <template>
   <AuthenticatedLayout :title="__('field.titles.show', { name: field.name })">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('field.titles.show', { name: field.name })"
       :breadcrumbs="[{ to: 'fields.index', text: __('field.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
     >
@@ -82,7 +82,7 @@ const deleteHandler = async (id) => {
         v-if="canEdit"
         v-show="isFileTab"
       />
-    </HeaderCrud>
+    </CollectionPageHeader>
 
     <div class="flex place-content-center">
       <nav class="flex mb-1 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-4 py-1">
