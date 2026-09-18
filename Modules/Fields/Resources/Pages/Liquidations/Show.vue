@@ -7,7 +7,7 @@ import { format, getWeek, endOfWeek, startOfWeek } from 'date-fns';
 import { formatNumber } from '@Core/Utils/format';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import CardSection from '@Core/Components/CardSection.vue';
 import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
 
@@ -78,7 +78,7 @@ const total_categories_not_commercial = computed(() => {
 
 <template>
   <AuthenticatedLayout :title="__('liquidation.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('liquidation.titles.show', { week: weekLiquidation })"
       :breadcrumbs="[{ to: 'liquidations.index', text: __('liquidation.titles.entity_breadcrumb') }, { text: __('generics.actions.show') }]"
     />
