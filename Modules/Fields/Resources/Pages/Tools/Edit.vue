@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormTool from '@Fields/Pages/Tools/Form.vue';
 
 import { stringToDate } from '@Core/Utils/date';
@@ -30,7 +30,7 @@ const submitHandler = () => form.post(route('tools.update', data.id));
 
 <template>
   <AuthenticatedLayout :title="__('tool.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('tool.titles.edit')"
       :breadcrumbs="[{ to: 'tools.index', text: __('tool.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.save_edit'), hrefCancel: route('tools.index') }"
