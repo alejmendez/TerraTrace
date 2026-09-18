@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormSecurityEquipment from '@Fields/Pages/SecurityEquipments/Form.vue';
 
 const form = useForm({
@@ -20,7 +20,7 @@ const submitHandler = () => form.post(route('security_equipments.store'));
 
 <template>
   <AuthenticatedLayout :title="__('security_equipment.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('security_equipment.titles.create')"
       :breadcrumbs="[{ to: 'security_equipments.index', text: __('security_equipment.titles.entity_breadcrumb') }, { text: __('generics.actions.create') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.create'), hrefCancel: route('security_equipments.index') }"

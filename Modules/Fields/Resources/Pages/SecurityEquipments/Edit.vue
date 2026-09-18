@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormSecurityEquipment from '@Fields/Pages/SecurityEquipments/Form.vue';
 
 import { stringToDate } from '@Core/Utils/date';
@@ -30,7 +30,7 @@ const submitHandler = () => form.post(route('security_equipments.update', data.i
 
 <template>
   <AuthenticatedLayout :title="__('security_equipment.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('security_equipment.titles.edit')"
       :breadcrumbs="[{ to: 'security_equipments.index', text: __('security_equipment.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.save_edit'), hrefCancel: route('security_equipments.index') }"
