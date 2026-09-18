@@ -85,8 +85,8 @@ class PlantsController
 ```
 
 Los servicios transversales (no asociados a una sola entidad) viven como
-clases planas en `Services/` — ej. `Modules\Core\Services\ListEntity`,
-`Modules\Core\Services\CacheService`, `Modules\Tasks\Services\NotifyTaskComment`.
+clases planas en `Services/` — ej. `Modules\Core\Services\CacheService`,
+`Modules\Tasks\Services\NotifyTaskComment`.
 
 Módulos actuales: `Auth`, `Core`, `Dashboard`, `Fields`, `Tasks`, `Users`.
 
@@ -95,28 +95,42 @@ Módulos actuales: `Auth`, `Core`, `Dashboard`, `Fields`, `Tasks`, `Users`.
 ## 4. Comunicación entre módulos
 
 TerraTrace es un monolito modular: cada módulo es dueño de sus entidades y
-de su acceso a datos. Cuando un módulo necesita información de otro, hay tres
+de su acceso a datos. Cuando un módulo necesita información de otro, hay cuatro
 niveles, cada uno apropiado para un caso. **El nivel más alto que aplique**;
 nunca se mezcla un nivel con otro.
 
-### 4.1 Datos planos / entidades nombradas → `EntityRegistry`
+### 4.1 Datos planos / entidades nombradas → `EntityDispatcher`
 
 Para cuando un módulo necesita una **lista plana** de otro módulo (combos,
 selects, tablas de sólo lectura).
 
-- El módulo productor registra la entidad en su `ServiceProvider::register()`
-  con `EntityRegistry::register('name', ModelClass, queryClosure)`.
-- El consumidor llama `ListEntity::call('name')`.
-- **Acoplamiento: cero.** El consumidor no conoce el modelo, sólo el nombre.
+- El módulo productor expone un método en su entity-service
+  (`FieldService::forSelect()`, `HarvestService::availableYears()`,
+  etc.).
+- El `Modules\Core\Registry\EntityDispatcher` mantiene un mapa
+  `entity => [ServiceClass, method]` (más algunas entradas
+  estáticas para listas de traducción como `scale_type` o
+  `genders`).
+- El consumidor llama `EntityDispatcher::dispatch('field')` — desde
+  un controlador HTTP, un service, o el endpoint legacy
+  `Modules\Core\Http\Controllers\SelectsController`
+  (`/api/selects/{entity}`).
+- **Acoplamiento: por nombre de entidad.** El consumidor no conoce
+  el modelo ni el service; sólo el slug.
 
 ```php
-// Modules/Tasks/Providers/TasksServiceProvider.php
-EntityRegistry::register('task_state', TaskState::class,
-    static fn () => TaskState::orderBy('name')->get());
+// Modules/Core/Registry/EntityDispatcher.php (mapa)
+'field' => [FieldService::class, 'forSelect'],
+'harvest_available_years' => [HarvestService::class, 'availableYears'],
 
-// Modules/Fields/Http/Controllers/FieldsController.php (consumidor)
-'task_states' => ListEntity::call('task_state'),
+// Consumidores
+$fields = EntityDispatcher::dispatch('field');          // single
+$batch  = EntityDispatcher::dispatchMany([...]);        // batch
 ```
+
+Para añadir una nueva entidad: registrar el slug en el mapa del
+dispatcher y exponer el método correspondiente en el service del
+módulo dueño. **No** se toca `EntityRegistry` (ver §4.4).
 
 ### 4.2 Agregaciones / datos computados → `*StatsProvider`
 
@@ -160,7 +174,33 @@ Para cuando un módulo necesita notificar a destinatarios sobre cambios
 $user->notify(new TaskNotification([...]));
 ```
 
-### 4.4 Anti-patrones
+### 4.4 Modelo de Eloquent cross-module → `EntityRegistry::model()`
+
+Para cuando un módulo necesita **la clase del modelo** de otro módulo
+para resolver una relación Eloquent (`belongsTo`,
+`belongsToMany`). El caso típico vive en
+`Modules\Tasks\Models\Task::field()`:
+
+```php
+return $this->belongsTo(EntityRegistry::model('field'));
+```
+
+- El módulo productor registra la clase del modelo en su
+  `ServiceProvider::register()` con
+  `EntityRegistry::register('field', Field::class)`.
+- El consumidor llama `EntityRegistry::model('field')` y obtiene el
+  FQCN; nunca importa `Field` directamente.
+- **Acoplamiento: por nombre.** El consumidor conoce el slug, no la
+  clase concreta.
+
+`EntityRegistry` también conserva `query()` y `reset()` para
+compatibilidad con el legacy, pero su única vía viva hoy es
+`model()`. La mitad "data-shape" de la API original
+(`EntityRegistry::register(..., $factory)` + `ListEntity::call()`)
+fue retirada: las listas planas ahora pasan por `EntityDispatcher`
+(§4.1) y los services módulo-dueño.
+
+### 4.5 Anti-patrones
 
 | ❌ No | ✅ Sí |
 |---|---|
@@ -168,14 +208,19 @@ $user->notify(new TaskNotification([...]));
 | Query directa cross-módulo en service propio | Llamar método del provider del módulo dueño |
 | "Core services" centralizadores (`Core\FieldsQueries`) | El módulo dueño expone su propio provider |
 | Importar `XxxService` completo cuando sólo se quiere una vista parcial | Usar el provider específico |
+| `EntityRegistry::register('field', Field::class, $closure)` para data-shape | `EntityDispatcher::dispatch('field')` → método en `FieldService` |
+| `ListEntity::call('field')` (legacy) | Inyectar `FieldService` directamente en el consumer |
 
-### 4.5 Excepciones controladas donde SÍ se cruzan módulos
+### 4.6 Excepciones controladas donde SÍ se cruzan módulos
 
 - **Events de framework** con modelos en el payload (`Registered(User $user)`).
 - **El provider mismo** — sí importa su modelo (es interno al productor).
 - **Tests de integración** cross-module.
 - **Cross-module auth**: Auth importa `Modules\Users\Models\User` porque el
   dominio Auth requiere el modelo del dominio Users. Legítimo.
+- **`EntityRegistry::model()`** desde relaciones cross-module (ver §4.4):
+  el consumidor importa el registro, no el modelo. Es la única vía
+  legítima para resolver un FQCN sin acoplar al modelo concreto.
 
 ---
 
