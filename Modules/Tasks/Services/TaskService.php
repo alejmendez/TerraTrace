@@ -25,7 +25,7 @@ class TaskService
      * TasksServiceProvider; moved here per the cross-module pattern
      * (each module is the owner of its own lists, AGENTS.md §4).
      * Cross-module lists (field, quarter, plant, user, tool, etc.)
-     * still resolve through EntityRegistry / ListEntity.
+     * resolve through EntityDispatcher (see AGENTS.md §4.4).
      */
     public function priorities(): array
     {
