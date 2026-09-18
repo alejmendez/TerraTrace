@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import Button from '@Core/Components/Form/Button.vue';
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const openUnprocesseds = ref(true);
 </script>
 
 <template>
-  <CardSection :header-text="props.title" wrapperClass="">
+  <CollectionCardSection :header-text="props.title" wrapperClass="">
     <div class="p-6">
       <p class="pb-3">{{ __('generics.bulk.instruction_1') }}</p>
       <ul class="list-decimal ps-5">
@@ -77,5 +77,5 @@ const openUnprocesseds = ref(true);
         </ul>
       </div>
     </div>
-  </CardSection>
+  </CollectionCardSection>
 </template>

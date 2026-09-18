@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 import VInputFile from '@Core/Components/Form/VInputFile.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
@@ -25,7 +25,7 @@ const changeFileHandler = (e) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection>
+    <CollectionCardSection>
       <VSelect
         id="field_id"
         v-model="form.field_id"
@@ -34,9 +34,9 @@ const changeFileHandler = (e) => {
         :label="__('quarter.form.field_id.label')"
         :message="form.errors.field_id"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection>
+    <CollectionCardSection>
       <VInput
         id="name"
         v-model="form.name"
@@ -63,9 +63,9 @@ const changeFileHandler = (e) => {
         :label="__('quarter.form.responsible_id.label')"
         :message="form.errors.responsible_id"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection :header-text="__('quarter.sections.blueprint')">
+    <CollectionCardSection :header-text="__('quarter.sections.blueprint')">
       <div class="form-text col-span-2 form-text-type">
         <VInputFile
           :image="blueprintPreview"
@@ -74,6 +74,6 @@ const changeFileHandler = (e) => {
           @change="changeFileHandler"
         />
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

@@ -10,7 +10,7 @@ import Column from 'primevue/column';
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 
 import Button from '@Core/Components/Form/Button.vue';
@@ -64,7 +64,7 @@ const deleteHandler = async (id) => {
       />
     </CollectionPageHeader>
 
-    <CardSection>
+    <CollectionCardSection>
       <VInput :label="__('harvest.form.date.label')" :value="data.date_rendered" readonly />
       <VInput :label="__('harvest.form.quarter_ids.label')" :value="quarters" readonly />
 
@@ -82,8 +82,8 @@ const deleteHandler = async (id) => {
         :label="__('harvest.form.note.label')"
         readonly
       />
-    </CardSection>
-    <CardSection
+    </CollectionCardSection>
+    <CollectionCardSection
       wrapperClass=""
       v-if="data.details"
     >
@@ -112,6 +112,6 @@ const deleteHandler = async (id) => {
           </template>
         </Column>
       </DataTable>
-    </CardSection>
+    </CollectionCardSection>
   </AuthenticatedLayout>
 </template>

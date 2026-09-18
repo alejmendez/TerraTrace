@@ -1,5 +1,5 @@
 <script setup>
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 
 const props = defineProps({
   field: Object,
@@ -9,7 +9,7 @@ const field = props.field;
 </script>
 
 <template>
-  <CardSection
+  <CollectionCardSection
     wrapperClass="p-5 grid grid-cols-1 gap-4"
   >
     <div v-if="field.documents.length === 0">
@@ -20,5 +20,5 @@ const field = props.field;
         {{ file.name }}
       </a>
     </div>
-  </CardSection>
+  </CollectionCardSection>
 </template>

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import MultiSelect from 'primevue/multiselect';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
@@ -27,7 +27,7 @@ const addImporterCallback = (newType) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection>
+    <CollectionCardSection>
       <VInput
         id="batch_number"
         v-model="form.batch_number"
@@ -92,6 +92,6 @@ const addImporterCallback = (newType) => {
         :label="__('batch.form.current_weight.label')"
         :message="form.errors.current_weight"
       />
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

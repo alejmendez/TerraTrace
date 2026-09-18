@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
 
@@ -69,7 +69,7 @@ watch(
 </script>
 
 <template>
-  <CardSection :header-text="__('task.sections.assignment')">
+  <CollectionCardSection :header-text="__('task.sections.assignment')">
     <VSelect
       id="field_id"
       v-model="form.field_id"
@@ -116,5 +116,5 @@ watch(
       :label="__('task.form.responsible_id.label')"
       :message="form.errors.responsible_id"
     />
-  </CardSection>
+  </CollectionCardSection>
 </template>

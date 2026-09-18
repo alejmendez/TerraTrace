@@ -8,7 +8,7 @@ import { formatNumber } from '@Core/Utils/format';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
 
 const props = defineProps({
@@ -82,7 +82,7 @@ const total_categories_not_commercial = computed(() => {
       :title="__('liquidation.titles.show', { week: weekLiquidation })"
       :breadcrumbs="[{ to: 'liquidations.index', text: __('liquidation.titles.entity_breadcrumb') }, { text: __('generics.actions.show') }]"
     />
-    <CardSection>
+    <CollectionCardSection>
       <VElementFormWrapper :label="__('liquidation.form.date.label')">
         <div>
           {{ date_rendered }}
@@ -106,8 +106,8 @@ const total_categories_not_commercial = computed(() => {
           {{ data.reception_date }}
         </div>
       </VElementFormWrapper>
-    </CardSection>
-    <CardSection>
+    </CollectionCardSection>
+    <CollectionCardSection>
       <VElementFormWrapper :label="__('liquidation.form.weight_with_earth.label')">
         <div>
           {{ formatNumber(data.weight_with_earth) }}
@@ -123,8 +123,8 @@ const total_categories_not_commercial = computed(() => {
           {{ formatNumber(data.dollar_value) }}
         </div>
       </VElementFormWrapper>
-    </CardSection>
-    <CardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
+    </CollectionCardSection>
+    <CollectionCardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
       <div class="col-span-4 font-semibold">
         {{ __('liquidation.form.commercial_categories.labels.name') }}
       </div>
@@ -155,8 +155,8 @@ const total_categories_not_commercial = computed(() => {
       <div class="col-span-3 pt-3 font-bold">
         {{ total_categories_commercial }}
       </div>
-    </CardSection>
-    <CardSection :headerText="__('liquidation.sections.rejected_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
+    </CollectionCardSection>
+    <CollectionCardSection :headerText="__('liquidation.sections.rejected_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
       <div class="col-span-7 font-semibold">
         {{ __('liquidation.form.commercial_categories.labels.name') }}
       </div>
@@ -179,6 +179,6 @@ const total_categories_not_commercial = computed(() => {
       <div class="col-span-3 pt-3 font-bold">
         {{ total_categories_not_commercial }}
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </AuthenticatedLayout>
 </template>

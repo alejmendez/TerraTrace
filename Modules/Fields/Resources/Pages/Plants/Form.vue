@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 
@@ -39,7 +39,7 @@ const handler_input_row = (e) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection :header-text="__('plant.sections.location')">
+    <CollectionCardSection :header-text="__('plant.sections.location')">
       <VSelect
         id="field_id"
         v-model="form.field_id"
@@ -67,9 +67,9 @@ const handler_input_row = (e) => {
         :label="__('plant.form.row.label')"
         :message="form.errors.row"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection>
+    <CollectionCardSection>
       <VInput
         id="code"
         v-model="form.code"
@@ -107,6 +107,6 @@ const handler_input_row = (e) => {
         :label="__('plant.form.nursery_origin.label')"
         :message="form.errors.nursery_origin"
       />
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

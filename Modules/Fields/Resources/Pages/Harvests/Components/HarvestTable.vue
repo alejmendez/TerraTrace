@@ -12,7 +12,7 @@ import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
 import Select from 'primevue/select';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 
 import Datatable from '@Core/Components/Table/Datatable.vue';
@@ -143,7 +143,7 @@ const number_format = (n) => {
   <Toast />
 
   <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 items-stretch mb-4">
-    <CardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
+    <CollectionCardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
       <div class="text-gray-400 pb-1">{{ __('harvest.table_filters.year') }}</div>
       <VSelect
         id="year"
@@ -152,18 +152,18 @@ const number_format = (n) => {
         :options="filter_year_options"
         @change="filterHandler"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
+    <CollectionCardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
       <div class="text-gray-400 pb-1">Unidades</div>
       <div class="pb-3 text-3xl font-bold dark:text-gray-100">{{ unitCountTotal }}</div>
-    </CardSection>
+    </CollectionCardSection>
 
 
-    <CardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
+    <CollectionCardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
       <div class="text-gray-400 pb-1">Peso Total</div>
       <div class="pb-3 text-3xl font-bold dark:text-gray-100">{{ weightTotal }}</div>
-    </CardSection>
+    </CollectionCardSection>
   </div>
 
   <Datatable

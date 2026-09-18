@@ -5,7 +5,7 @@ import Timeline from 'primevue/timeline';
 import Checkbox from 'primevue/checkbox';
 import ProgressSpinner from 'primevue/progressspinner';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 
 import PlantDetailService from '@Fields/Services/PlantDetailService';
@@ -94,7 +94,7 @@ defineExpose({ filter });
 
 <template>
   <div class="grid grid-cols-4 gap-4">
-    <CardSection
+    <CollectionCardSection
       wrapperClass="p-5"
     >
       <div class="mb-4">
@@ -125,8 +125,8 @@ defineExpose({ filter });
           </label>
         </div>
       </div>
-    </CardSection>
-    <CardSection
+    </CollectionCardSection>
+    <CollectionCardSection
       wrapperClass="p-5"
       sectionClass="mt-5 col-span-3 rounded-xl shadow-sm ring-1 ring-gray-950/5"
     >
@@ -185,6 +185,6 @@ defineExpose({ filter });
           {{ __('harvest_details.no_data') }}
         </p>
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </div>
 </template>

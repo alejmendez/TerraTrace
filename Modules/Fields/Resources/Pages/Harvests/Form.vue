@@ -6,7 +6,7 @@ import { format, getWeek, endOfWeek, startOfWeek } from 'date-fns';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
 import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
@@ -76,7 +76,7 @@ watch(totalWeight, (newValue) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection>
+    <CollectionCardSection>
       <div class="grid grid-cols-2 gap-x-2 gap-y-4">
         <VElementFormWrapper :label="__('harvest.form.date.label_rendered')">
           <InputText
@@ -150,9 +150,9 @@ watch(totalWeight, (newValue) => {
         :label="__('harvest.form.note.label')"
         :message="form.errors.note"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection
+    <CollectionCardSection
       wrapperClass=""
       v-if="props.details"
     >
@@ -232,6 +232,6 @@ watch(totalWeight, (newValue) => {
           :label="__('generics.bulk.button')"
         />
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

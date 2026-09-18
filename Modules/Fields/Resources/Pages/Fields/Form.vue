@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 import VInputDni from '@Core/Components/Form/VInputDni.vue';
 import VInputFile from '@Core/Components/Form/VInputFile.vue';
@@ -29,7 +29,7 @@ const changeDocumentsHandler = (e) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection>
+    <CollectionCardSection>
       <VInput
         id="name"
         v-model="form.name"
@@ -63,9 +63,9 @@ const changeDocumentsHandler = (e) => {
         readonly
         v-if="form.plants_count"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection>
+    <CollectionCardSection>
       <VInputDni
         id="owner_dni"
         v-model="form.owner_dni"
@@ -79,9 +79,9 @@ const changeDocumentsHandler = (e) => {
         :label="__('field.form.owner_name.label')"
         :message="form.errors.owner_name"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection :header-text="__('field.sections.blueprint')">
+    <CollectionCardSection :header-text="__('field.sections.blueprint')">
       <div class="form-text col-span-2 form-text-type">
         <VInputFile
           :image="blueprintPreview"
@@ -90,9 +90,9 @@ const changeDocumentsHandler = (e) => {
           @change="changeFileHandler"
         />
       </div>
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection :header-text="__('field.sections.documents')">
+    <CollectionCardSection :header-text="__('field.sections.documents')">
       <div class="form-text col-span-2 form-text-type">
         <VInputFile
           :files="documents"
@@ -102,6 +102,6 @@ const changeDocumentsHandler = (e) => {
           @change="changeDocumentsHandler"
         />
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

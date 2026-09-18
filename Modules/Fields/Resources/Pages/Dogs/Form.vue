@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 import VInputFile from '@Core/Components/Form/VInputFile.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
@@ -47,7 +47,7 @@ const remove_vaccine = (index) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection>
+    <CollectionCardSection>
       <div class="form-text col-span-2 form-text-type">
         <VInputFile
           :image="avatarPreview"
@@ -122,9 +122,9 @@ const remove_vaccine = (index) => {
         :label="__('dog.form.couple_id.label')"
         :message="form.errors.couple_id"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection :header-text="__('dog.sections.vaccines')" wrapperClass="">
+    <CollectionCardSection :header-text="__('dog.sections.vaccines')" wrapperClass="">
       <div
         class="p-6 grid grid-cols-2 gap-x-16 gap-y-4"
         v-for="(vaccine, index) in form.vaccines"
@@ -160,6 +160,6 @@ const remove_vaccine = (index) => {
           :label="__('dog.buttons.add_vaccine')"
         />
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

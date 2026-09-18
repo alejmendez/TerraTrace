@@ -9,7 +9,7 @@ import InputText from 'primevue/inputtext';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
 import AddImporter from '@Core/Components/Form/AddImporter.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
@@ -72,7 +72,7 @@ const total_categories_not_commercial = computed(() => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection>
+    <CollectionCardSection>
       <VElementFormWrapper :label="__('liquidation.form.date.label')" :message="form.errors.date">
         <InputGroup>
           <InputText
@@ -126,8 +126,8 @@ const total_categories_not_commercial = computed(() => {
         :label="__('liquidation.form.field_id.label')"
         :message="form.errors.field_id"
       />
-    </CardSection>
-    <CardSection>
+    </CollectionCardSection>
+    <CollectionCardSection>
       <VElementFormWrapper :label="__('liquidation.form.weight_with_earth.label')" :message="form.errors.weight_with_earth">
         <InputGroup>
           <InputText
@@ -167,8 +167,8 @@ const total_categories_not_commercial = computed(() => {
           <InputGroupAddon>{{ __('liquidation.currency_unit') }}</InputGroupAddon>
         </InputGroup>
       </VElementFormWrapper>
-    </CardSection>
-    <CardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
+    </CollectionCardSection>
+    <CollectionCardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
       <div class="col-span-4 font-semibold">
         {{ __('liquidation.form.commercial_categories.labels.name') }}
       </div>
@@ -213,8 +213,8 @@ const total_categories_not_commercial = computed(() => {
       <div class="col-span-3 pt-3 font-bold">
         {{ total_categories_commercial }}
       </div>
-    </CardSection>
-    <CardSection :headerText="__('liquidation.sections.rejected_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
+    </CollectionCardSection>
+    <CollectionCardSection :headerText="__('liquidation.sections.rejected_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
       <div class="col-span-7 font-semibold">
         {{ __('liquidation.form.commercial_categories.labels.name') }}
       </div>
@@ -244,7 +244,7 @@ const total_categories_not_commercial = computed(() => {
       <div class="col-span-3 pt-3 font-bold">
         {{ total_categories_not_commercial }}
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </form>
 
   <Dialog v-model:visible="show_modal_datepicker" modal header="Seleccionar Fecha">

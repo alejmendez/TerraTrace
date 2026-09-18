@@ -1,5 +1,5 @@
 <script setup>
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 
@@ -13,7 +13,7 @@ const form = props.form;
 </script>
 
 <template>
-  <CardSection>
+  <CollectionCardSection>
     <VInput
       id="name"
       v-model="form.name"
@@ -55,5 +55,5 @@ const form = props.form;
       :label="__('task.form.end_date.label')"
       :message="form.errors.end_date"
     />
-  </CardSection>
+  </CollectionCardSection>
 </template>

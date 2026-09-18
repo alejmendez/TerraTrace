@@ -1,5 +1,5 @@
 <script setup>
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import { formatNumber } from '@Core/Utils/format';
 
 const props = defineProps({
@@ -17,7 +17,7 @@ const fieldFile = [
 </script>
 
 <template>
-  <CardSection
+  <CollectionCardSection
     wrapperClass="p-5 grid grid-cols-2 gap-4"
   >
     <div>
@@ -37,5 +37,5 @@ const fieldFile = [
         </div>
       </template>
     </div>
-  </CardSection>
+  </CollectionCardSection>
 </template>

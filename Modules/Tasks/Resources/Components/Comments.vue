@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useConfirm } from 'primevue/useconfirm';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import Button from '@Core/Components/Form/Button.vue';
 
 import VEditor from '@Core/Components/Form/VEditor.vue';
@@ -101,16 +101,16 @@ if (form.id === null) {
 </script>
 
 <template>
-  <CardSection :header-text="__('task.sections.comments')" wrapperClass="" v-if="form.id === null">
+  <CollectionCardSection :header-text="__('task.sections.comments')" wrapperClass="" v-if="form.id === null">
     <VEditor
       id="new_comment_create_task"
       v-model="commentField"
       :options="responsibles"
       editorStyle="height: 220px"
     />
-  </CardSection>
+  </CollectionCardSection>
 
-  <CardSection
+  <CollectionCardSection
     :header-text="__('task.sections.comments')"
     wrapperClass=""
     v-if="form.id !== null"
@@ -167,6 +167,6 @@ if (form.id === null) {
         <Button @click="commentField = null" severity="secondary" :label="__('task.form.comments.cancel')" :loading="loading" />
       </div>
     </div>
-  </CardSection>
+  </CollectionCardSection>
   <div class="h-[220px]"></div>
 </template>

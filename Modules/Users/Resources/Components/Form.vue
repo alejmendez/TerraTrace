@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInputFile from '@Core/Components/Form/VInputFile.vue';
 import VInputDni from '@Core/Components/Form/VInputDni.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
@@ -31,7 +31,7 @@ const changeFileHandler = (e) => {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection :header-text="__('user.sections.details')">
+    <CollectionCardSection :header-text="__('user.sections.details')">
       <div class="form-text col-span-2 form-text-type">
         <VInputFile
           :image="avatarPreview"
@@ -84,8 +84,8 @@ const changeFileHandler = (e) => {
         :label="__('user.form.password.label')"
         :message="form.errors.password"
       />
-    </CardSection>
-    <CardSection :header-text="__('user.sections.roles')" v-if="props.showRole">
+    </CollectionCardSection>
+    <CollectionCardSection :header-text="__('user.sections.roles')" v-if="props.showRole">
       <VSelect
         id="role"
         v-model="form.role"
@@ -94,6 +94,6 @@ const changeFileHandler = (e) => {
         :label="__('user.form.role.label')"
         :message="form.errors.role"
       />
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

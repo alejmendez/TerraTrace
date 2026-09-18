@@ -8,7 +8,7 @@ import { can } from '@Auth/Services/Auth';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 
 const props = defineProps({
   data: Object,
@@ -102,7 +102,7 @@ const deleteHandler = async (id) => {
       </nav>
     </div>
 
-    <CardSection
+    <CollectionCardSection
       :header-text="__('dog.show.file.title')"
       wrapperClass="p-5 grid grid-cols-3 gap-4"
       v-show="isFileTab"
@@ -136,19 +136,19 @@ const deleteHandler = async (id) => {
         <div class="text-gray-400 mb-2">{{ __('dog.show.file.couple.label') }}</div>
         <div class="">{{ data.couple.name }}</div>
       </div>
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection
+    <CollectionCardSection
       :header-text="__('dog.show.activity.title')"
       wrapperClass="p-5 grid grid-cols-2 gap-4"
       v-show="isActivityTab"
     >
-    </CardSection>
-    <CardSection
+    </CollectionCardSection>
+    <CollectionCardSection
       :header-text="__('dog.show.statistics.title')"
       wrapperClass="p-5 grid grid-cols-2 gap-4"
       v-show="isStatisticsTab"
     >
-    </CardSection>
+    </CollectionCardSection>
   </AuthenticatedLayout>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 
 const props = defineProps({
@@ -20,7 +20,7 @@ textarea.p-textarea.note {
 
 <template>
   <form @submit.prevent="props.submitHandler">
-    <CardSection :header-text="__('security_equipment.sections.details')">
+    <CollectionCardSection :header-text="__('security_equipment.sections.details')">
       <VInput
         id="name"
         v-model="form.name"
@@ -66,9 +66,9 @@ textarea.p-textarea.note {
         :label="__('security_equipment.form.contact.label')"
         :message="form.errors.contact"
       />
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection :header-text="__('security_equipment.sections.note')" wrapperClass="">
+    <CollectionCardSection :header-text="__('security_equipment.sections.note')" wrapperClass="">
       <VInput
         id="note"
         type="textarea"
@@ -77,6 +77,6 @@ textarea.p-textarea.note {
         :placeholder="__('security_equipment.form.note.placeholder')"
         :message="form.errors.note"
       />
-    </CardSection>
+    </CollectionCardSection>
   </form>
 </template>

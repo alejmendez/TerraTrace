@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 import Button from '@Core/Components/Form/Button.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
@@ -184,7 +184,7 @@ table tbody tr td.border_cell_left {
 </style>
 
 <template>
-  <CardSection :header-text="__('field.show.statistics.title')" wrapperClass="p-5 grid gap-4">
+  <CollectionCardSection :header-text="__('field.show.statistics.title')" wrapperClass="p-5 grid gap-4">
     <div v-if="canUpdatePlantsPosition">
       <Button
         :label="__('harvest.buttons.change_distribution')"
@@ -259,5 +259,5 @@ table tbody tr td.border_cell_left {
         </div>
       </div>
     </div>
-  </CardSection>
+  </CollectionCardSection>
 </template>

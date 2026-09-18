@@ -9,7 +9,7 @@ import { stringToFormat } from '@Core/Utils/date';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import FormComments from '@Tasks/Components/Comments.vue';
 
 const confirm = useConfirm();
@@ -105,7 +105,7 @@ const deleteHandler = async (id) => {
     </div>
 
     <div class="grid grid-cols-5 gap-4" v-show="isFileTab">
-      <CardSection
+      <CollectionCardSection
         :header-text="data.name"
         wrapperClass="p-5"
       >
@@ -142,9 +142,9 @@ const deleteHandler = async (id) => {
         <div class="mb-4">
           {{ data.responsible_name }}
         </div>
-      </CardSection>
+      </CollectionCardSection>
       <div class="col-span-4">
-        <CardSection
+        <CollectionCardSection
           :header-text="__('task.show.detail.sections.resources')"
           wrapperClass="p-5"
         >
@@ -207,29 +207,29 @@ const deleteHandler = async (id) => {
               </tr>
             </tbody>
           </table>
-        </CardSection>
+        </CollectionCardSection>
 
         <FormComments :form="data" :responsibles="props.responsibles" />
       </div>
     </div>
 
-    <CardSection
+    <CollectionCardSection
       :header-text="__('task.show.tracking.title')"
       wrapperClass="p-5 grid grid-cols-2 gap-4"
       v-show="isTrackingTab"
     >
-    </CardSection>
-    <CardSection
+    </CollectionCardSection>
+    <CollectionCardSection
       :header-text="__('task.show.logbook.title')"
       wrapperClass="p-5 grid grid-cols-2 gap-4"
       v-show="isLogbookTab"
     >
-    </CardSection>
-    <CardSection
+    </CollectionCardSection>
+    <CollectionCardSection
       :header-text="__('task.show.statistics.title')"
       wrapperClass="p-5 grid grid-cols-2 gap-4"
       v-show="isStatisticsTab"
     >
-    </CardSection>
+    </CollectionCardSection>
   </AuthenticatedLayout>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
@@ -33,7 +33,7 @@ const remove_supply = (index) => {
 </script>
 
 <template>
-  <CardSection :header-text="__('task.sections.resources')" wrapperClass="">
+  <CollectionCardSection :header-text="__('task.sections.resources')" wrapperClass="">
     <div class="p-6 grid md:grid-cols-3 gap-x-16 gap-y-4 sm:grid-cols-1">
       <VSelectMultiple
         class="mt-1"
@@ -116,5 +116,5 @@ const remove_supply = (index) => {
     <div class="p-6">
       <Button @click.prevent="add_supply" :label="__('task.buttons.add_supply')" />
     </div>
-  </CardSection>
+  </CollectionCardSection>
 </template>

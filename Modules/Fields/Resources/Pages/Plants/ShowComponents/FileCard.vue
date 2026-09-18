@@ -1,7 +1,7 @@
 <script setup>
 import { stringToFormat } from '@Core/Utils/date';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 
 const props = defineProps({
   data: Object,
@@ -20,7 +20,7 @@ const dataFile = [
 </script>
 
 <template>
-  <CardSection
+  <CollectionCardSection
     wrapperClass="p-5 grid grid-cols-2 gap-4"
   >
     <div>
@@ -40,5 +40,5 @@ const dataFile = [
         </div>
       </template>
     </div>
-  </CardSection>
+  </CollectionCardSection>
 </template>

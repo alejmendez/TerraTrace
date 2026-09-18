@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-import CardSection from '@Core/Components/CardSection.vue';
+import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 
 import { getGraph } from '@Fields/Services/Graphs';
@@ -166,7 +166,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <CardSection wrapperClass="p-6 grid md:grid-cols-3 gap-x-16 gap-y-4 sm:grid-cols-1">
+    <CollectionCardSection wrapperClass="p-6 grid md:grid-cols-3 gap-x-16 gap-y-4 sm:grid-cols-1">
       <div>
         <div class="text-gray-400 pb-1">Tipo de gráfica</div>
         <VSelect
@@ -176,9 +176,9 @@ onMounted(async () => {
           @change="filterHandler"
         />
       </div>
-    </CardSection>
+    </CollectionCardSection>
 
-    <CardSection
+    <CollectionCardSection
       :header-text="type_graph.text"
       wrapperClass="p-5 grid grid-cols-2 gap-4"
     >
@@ -193,6 +193,6 @@ onMounted(async () => {
       <div v-else>
         <apexchart width="1300" height="450" :options="chartOption" :series="series"></apexchart>
       </div>
-    </CardSection>
+    </CollectionCardSection>
   </div>
 </template>
