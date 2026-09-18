@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormField from '@Fields/Pages/Fields/Form.vue';
 
 const props = defineProps({
@@ -31,7 +31,7 @@ const submitHandler = () => form.post(route('fields.update', data.id), form.blue
 
 <template>
   <AuthenticatedLayout :title="__('field.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('field.titles.edit')"
       :breadcrumbs="[{ to: 'fields.index', text: __('field.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.save_edit'), hrefCancel: route('fields.index') }"
