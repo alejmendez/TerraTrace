@@ -6,7 +6,7 @@ import { deleteRowTable } from '@Core/Utils/table';
 import { can } from '@Auth/Services/Auth';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import StatisticsCard from '@Fields/Pages/Quarters/ShowComponents/StatisticsCard.vue';
 import HarvestCard from '@Fields/Pages/Quarters/ShowComponents/HarvestCard.vue';
 import LogbookCard from '@Fields/Pages/Quarters/ShowComponents/LogbookCard.vue';
@@ -62,7 +62,7 @@ const deleteHandler = async (id) => {
 
 <template>
   <AuthenticatedLayout :title="__('quarter.titles.show', {name: quarter.name})">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('quarter.titles.show', {name: quarter.name})"
       :breadcrumbs="[{ to: 'quarters.index', text: __('quarter.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
     >
@@ -79,7 +79,7 @@ const deleteHandler = async (id) => {
         v-if="canEdit"
         v-show="isFileTab"
       />
-    </HeaderCrud>
+    </CollectionPageHeader>
 
     <div class="flex place-content-center">
       <nav class="flex mb-1 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-4 py-1">
