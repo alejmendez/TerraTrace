@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import BulkWrapper from '@Core/Components/BulkWrapper.vue';
 
 import VSelect from '@Core/Components/Form/VSelect.vue';
@@ -57,7 +57,7 @@ const changeFileHandler = (e) => {
 
 <template>
   <AuthenticatedLayout :title="__('plant.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('plant.titles.bulk')"
       :breadcrumbs="[{ to: 'plants.index', text: __('plant.titles.entity_breadcrumb') }, { text: __('generics.actions.bulk') }]"
       :form="{ instance: form }"
