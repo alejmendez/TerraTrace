@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { useConfirm } from 'primevue/useconfirm';
 import { deleteRowTable } from '@Core/Utils/table';
 import { stringToFormat } from '@Core/Utils/date';
 import { can } from '@Auth/Services/Auth';
@@ -37,7 +36,6 @@ const STATISTICS_TAB = 'statistics';
 const tabs = [FILE_TAB, ACTIVITY_TAB, STATISTICS_TAB];
 
 const currentTab = ref(props.current_tab || FILE_TAB);
-const confirm = useConfirm();
 
 const isFileTab = computed(() => currentTab.value === FILE_TAB);
 const isActivityTab = computed(() => currentTab.value === ACTIVITY_TAB);
@@ -51,7 +49,7 @@ const selectTab = (tab) => {
 };
 
 const deleteHandler = async (id) => {
-  await deleteRowTable(confirm, () => {
+  await deleteRowTable(() => {
     router.delete(route('dogs.destroy', id));
   });
 };

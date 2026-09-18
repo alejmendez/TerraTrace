@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
-import { useConfirm } from 'primevue/useconfirm';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { deleteRowTable } from '@Core/Utils/table';
@@ -18,7 +17,6 @@ import StatisticsCard from '@Fields/Pages/Plants/ShowComponents/StatisticsCard.v
 
 import PlantDetailService from '@Fields/Services/PlantDetailService';
 
-const confirm = useConfirm();
 const props = defineProps({
   data: Object,
   details: Object,
@@ -82,7 +80,7 @@ const selectTab = (tab) => {
 };
 
 const deleteHandler = async (id) => {
-  await deleteRowTable(confirm, () => {
+  await deleteRowTable(() => {
     router.delete(route('plants.destroy', id));
   });
 };

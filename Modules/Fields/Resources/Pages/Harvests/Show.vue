@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { getWeek } from 'date-fns';
-import { useConfirm } from 'primevue/useconfirm';
 
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -31,7 +30,6 @@ const props = defineProps({
 
 const { data } = props.data;
 
-const confirm = useConfirm();
 
 const quarters = ref(data.quarters.map((q) => q.name).join(', '));
 
@@ -39,7 +37,7 @@ const canEdit = can('harvests.edit');
 const canDestroy = can('harvests.destroy');
 
 const deleteHandler = async (id) => {
-  await deleteRowTable(confirm, () => {
+  await deleteRowTable(() => {
     router.delete(route('harvests.destroy', id));
   });
 };

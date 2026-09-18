@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { useConfirm } from 'primevue/useconfirm';
 
 import { can } from '@Auth/Services/Auth';
 import { deleteRowTable } from '@Core/Utils/table';
@@ -12,7 +11,6 @@ import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHead
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import FormComments from '@Tasks/Components/Comments.vue';
 
-const confirm = useConfirm();
 const props = defineProps({
   data: Object,
   fields: Array,
@@ -77,7 +75,7 @@ const selectTab = (tab) => {
 };
 
 const deleteHandler = async (id) => {
-  await deleteRowTable(confirm, () => {
+  await deleteRowTable(() => {
     router.delete(route('tasks.destroy', id));
   });
 };

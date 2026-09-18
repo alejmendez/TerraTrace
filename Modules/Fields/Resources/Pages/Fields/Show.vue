@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { useConfirm } from 'primevue/useconfirm';
 import { deleteRowTable } from '@Core/Utils/table';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
@@ -28,7 +27,6 @@ const props = defineProps({
 });
 
 const field = props.field.data;
-const confirm = useConfirm();
 
 const current_tab = ref(props.current_tab);
 
@@ -57,7 +55,7 @@ const isStatisticsTab = computed(() => current_tab.value === STATISTICS_TAB);
 const isDocumentationTab = computed(() => current_tab.value === DOCUMENTATION_TAB);
 
 const deleteHandler = async (id) => {
-  await deleteRowTable(confirm, () => {
+  await deleteRowTable(() => {
     router.delete(route('fields.destroy', id));
   });
 };

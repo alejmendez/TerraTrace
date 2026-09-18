@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { useConfirm } from 'primevue/useconfirm';
 import { deleteRowTable } from '@Core/Utils/table';
 import { stringToFormat } from '@Core/Utils/date';
 import { can } from '@Auth/Services/Auth';
@@ -10,7 +9,6 @@ import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 
-const confirm = useConfirm();
 
 const props = defineProps({
   data: Object,
@@ -50,7 +48,7 @@ const selectTab = (tab) => {
 };
 
 const deleteHandler = async (id) => {
-  await deleteRowTable(confirm, () => {
+  await deleteRowTable(() => {
     router.delete(route('users.destroy', id));
   });
 };
