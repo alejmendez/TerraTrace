@@ -8,7 +8,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
 import CardSection from '@Core/Components/CardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
@@ -47,7 +47,7 @@ const deleteHandler = async (id) => {
 
 <template>
   <AuthenticatedLayout :title="__('harvest.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="data.date_rendered"
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }, { text: __('generics.actions.show') }]"
     >
@@ -62,7 +62,7 @@ const deleteHandler = async (id) => {
         :label="__('generics.actions.edit')"
         v-if="canEdit"
       />
-    </HeaderCrud>
+    </CollectionPageHeader>
 
     <CardSection>
       <VInput :label="__('harvest.form.date.label')" :value="data.date_rendered" readonly />
