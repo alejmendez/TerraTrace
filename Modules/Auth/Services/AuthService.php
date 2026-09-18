@@ -7,11 +7,10 @@ use Spatie\Permission\Models\Role;
 /**
  * Auth-owned operations.
  *
- * Created during the ListEntity migration (each module owns its own
- * lists per AGENTS.md section 4). At the moment this only exposes
- * `roles()` for the role <select>, but new Auth-domain operations
- * (e.g. token lifecycle helpers, MFA, socialite redirects) belong
- * here too once they appear.
+ * Exposes `roles()` for the role <select>. The dispatcher entry
+ * `role` resolves through this method (AGENTS.md §4.4). New
+ * Auth-domain operations (token lifecycle helpers, MFA, socialite
+ * redirects) belong here too once they appear.
  *
  * Cross-module auth (login/register flows) stays in the existing
  * Auth controllers — UserService handles the User-domain side of

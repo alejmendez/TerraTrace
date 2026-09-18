@@ -6,25 +6,25 @@ use Closure;
 use RuntimeException;
 
 /**
- * Runtime registry of entity names → query factories.
+ * Runtime registry of entity names → model classes.
  *
- * Lets each module declare which named entities it owns (the strings
- * that `Modules\Core\Services\ListEntity::call('field')` consumes),
- * without Core having to know about any specific module's models.
+ * Lets each module declare the Eloquent model class behind a named
+ * entity (the strings `EntityRegistry::model('field')` consumes from
+ * `Modules\Tasks\Models\Task::field()` etc.), without Core having to
+ * know about any specific module's models.
  *
  * Registration happens in each module's `ServiceProvider::register()`
  * (NOT boot()) so the registry is populated before any boot logic
  * queries it. Core itself doesn't register anything — it's the spine.
  *
- * Two entry shapes are accepted:
- *   - string model class  → resolve() returns the class; query() returns
- *                            a fresh query builder for it.
- *   - Closure factory     → resolve() returns null; query() invokes the
- *                            closure with the filter array and returns
- *                            whatever it produces (query, collection,
- *                            paginator, …). Use this for entities that
- *                            need a custom SELECT (e.g. computed labels)
- *                            or post-processing (e.g. mapping).
+ * @deprecated Use `EntityDispatcher` for data-shape lookups
+ *             (see AGENTS.md §4.4). This registry now serves one
+ *             purpose only: resolving entity name → model class for
+ *             cross-module `belongsTo` / `belongsToMany` relations.
+ *             The query-factory / data-shape half of the old API is
+ *             retained as a default fallback (so `register('field',
+ *             Field::class)` keeps working) but is no longer the
+ *             intended entry point.
  *
  * The registry is static. State persists for the process lifetime; in
  * Octane that's across requests (intentional — registrations are
@@ -51,8 +51,9 @@ class EntityRegistry
 
         // If a model is given without a factory, build a default factory
         // that returns a fresh query on the model. The list ordering /
-        // column selection that ListEntity used to inline now moves into
-        // each module's ServiceProvider::register().
+        // column selection used to live inline here; it now lives in
+        // each module's service method (FieldService::forSelect, etc.)
+        // and is dispatched through EntityDispatcher.
         $factory ??= static fn (array $filter) => $model::query();
 
         self::$entries[$name] = [

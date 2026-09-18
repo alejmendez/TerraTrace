@@ -130,7 +130,7 @@ class EntityDispatcher
 
     /**
      * Resolve a batch of entities keyed by name. `$entities` mirrors
-     * the JSON shape the legacy `ListEntities::call()` accepted:
+     * the body shape the `entity=multiple` HTTP endpoint accepts:
      * either `[entity => filter]` (assoc array) or `{entity: filter}`
      * (stdClass from `json_decode`). Filters are passed through but
      * unused by current service methods.
