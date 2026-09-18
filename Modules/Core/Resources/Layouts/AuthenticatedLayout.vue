@@ -1,10 +1,12 @@
 <script setup>
 import { usePage, Head, Link } from '@inertiajs/vue3';
 import { storeToRefs } from 'pinia';
-import ConfirmDialog from 'primevue/confirmdialog';
-import Toast from 'primevue/toast';
 import Drawer from 'primevue/drawer';
 
+import CollectionConfirmDialog from '@Core/Components/Collection/CollectionConfirmDialog.vue';
+import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
+import { useConfirm } from '@Core/Composables/useConfirm';
+import { useToast } from '@Core/Composables/useToast';
 import SideBarLeft from '@Core/Components/Menu/SideBarLeft.vue';
 import MenuUser from '@Core/Components/Menu/MenuUser.vue';
 import { useSideBarStore } from '@Core/Stores/sidebar.js';
@@ -28,6 +30,9 @@ const drawerRightMenuStore = useDrawerRightMenuStore();
 const { show: showDrawerRightMenu } = storeToRefs(drawerRightMenuStore);
 
 const menuRightItems = menuElementsRight(currentComponent);
+
+const confirm = useConfirm();
+const toast = useToast();
 </script>
 
 <template>
@@ -78,7 +83,6 @@ const menuRightItems = menuElementsRight(currentComponent);
       </header>
 
       <main class="terra-main">
-        <Toast />
         <slot></slot>
       </main>
     </section>
@@ -103,5 +107,17 @@ const menuRightItems = menuElementsRight(currentComponent);
     </ul>
   </Drawer>
 
-  <ConfirmDialog />
+  <CollectionConfirmDialog
+    :visible="confirm.visible.value"
+    :title="confirm.title.value"
+    :message="confirm.message.value"
+    @cancel="confirm.cancel"
+    @confirm="confirm.confirm"
+  />
+
+  <CollectionToast
+    :message="toast.message.value"
+    :tone="toast.tone.value"
+    @dismiss="toast.dismiss"
+  />
 </template>

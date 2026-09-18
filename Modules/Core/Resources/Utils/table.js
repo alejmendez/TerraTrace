@@ -1,84 +1,56 @@
 import { trans } from 'laravel-vue-i18n';
 
-const createConfirmOptions = (entity, accept) => ({
-  message: trans('generics.tables.confirm.delete', { entity }),
-  header: trans('generics.tables.confirm.delete_header', { entity }),
-  icon: 'pi pi-info-circle',
-  rejectLabel: trans('generics.tables.confirm.denyButton'),
-  rejectProps: {
-    label: trans('generics.tables.confirm.denyButton'),
-    severity: 'secondary',
-    outlined: true,
-  },
-  acceptProps: {
-    label: trans('generics.tables.confirm.confirmButton'),
-    severity: 'danger',
-  },
-  accept,
-  reject: () => {},
-});
+import { useConfirm } from '@Core/Composables/useConfirm';
+import { useToast } from '@Core/Composables/useToast';
 
-const showToast = (toast, isSuccess = true) => {
-  const config = isSuccess
-    ? {
-        severity: 'success',
-        summary: trans('generics.messages.deleted_successfully_summary'),
-        detail: trans('generics.messages.deleted_successfully'),
-      }
-    : {
-        severity: 'error',
-        summary: trans('generics.tables.errors.could_not_delete_the_record_summary'),
-        detail: trans('generics.tables.errors.could_not_delete_the_record'),
-      };
-
-  toast.add({
-    ...config,
-    life: 3000,
-  });
-};
-
-const handleDeleteConfirmation = async (handler, datatable, toast) => {
-  const result = await handler();
-
-  if (result) {
-    datatable.value.loadLazyData();
-    showToast(toast, true);
-    return;
-  }
-
-  showToast(toast, false);
-};
-
-export const deleteRowTable = async (confirm, accept, entity = null) => {
-  const confirmOptions = createConfirmOptions(entity || trans('generics.tables.entity'), accept);
-  confirm.require(confirmOptions);
-};
-
-export const defaultDeleteHandler = (confirm, datatable, toast, fetchDelete) => {
-  deleteRowTable(confirm, async () => {
-    const result = await fetchDelete();
-    if (result) {
-      datatable.value.loadLazyData();
-      return toast.add({
-        severity: 'success',
-        summary: trans('generics.messages.deleted_successfully_summary'),
-        detail: trans('generics.messages.deleted_successfully'),
-        life: 3000,
-      });
-    }
-    toast.add({
-      severity: 'error',
-      summary: trans('generics.tables.errors.could_not_delete_the_record_summary'),
-      detail: trans('generics.tables.errors.could_not_delete_the_record'),
-      life: 3000,
+/**
+ * Open a confirmation dialog before deleting a row. Used by the
+ * Show pages, which navigate away after deletion.
+ *
+ * @param  {() => void | Promise<void>}  accept  delete action
+ * @param  {string}  [entity]  i18n key suffix for the entity name
+ */
+export const deleteRowTable = (accept, entity = null) => {
+    useConfirm().ask({
+        message: trans('generics.tables.confirm.delete', { entity: entity ?? trans('generics.tables.entity') }),
+        title: trans('generics.tables.confirm.delete_header', { entity: entity ?? trans('generics.tables.entity') }),
+        accept,
     });
-  });
 };
 
-export const deleteRowDatatable = (options) => {
-  const { datatable, confirm, toast, entity = trans('generics.tables.entity'), handler } = options;
-
-  const confirmOptions = createConfirmOptions(entity, async () => await handleDeleteConfirmation(handler, datatable, toast));
-
-  confirm.require(confirmOptions);
+/**
+ * Open a confirmation dialog before deleting a row from a table.
+ * On success, reloads the datatable and shows a toast. Used by
+ * the harvest / datatable components that refresh after deletion.
+ *
+ * The first two positional args (`confirm`, `toast`) are accepted
+ * for backwards compatibility but ignored — the module-level
+ * composables handle them now. `HarvestTable.vue` still calls with
+ * the old shape and will be migrated separately.
+ *
+ * @param  {object}  _confirm   legacy PrimeVue confirm instance (ignored)
+ * @param  {{value: object, loadLazyData: () => void}}  datatable
+ * @param  {object}  _toast     legacy PrimeVue toast instance (ignored)
+ * @param  {() => Promise<boolean>}  fetchDelete
+ */
+export const defaultDeleteHandler = (_confirm, datatable, _toast, fetchDelete) => {
+    useConfirm().ask({
+        message: trans('generics.tables.confirm.delete', { entity: trans('generics.tables.entity') }),
+        title: trans('generics.tables.confirm.delete_header', { entity: trans('generics.tables.entity') }),
+        accept: async () => {
+            const ok = await fetchDelete();
+            if (ok) {
+                datatable.value.loadLazyData();
+                useToast().show({
+                    tone: 'success',
+                    message: trans('generics.messages.deleted_successfully'),
+                });
+                return;
+            }
+            useToast().show({
+                tone: 'error',
+                message: trans('generics.tables.errors.could_not_delete_the_record'),
+            });
+        },
+    });
 };
