@@ -38,6 +38,15 @@ class EntityRegistry
     /**
      * Register an entity.
      *
+     * `@deprecated` since the EntityDispatcher migration. The data-shape
+     * half (the `$factory` closure) is no longer the recommended entry
+     * point — register the entity in EntityDispatcher and expose a
+     * `forSelect()` / equivalent method on the owning module's service.
+     * The bare-model registration (`register('field', Field::class)`)
+     * is still required by cross-module `belongsTo` / `belongsToMany`
+     * relations in `Modules\Tasks\Models\Task`; only the closure
+     * variants are deprecated.
+     *
      * @param  string  $name  short slug, e.g. "field", "harvest"
      * @param  string|null  $model  Eloquent model FQCN, or null when
      *                              providing a factory closure
