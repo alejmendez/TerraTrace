@@ -4,7 +4,7 @@ import { useForm } from '@inertiajs/vue3';
 import { useToast } from 'primevue/usetoast';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormUser from '@Users/Components/Form.vue';
 
 const toast = useToast();
@@ -42,7 +42,7 @@ onMounted(async () => {
 
 <template>
   <AuthenticatedLayout :title="__('profile.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('profile.titles.edit')"
       :breadcrumbs="[{ text: __('profile.titles.entity_breadcrumb') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.save_edit'), hrefCancel: route('dashboard.index') }"

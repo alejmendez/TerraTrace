@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormUser from '@Users/Components/Form.vue';
 
 const props = defineProps({
@@ -25,7 +25,7 @@ const submitHandler = () => form.post(route('users.store'), form.avatar ? { forc
 
 <template>
   <AuthenticatedLayout :title="__('user.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('user.titles.create')"
       :breadcrumbs="[{ to: 'users.index', text: __('user.titles.entity_breadcrumb') }, { text: __('generics.actions.create') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.create'), hrefCancel: route('users.index') }"

@@ -7,7 +7,7 @@ import { stringToFormat } from '@Core/Utils/date';
 import { can } from '@Auth/Services/Auth';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import CardSection from '@Core/Components/CardSection.vue';
 
 const confirm = useConfirm();
@@ -58,7 +58,7 @@ const deleteHandler = async (id) => {
 
 <template>
   <AuthenticatedLayout :title="__('user.titles.show')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('user.titles.show')"
       :breadcrumbs="[{ to: 'users.index', text: __('user.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
       :links="headerLinks"
