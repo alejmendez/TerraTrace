@@ -8,7 +8,7 @@ import { deleteRowTable } from '@Core/Utils/table';
 import { stringToFormat } from '@Core/Utils/date';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import CardSection from '@Core/Components/CardSection.vue';
 import FormComments from '@Tasks/Components/Comments.vue';
 
@@ -85,7 +85,7 @@ const deleteHandler = async (id) => {
 
 <template>
   <AuthenticatedLayout :title="__('task.titles.show')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('task.titles.show')"
       :breadcrumbs="[{ to: 'tasks.index', text: __('task.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
       :links="headerLinks"
