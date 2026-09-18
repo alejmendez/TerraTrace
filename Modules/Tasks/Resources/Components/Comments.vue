@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useConfirm } from 'primevue/useconfirm';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import Button from '@Core/Components/Form/Button.vue';
@@ -16,8 +15,6 @@ const props = defineProps({
 });
 
 const form = props.form;
-
-const confirm = useConfirm();
 
 const loading = ref(false);
 const isEditing = ref(false);
@@ -79,8 +76,6 @@ const updateCommentHandler = async () => {
 
 const deleteComment = (id) => {
   deleteRowTable(
-    trans,
-    confirm,
     async () => {
       loading.value = true;
       const deletedComment = await destroyComment(id);
