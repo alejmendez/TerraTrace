@@ -30,7 +30,6 @@ const props = defineProps({
      * right column. Each entry is
      * `{ to: routeName | url | function, text: i18nKey, variant?: string }`.
      * `to` as a function is treated as an onClick handler.
-     * Replaces `HeaderCrud.links`.
      */
     links: {
         type: Array,
@@ -38,8 +37,7 @@ const props = defineProps({
     },
 
     /**
-     * Optional form-action bundle. Shape mirrors the legacy
-     * `HeaderCrud.form`:
+     * Optional form-action bundle:
      *   `{ instance: useFormReturn, submitHandler: () => void,
      *      submitText?: string, hrefCancel?: string }`.
      * When present, renders a submit button (with processing state
