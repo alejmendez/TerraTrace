@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormDog from '@Fields/Pages/Dogs/Form.vue';
 
 import { stringToDate, getAge } from '@Core/Utils/date';
@@ -51,7 +51,7 @@ const submitHandler = () => form.post(route('dogs.update', data.id), form.avatar
 
 <template>
   <AuthenticatedLayout :title="__('dog.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('dog.titles.edit')"
       :breadcrumbs="[{ to: 'dogs.index', text: __('dog.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.save_edit'), hrefCancel: route('dogs.index') }"
