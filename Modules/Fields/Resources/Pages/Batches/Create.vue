@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import FormBatch from '@Fields/Pages/Batches/Form.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
 const props = defineProps({
   importers: Array,
@@ -24,7 +24,7 @@ const submitHandler = () => form.post(route('batches.store'));
 
 <template>
   <AuthenticatedLayout :title="__('batch.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('batch.titles.create')"
       :breadcrumbs="[{ to: 'batches.index', text: __('batch.titles.entity_breadcrumb') }, { text: __('generics.actions.create') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.create'), hrefCancel: route('batches.index') }"
