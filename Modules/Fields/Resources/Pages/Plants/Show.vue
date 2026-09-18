@@ -8,7 +8,7 @@ import { deleteRowTable } from '@Core/Utils/table';
 import { can } from '@Auth/Services/Auth';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
 import VariablesView from '@Fields/Pages/HarvestDetails/Views/VariablesView.vue';
 
@@ -103,7 +103,7 @@ const submitHandler = async () => {
 
 <template>
   <AuthenticatedLayout :title="__('plant.titles.show', {name: data.code})">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('plant.titles.show', {name: data.code})"
       :breadcrumbs="[{ to: 'plants.index', text: __('plant.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
     >
@@ -126,7 +126,7 @@ const submitHandler = async () => {
         v-show="isLogsTab"
         @click="showModalNote = true"
       />
-    </HeaderCrud>
+    </CollectionPageHeader>
 
     <div class="flex place-content-center">
       <nav class="flex mb-1 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-4 py-1">
