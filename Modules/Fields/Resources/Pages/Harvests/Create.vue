@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormHarvest from '@Fields/Pages/Harvests/Form.vue';
 
 const props = defineProps({
@@ -30,7 +30,7 @@ const submitHandler = () => {
 
 <template>
   <AuthenticatedLayout :title="__('harvest.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('harvest.titles.create')"
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }, { text: __('generics.actions.create') }]"
       :form="{ instance: form, submitHandler, submitText: __('generics.buttons.create'), hrefCancel: route('harvests.index') }"

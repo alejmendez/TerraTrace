@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import { getWeek } from 'date-fns';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormHarvest from '@Fields/Pages/Harvests/Form.vue';
 
 import Button from '@Core/Components/Form/Button.vue';
@@ -61,7 +61,7 @@ const submitHandler = () => {
 
 <template>
   <AuthenticatedLayout :title="__('harvest.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('harvest.titles.edit', { batch: form.batch.toUpperCase(), week: getWeek(form.date, { weekStartsOn: 1 })})"
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
     >
@@ -79,7 +79,7 @@ const submitHandler = () => {
         :href="route('harvests.index')"
         :label="__('generics.buttons.cancel')"
       />
-    </HeaderCrud>
+    </CollectionPageHeader>
 
     <FormHarvest
       :form="form"

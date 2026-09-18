@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
-import HeaderCrud from '@Core/Components/Crud/HeaderCrud.vue';
+import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import BulkWrapper from '@Core/Components/BulkWrapper.vue';
 
 import VSelect from '@Core/Components/Form/VSelect.vue';
@@ -56,7 +56,7 @@ const handleYearChange = () => {
 
 <template>
   <AuthenticatedLayout :title="__('harvest.titles.entity_breadcrumb')">
-    <HeaderCrud
+    <CollectionPageHeader
       :title="__('harvest.titles.bulk')"
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }, { text: __('generics.actions.bulk') }]"
       :form="{ instance: form }"
