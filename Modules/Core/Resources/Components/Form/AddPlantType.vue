@@ -1,14 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 
-import Dialog from 'primevue/dialog';
+import CollectionDialog from '@Core/Components/Collection/CollectionDialog.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import plantTypeService from '@Fields/Services/PlantTypeService.js';
 
 const props = defineProps({
-  callback: Function,
+    callback: Function,
 });
 
 const plant_type_name = ref('');
@@ -16,34 +16,43 @@ const open = ref(false);
 const loading = ref(false);
 
 const addPlantType = async () => {
-  loading.value = true;
-  const response = await plantTypeService.create({ name: plant_type_name.value });
-  const newType = response.data.type;
-  loading.value = false;
-  open.value = false;
-  props.callback(newType);
-  plant_type_name.value = '';
+    loading.value = true;
+    const response = await plantTypeService.create({ name: plant_type_name.value });
+    const newType = response.data.type;
+    loading.value = false;
+    open.value = false;
+    props.callback(newType);
+    plant_type_name.value = '';
 };
 </script>
 
 <template>
-  <CollectionButton
-    severity="secondary"
-    @click.prevent="open = true"
-    icon="pi pi-plus"
-  />
-  <Dialog v-model:visible="open" modal header="Agregar un tipo de planta" :style="{ maxWidth: '425px' }">
-    <div class="grid gap-4 py-4">
-      <div class="grid items-center gap-4">
+    <CollectionButton
+        severity="secondary"
+        icon="add"
+        @click.prevent="open = true"
+    />
+
+    <CollectionDialog
+        v-model:visible="open"
+        title="Agregar un tipo de planta"
+        max-width="425px"
+    >
         <CollectionInput
-          id="plant_type_name"
-          v-model="plant_type_name"
-          :label="__('plant.form.plant_type_id.label')"
+            id="plant_type_name"
+            v-model="plant_type_name"
+            :label="__('plant.form.plant_type_id.label')"
         />
-      </div>
-    </div>
-    <div class="flex justify-end">
-      <CollectionButton type="submit" @click="addPlantType" :label="__('generics.actions.create')" :loading="loading" />
-    </div>
-  </Dialog>
+
+        <template #footer>
+            <div class="flex justify-end">
+                <CollectionButton
+                    type="submit"
+                    :label="__('generics.actions.create')"
+                    :loading="loading"
+                    @click="addPlantType"
+                />
+            </div>
+        </template>
+    </CollectionDialog>
 </template>
