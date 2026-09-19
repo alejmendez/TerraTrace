@@ -8,8 +8,6 @@ import QrCodeReader from '@Fields/Pages/HarvestDetails/QrCodeReader.vue';
 import HarvestView from '@Fields/Pages/HarvestDetails/Views/HarvestView.vue';
 import VariablesView from '@Fields/Pages/HarvestDetails/Views/VariablesView.vue';
 
-import Button from 'primevue/button';
-
 import { findByCode } from '@Fields/Services/Plant.js';
 import HarvestDetailService from '@Fields/Services/HarvestDetailService.js';
 import PlantDetailService from '@Fields/Services/PlantDetailService.js';

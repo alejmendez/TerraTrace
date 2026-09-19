@@ -1,11 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import InputGroup from 'primevue/inputgroup';
 
 import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
   form: {
@@ -152,48 +150,45 @@ const openSoilSanitationPhoto = () => {
     />
 
     <CollectionFieldWrapper :label="__('harvest_details.form.foliage_sanitation.label')" :message="form.errors.foliage_sanitation">
-      <InputGroup>
-        <InputText
+      <div class="mb-2 flex items-stretch gap-2">
+        <CollectionInput
           id="foliage_sanitation"
-          class="mb-2"
-          fluid
           v-model="form.foliage_sanitation"
+          class="grow"
         />
         <CollectionButton
-          icon="pi pi-plus"
+          icon="add"
           @click="openFoliageSanitationPhoto"
         />
-      </InputGroup>
+      </div>
     </CollectionFieldWrapper>
 
     <CollectionFieldWrapper :label="__('harvest_details.form.trunk_sanitation.label')" :message="form.errors.trunk_sanitation">
-      <InputGroup>
-        <InputText
+      <div class="mb-2 flex items-stretch gap-2">
+        <CollectionInput
           id="trunk_sanitation"
-          class="mb-2"
-          fluid
           v-model="form.trunk_sanitation"
+          class="grow"
         />
         <CollectionButton
-          icon="pi pi-plus"
+          icon="add"
           @click="openTrunkSanitationPhoto"
         />
-      </InputGroup>
+      </div>
     </CollectionFieldWrapper>
 
     <CollectionFieldWrapper :label="__('harvest_details.form.soil_sanitation.label')" :message="form.errors.soil_sanitation">
-      <InputGroup>
-        <InputText
+      <div class="mb-2 flex items-stretch gap-2">
+        <CollectionInput
           id="soil_sanitation"
-          class="mb-2"
-          fluid
           v-model="form.soil_sanitation"
+          class="grow"
         />
         <CollectionButton
-          icon="pi pi-plus"
+          icon="add"
           @click="openSoilSanitationPhoto"
         />
-      </InputGroup>
+      </div>
     </CollectionFieldWrapper>
 
     <CollectionInput

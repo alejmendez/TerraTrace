@@ -1,6 +1,5 @@
 <script setup>
-import Button from 'primevue/button';
-
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
