@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import MultiSelect from 'primevue/multiselect';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSelect.vue';
 import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import AddImporter from '@Core/Components/Form/AddImporter.vue';
 
@@ -60,22 +60,15 @@ const addImporterCallback = (newType) => {
       </div>
 
       <CollectionFieldWrapper :classWrapper="props.classWrapper" :label="__('batch.form.harvests.label')" :message="form.errors.harvests">
-        <MultiSelect
+        <CollectionMultiSelect
           id="harvests"
           v-model="form.harvests"
-          optionGroupLabel="label"
-          optionGroupChildren="items"
-          optionLabel="label"
-          fluid
+          option-group-label="label"
+          option-group-children="items"
+          option-label="label"
           :placeholder="__('generics.please_select')"
           :options="harvests"
-        >
-          <template #optiongroup="slotProps">
-            <div class="flex items-center">
-              <div>{{ slotProps.option.label }}</div>
-            </div>
-          </template>
-        </MultiSelect>
+        />
       </CollectionFieldWrapper>
 
       <CollectionInput

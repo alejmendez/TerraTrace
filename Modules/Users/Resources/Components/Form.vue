@@ -6,8 +6,6 @@ import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
-import InputMask from 'primevue/inputmask';
-
 const props = defineProps({
   form: Object,
   roles: Array,
@@ -69,10 +67,10 @@ const changeFileHandler = (e) => {
       />
 
       <CollectionFieldWrapper :classWrapper="props.classWrapper" :label="__('user.form.phone.label')" :message="form.errors.phone">
-        <InputMask
+        <CollectionInput
           v-model="form.phone"
-          mask="(+99) 9 9999 9999"
-          fluid
+          type="tel"
+          placeholder="(+99) 9 9999 9999"
         />
       </CollectionFieldWrapper>
 

@@ -3,13 +3,8 @@ import { ref, computed } from 'vue';
 import { trans } from 'laravel-vue-i18n';
 import { format, getWeek, endOfWeek, startOfWeek } from 'date-fns';
 
-import Dialog from 'primevue/dialog';
-import DatePicker from 'primevue/datepicker';
-import InputText from 'primevue/inputtext';
-import InputGroup from 'primevue/inputgroup';
-import InputGroupAddon from 'primevue/inputgroupaddon';
-
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
+import CollectionDialog from '@Core/Components/Collection/CollectionDialog.vue';
 import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import AddImporter from '@Core/Components/Form/AddImporter.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
@@ -74,15 +69,14 @@ const total_categories_not_commercial = computed(() => {
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
       <CollectionFieldWrapper :label="__('liquidation.form.date.label')" :message="form.errors.date">
-        <InputGroup>
-          <InputText
-            fluid
+        <div class="flex items-stretch gap-2">
+          <CollectionInput
             v-model="date_rendered"
-            variant="filled"
+            class="grow"
             @click="handler_open_datepicker"
           />
-          <CollectionButton severity="secondary" icon="pi pi-calendar" @click="handler_open_datepicker" />
-        </InputGroup>
+          <CollectionButton severity="secondary" icon="calendar_month" @click="handler_open_datepicker" />
+        </div>
       </CollectionFieldWrapper>
 
       <div class="grid grid-cols-12">
@@ -129,43 +123,34 @@ const total_categories_not_commercial = computed(() => {
     </CollectionCardSection>
     <CollectionCardSection>
       <CollectionFieldWrapper :label="__('liquidation.form.weight_with_earth.label')" :message="form.errors.weight_with_earth">
-        <InputGroup>
-          <InputText
-            fluid
-            v-model="form.weight_with_earth"
-            type="number"
-            :min="0"
-            :max="200000"
-            :step="0.1"
-          />
-          <InputGroupAddon>{{ __('liquidation.weight_unit') }}</InputGroupAddon>
-        </InputGroup>
+        <CollectionInput
+          v-model="form.weight_with_earth"
+          type="number"
+          :min="0"
+          :max="200000"
+          :step="0.1"
+          sufix="kg"
+        />
       </CollectionFieldWrapper>
       <CollectionFieldWrapper :label="__('liquidation.form.weight_washed.label')" :message="form.errors.weight_washed">
-        <InputGroup>
-          <InputText
-            fluid
-            v-model="form.weight_washed"
-            type="number"
-            :min="0"
-            :max="200000"
-            :step="0.1"
-          />
-          <InputGroupAddon>{{ __('liquidation.weight_unit') }}</InputGroupAddon>
-        </InputGroup>
+        <CollectionInput
+          v-model="form.weight_washed"
+          type="number"
+          :min="0"
+          :max="200000"
+          :step="0.1"
+          sufix="kg"
+        />
       </CollectionFieldWrapper>
       <CollectionFieldWrapper :label="__('liquidation.form.dollar_value.label')" :message="form.errors.dollar_value">
-        <InputGroup>
-          <InputText
-            fluid
-            v-model="form.dollar_value"
-            type="number"
-            :min="0"
-            :max="200000"
-            :step="0.1"
-          />
-          <InputGroupAddon>{{ __('liquidation.currency_unit') }}</InputGroupAddon>
-        </InputGroup>
+        <CollectionInput
+          v-model="form.dollar_value"
+          type="number"
+          :min="0"
+          :max="200000"
+          :step="0.1"
+          sufix="$"
+        />
       </CollectionFieldWrapper>
     </CollectionCardSection>
     <CollectionCardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
@@ -247,7 +232,12 @@ const total_categories_not_commercial = computed(() => {
     </CollectionCardSection>
   </form>
 
-  <Dialog v-model:visible="show_modal_datepicker" modal header="Seleccionar Fecha">
-    <DatePicker v-model="form.date" fluid inline showWeek @date-select="handler_date_selected" />
-  </Dialog>
+  <CollectionDialog v-model:visible="show_modal_datepicker" title="Seleccionar Fecha">
+    <CollectionInput
+      id="date_picker"
+      v-model="form.date"
+      type="date"
+      @change="handler_date_selected"
+    />
+  </CollectionDialog>
 </template>

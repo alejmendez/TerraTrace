@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import ProgressSpinner from 'primevue/progressspinner';
 
 import { listUnread } from '@Tasks/Services/TaskNotificationService';
 import { stringToDate, relativeTimeDifference } from '@Core/Utils/date';
@@ -50,13 +49,11 @@ onMounted(async () => {
     </div>
 
     <div v-show="loading" class="text-center mt-5">
-      <ProgressSpinner
-        style="width: 50px; height: 50px"
-        strokeWidth="8"
-        fill="transparent"
-        animationDuration=".5s"
-        aria-label="Progress Spinner"
-      />
+      <div
+        class="inline-block size-[50px] rounded-full border-4 border-[#e1e9e3] border-t-[#17663a] animate-spin"
+        role="status"
+        aria-label="Cargando"
+      ></div>
     </div>
 
     <div class="mt-5" v-show="!loading && messages.total == 0">

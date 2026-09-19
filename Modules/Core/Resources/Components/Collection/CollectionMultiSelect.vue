@@ -34,6 +34,14 @@ const props = defineProps({
         type: String,
         default: 'value',
     },
+    optionGroupLabel: {
+        type: String,
+        default: null,
+    },
+    optionGroupChildren: {
+        type: String,
+        default: null,
+    },
 });
 
 defineOptions({ inheritAttrs: false });
@@ -109,13 +117,30 @@ function onBlur(e) {
             @change="onChange"
             @blur="onBlur"
         >
-            <option
-                v-for="(opt, idx) in props.options"
-                :key="`${getOptionValue(opt)}-${idx}`"
-                :value="getOptionValue(opt)"
-            >
-                {{ getOptionLabel(opt) }}
-            </option>
+            <template v-if="props.optionGroupLabel && props.optionGroupChildren">
+                <optgroup
+                    v-for="(group, gIdx) in props.options"
+                    :key="gIdx"
+                    :label="getOptionLabel(group)"
+                >
+                    <option
+                        v-for="(opt, idx) in (group[props.optionGroupChildren] || [])"
+                        :key="`${getOptionValue(opt)}-${gIdx}-${idx}`"
+                        :value="getOptionValue(opt)"
+                    >
+                        {{ getOptionLabel(opt) }}
+                    </option>
+                </optgroup>
+            </template>
+            <template v-else>
+                <option
+                    v-for="(opt, idx) in props.options"
+                    :key="`${getOptionValue(opt)}-${idx}`"
+                    :value="getOptionValue(opt)"
+                >
+                    {{ getOptionLabel(opt) }}
+                </option>
+            </template>
         </select>
     </CollectionFieldWrapper>
 </template>

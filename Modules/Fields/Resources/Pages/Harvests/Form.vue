@@ -3,9 +3,6 @@ import { ref, computed, watch } from 'vue';
 import { trans } from 'laravel-vue-i18n';
 import { format, getWeek, endOfWeek, startOfWeek } from 'date-fns';
 
-import InputText from 'primevue/inputtext';
-import InputNumber from 'primevue/inputnumber';
-
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSelect.vue';
@@ -79,11 +76,9 @@ watch(totalWeight, (newValue) => {
     <CollectionCardSection>
       <div class="grid grid-cols-2 gap-x-2 gap-y-4">
         <CollectionFieldWrapper :label="__('harvest.form.date.label_rendered')">
-          <InputText
-            fluid
-            class="mt-1"
+          <CollectionInput
             v-model="date_rendered"
-            variant="filled"
+            class="mt-1"
           />
         </CollectionFieldWrapper>
         <CollectionInput
@@ -164,13 +159,13 @@ watch(totalWeight, (newValue) => {
 
           <div class="flex items-center gap-2">
             {{ __('harvest.form.weight.label') }}
-            <InputNumber
+            <CollectionInput
               v-model="form.weight"
               :message="form.errors.weight"
-              showButtons
-              :min="0"
+              type="number"
+              show-buttons
               :step="1"
-              suffix=" grs"
+              sufix=" grs"
             />
           </div>
         </header>
