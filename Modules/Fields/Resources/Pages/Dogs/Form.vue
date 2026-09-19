@@ -5,7 +5,7 @@ import CollectionCardSection from '@Core/Components/Collection/CollectionCardSec
 import VInput from '@Core/Components/Form/VInput.vue';
 import VInputFile from '@Core/Components/Form/VInputFile.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { getAge } from '@Core/Utils/date';
 
@@ -154,7 +154,7 @@ const remove_vaccine = (index) => {
       </div>
 
       <div class="p-6">
-        <Button
+        <CollectionButton
           class="btn btn-secondary border-gray-800"
           @click.prevent="add_vaccine"
           :label="__('dog.buttons.add_vaccine')"

@@ -152,7 +152,7 @@ const optionViewHandler = (option) => {
     </div>
 
     <div v-show="optionView === DEFAULT_OPTION_VIEW">
-      <Button
+      <CollectionButton
         v-for="option in optionViews"
         class="w-full mt-3 text-xl h-16"
         :loading="form.processing"

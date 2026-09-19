@@ -6,7 +6,7 @@ import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import FormHarvest from '@Fields/Pages/Harvests/Form.vue';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { stringToDate } from '@Core/Utils/date';
 
@@ -65,7 +65,7 @@ const submitHandler = () => {
       :title="__('harvest.titles.edit', { batch: form.batch.toUpperCase(), week: getWeek(form.date, { weekStartsOn: 1 })})"
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }, { text: __('generics.actions.edit') }]"
     >
-      <Button
+      <CollectionButton
         class="btn btn-secondary border-gray-800"
         :loading="form.processing"
         :label="__('generics.buttons.save_edit')"
@@ -73,7 +73,7 @@ const submitHandler = () => {
         v-if="submitHandler"
       />
 
-      <Button
+      <CollectionButton
         severity="secondary"
         :disabled="form.processing"
         :href="route('harvests.index')"

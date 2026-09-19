@@ -6,7 +6,7 @@ import ProgressSpinner from 'primevue/progressspinner';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 
 import QuarterService from '@Fields/Services/QuarterService.js';
@@ -186,7 +186,7 @@ table tbody tr td.border_cell_left {
 <template>
   <CollectionCardSection :header-text="__('field.show.statistics.title')" wrapperClass="p-5 grid gap-4">
     <div v-if="canUpdatePlantsPosition">
-      <Button
+      <CollectionButton
         :label="__('harvest.buttons.change_distribution')"
         @click.prevent="open = true"
       />
@@ -197,7 +197,7 @@ table tbody tr td.border_cell_left {
           </div>
         </div>
         <div class="flex justify-end">
-          <Button type="submit" @click="changeDistribution" :label="__('generics.actions.create')" />
+          <CollectionButton type="submit" @click="changeDistribution" :label="__('generics.actions.create')" />
         </div>
       </Dialog>
     </div>

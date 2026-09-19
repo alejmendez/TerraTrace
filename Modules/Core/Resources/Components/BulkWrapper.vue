@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
   message_success: String,
@@ -35,7 +35,7 @@ const openUnprocesseds = ref(true);
         {{ __('generics.bulk.instruction_7') }}
       </p>
 
-      <Button
+      <CollectionButton
         severity="outline"
         as="a"
         :href="route(props.downloadRoute)"

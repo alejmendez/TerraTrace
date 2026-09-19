@@ -159,7 +159,7 @@ const openSoilSanitationPhoto = () => {
           fluid
           v-model="form.foliage_sanitation"
         />
-        <Button
+        <CollectionButton
           icon="pi pi-plus"
           @click="openFoliageSanitationPhoto"
         />
@@ -174,7 +174,7 @@ const openSoilSanitationPhoto = () => {
           fluid
           v-model="form.trunk_sanitation"
         />
-        <Button
+        <CollectionButton
           icon="pi pi-plus"
           @click="openTrunkSanitationPhoto"
         />
@@ -189,7 +189,7 @@ const openSoilSanitationPhoto = () => {
           fluid
           v-model="form.soil_sanitation"
         />
-        <Button
+        <CollectionButton
           icon="pi pi-plus"
           @click="openSoilSanitationPhoto"
         />
@@ -209,7 +209,7 @@ const openSoilSanitationPhoto = () => {
   </div>
   <div class="md:w-1/2 md:mx-auto sm:w-full">
     <div class="mt-5 mb-20">
-      <Button
+      <CollectionButton
         class="w-full mt-3 text-xl h-16"
         :loading="form.processing"
         :disabled="hasError || form.processing"
@@ -217,7 +217,7 @@ const openSoilSanitationPhoto = () => {
         label="Guardar"
       />
 
-      <Button
+      <CollectionButton
         class="w-full mt-3 text-xl h-16"
         :loading="form.processing"
         :disabled="hasError || form.processing"

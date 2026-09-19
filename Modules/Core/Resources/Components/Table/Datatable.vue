@@ -10,7 +10,7 @@ import { trans } from 'laravel-vue-i18n';
 
 import { useSideBarStore } from '@Core/Stores/sidebar';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const toast = useToast();
 
@@ -143,7 +143,7 @@ onMounted(() => {
       <template #header>
         <div class="flex justify-between">
           <div class="sm:hidden md:block">
-            <Button
+            <CollectionButton
               type="button"
               icon="pi pi-filter-slash"
               label="Limpiar"

@@ -4,7 +4,7 @@ import FormMain from './Main.vue';
 import FormComments from './Comments.vue';
 import FormResources from './Resources.vue';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
   form: Object,
@@ -43,7 +43,7 @@ const statesClasses = {
 
 <template>
   <div class="mt-5">
-    <Button
+    <CollectionButton
       v-for="state in task_states"
       :class="`me-3 text-l ${statesClasses[state.value]}`"
       @click.prevent="form.status = state"

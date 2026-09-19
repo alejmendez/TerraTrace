@@ -1,7 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import CollectionIcon from './CollectionIcon.vue';
 
 const props = defineProps({
@@ -117,13 +117,13 @@ const resolveHref = (to) => (isAbsoluteUrl(to) ? to : route(to));
             :class="{ 'md:mt-[50px]': props.breadcrumbs.length }"
         >
             <template v-for="link in props.links" :key="link.text">
-                <Button
+                <CollectionButton
                     v-if="typeof link.to === 'function'"
                     :severity="link.variant || 'secondary'"
                     :label="__(link.text)"
                     @click="link.to"
                 />
-                <Button
+                <CollectionButton
                     v-else
                     :severity="link.variant || 'secondary'"
                     :href="resolveHref(link.to)"
@@ -134,13 +134,13 @@ const resolveHref = (to) => (isAbsoluteUrl(to) ? to : route(to));
             <slot />
 
             <template v-if="props.form">
-                <Button
+                <CollectionButton
                     :disabled="props.form.instance?.processing"
                     :loading="props.form.instance?.processing"
                     :label="props.form.submitText || __('generics.buttons.save')"
                     @click="props.form.submitHandler"
                 />
-                <Button
+                <CollectionButton
                     v-if="props.form.hrefCancel"
                     severity="secondary"
                     :disabled="props.form.instance?.processing"

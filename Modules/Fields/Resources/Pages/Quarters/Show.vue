@@ -11,7 +11,7 @@ import HarvestCard from '@Fields/Pages/Quarters/ShowComponents/HarvestCard.vue';
 import LogbookCard from '@Fields/Pages/Quarters/ShowComponents/LogbookCard.vue';
 import FileCard from '@Fields/Pages/Quarters/ShowComponents/FileCard.vue';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 
 const props = defineProps({
@@ -64,14 +64,14 @@ const deleteHandler = async (id) => {
       :title="__('quarter.titles.show', {name: quarter.name})"
       :breadcrumbs="[{ to: 'quarters.index', text: __('quarter.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
     >
-      <Button
+      <CollectionButton
         severity="secondary"
         @click="deleteHandler(quarter.id)"
         :label="__('generics.actions.delete')"
         v-if="canDestroy"
         v-show="isFileTab"
       />
-      <Button
+      <CollectionButton
         :href="route('quarters.edit', quarter.id)"
         :label="__('generics.actions.edit')"
         v-if="canEdit"

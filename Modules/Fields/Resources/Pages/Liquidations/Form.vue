@@ -14,7 +14,7 @@ import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
 import AddImporter from '@Core/Components/Form/AddImporter.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
   form: Object,
@@ -81,7 +81,7 @@ const total_categories_not_commercial = computed(() => {
             variant="filled"
             @click="handler_open_datepicker"
           />
-          <Button severity="secondary" icon="pi pi-calendar" @click="handler_open_datepicker" />
+          <CollectionButton severity="secondary" icon="pi pi-calendar" @click="handler_open_datepicker" />
         </InputGroup>
       </VElementFormWrapper>
 

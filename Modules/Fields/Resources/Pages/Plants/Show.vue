@@ -105,21 +105,21 @@ const submitHandler = async () => {
       :title="__('plant.titles.show', {name: data.code})"
       :breadcrumbs="[{ to: 'plants.index', text: __('plant.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
     >
-      <Button
+      <CollectionButton
         severity="secondary"
         @click="deleteHandler(data.id)"
         :label="__('generics.actions.delete')"
         v-if="canDestroy"
         v-show="isFileTab"
       />
-      <Button
+      <CollectionButton
         :href="route('plants.edit', data.id)"
         :label="__('generics.actions.edit')"
         v-if="canEdit"
         v-show="isFileTab"
       />
 
-      <Button
+      <CollectionButton
         :label="__('plant.titles.add_variables')"
         v-show="isLogsTab"
         @click="showModalNote = true"

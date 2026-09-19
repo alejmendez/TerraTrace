@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import VEditor from '@Core/Components/Form/VEditor.vue';
 import { stringToFormat, relativeTimeDifference, stringToDate } from '@Core/Utils/date.js';
@@ -132,8 +132,8 @@ if (form.id === null) {
           />
           <div v-if="commentFieldError !== null" class="text-xs text-red-500">{{ commentFieldError }}</div>
           <div class="flex w-full gap-2 pe-5 mt-2 justify-end">
-            <Button @click="updateCommentHandler" :label="__('task.form.comments.save')" :loading="loading" />
-            <Button @click="resetEditComment" severity="secondary" :label="__('task.form.comments.cancel')" :loading="loading" />
+            <CollectionButton @click="updateCommentHandler" :label="__('task.form.comments.save')" :loading="loading" />
+            <CollectionButton @click="resetEditComment" severity="secondary" :label="__('task.form.comments.cancel')" :loading="loading" />
           </div>
         </div>
         <div v-else>
@@ -158,8 +158,8 @@ if (form.id === null) {
         <div v-if="commentFieldError !== null" class="text-xs text-red-500">{{ commentFieldError }}</div>
       </div>
       <div class="flex w-full gap-2 pe-5 py-2 justify-end">
-        <Button @click="storeCommentHandler" :label="__('task.form.comments.save')" :loading="loading" />
-        <Button @click="commentField = null" severity="secondary" :label="__('task.form.comments.cancel')" :loading="loading" />
+        <CollectionButton @click="storeCommentHandler" :label="__('task.form.comments.save')" :loading="loading" />
+        <CollectionButton @click="commentField = null" severity="secondary" :label="__('task.form.comments.cancel')" :loading="loading" />
       </div>
     </div>
   </CollectionCardSection>

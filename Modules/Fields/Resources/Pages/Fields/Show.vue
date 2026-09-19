@@ -11,7 +11,7 @@ import HarvestCard from '@Fields/Pages/Fields/ShowComponents/HarvestCard.vue';
 import StatisticsCard from '@Fields/Pages/Fields/ShowComponents/StatisticsCard.vue';
 import DocumentationCard from '@Fields/Pages/Fields/ShowComponents/DocumentationCard.vue';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { can } from '@Auth/Services/Auth';
 
@@ -67,14 +67,14 @@ const deleteHandler = async (id) => {
       :title="__('field.titles.show', { name: field.name })"
       :breadcrumbs="[{ to: 'fields.index', text: __('field.titles.entity_breadcrumb') }, { text: __('generics.detail') }]"
     >
-      <Button
+      <CollectionButton
         severity="secondary"
         @click="deleteHandler(field.id)"
         :label="__('generics.actions.delete')"
         v-if="canDestroy"
         v-show="isFileTab"
       />
-      <Button
+      <CollectionButton
         :href="route('fields.edit', field.id)"
         :label="__('generics.actions.edit')"
         v-if="canEdit"

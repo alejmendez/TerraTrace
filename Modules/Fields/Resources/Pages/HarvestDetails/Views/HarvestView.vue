@@ -45,7 +45,7 @@ const emit = defineEmits(['submit', 'submitAndLoadAnother', 'resetQr']);
     />
 
     <div class="mt-20 mb-20">
-      <Button
+      <CollectionButton
         class="w-full text-xl h-16"
         severity="secondary"
         :loading="form.processing"
@@ -54,7 +54,7 @@ const emit = defineEmits(['submit', 'submitAndLoadAnother', 'resetQr']);
         label="Guardar y cargar otra"
       />
 
-      <Button
+      <CollectionButton
         class="w-full mt-3 text-xl h-16"
         :loading="form.processing"
         :disabled="hasError"
@@ -62,7 +62,7 @@ const emit = defineEmits(['submit', 'submitAndLoadAnother', 'resetQr']);
         label="Guardar"
       />
 
-      <Button
+      <CollectionButton
         class="w-full mt-3 text-xl h-16"
         :loading="form.processing"
         :disabled="hasError"

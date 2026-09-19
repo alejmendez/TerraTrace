@@ -12,7 +12,7 @@ import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHead
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { can } from '@Auth/Services/Auth';
 import { deleteRowTable } from '@Core/Utils/table';
@@ -49,13 +49,13 @@ const deleteHandler = async (id) => {
       :title="data.date_rendered"
       :breadcrumbs="[{ to: 'harvests.index', text: __('harvest.titles.entity_breadcrumb') }, { text: __('generics.actions.show') }]"
     >
-      <Button
+      <CollectionButton
         severity="secondary"
         @click="deleteHandler(data.id)"
         :label="__('generics.actions.delete')"
         v-if="canDestroy"
       />
-      <Button
+      <CollectionButton
         :href="route('harvests.edit', data.id)"
         :label="__('generics.actions.edit')"
         v-if="canEdit"

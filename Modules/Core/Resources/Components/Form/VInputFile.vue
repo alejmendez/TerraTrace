@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 
 import InputGroup from 'primevue/inputgroup';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
   multiple: {
@@ -145,7 +145,7 @@ const remove_element = (id) => {
     <div class="w-full" v-if="multiple">
       <div class="mb-1 w-full text-gray-900 dark:text-gray-100">{{ props.label }}</div>
 
-      <Button
+      <CollectionButton
         severity="secondary"
         @click.prevent="selectFile"
         :label="__('generics.form.file.upload_file')"
@@ -175,7 +175,7 @@ const remove_element = (id) => {
           >
             {{ filePath }}
           </div>
-          <Button
+          <CollectionButton
             severity="secondary"
             @click.prevent="selectFile"
             :label="__('generics.form.file.upload_file')"
@@ -190,7 +190,7 @@ const remove_element = (id) => {
           >
             {{ filePath }}
           </div>
-          <Button
+          <CollectionButton
             severity="secondary"
             @click.prevent="selectFile"
             icon="pi pi-cloud-upload"
@@ -198,7 +198,7 @@ const remove_element = (id) => {
         </InputGroup>
       </div>
       <div class="text-slate-500 dark:text-slate-300 text-sm">Los archivos no debe superar 5 mb</div>
-      <Button
+      <CollectionButton
         severity="secondary"
         v-if="props.withRemove"
         class="mt-4"

@@ -10,7 +10,7 @@ import CollectionCardSection from '@Core/Components/Collection/CollectionCardSec
 import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
 import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
 
 const props = defineProps({
@@ -219,13 +219,13 @@ watch(totalWeight, (newValue) => {
         </div>
       </div>
       <div class="px-6 py-3">
-        <Button
+        <CollectionButton
           severity="secondary"
           @click.prevent="add_detail"
           :label="__('harvest.buttons.add_detail')"
         />
 
-        <Button
+        <CollectionButton
           class="ms-3"
           severity="secondary"
           :href="route('harvests.create.bulk', { id: form.id })"

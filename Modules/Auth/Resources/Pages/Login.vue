@@ -4,7 +4,7 @@ import { useForm, Link, Head } from '@inertiajs/vue3';
 import GuestLayout from '@Core/Layouts/GuestLayout.vue';
 import Checkbox from '@Core/Components/Form/Checkbox.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 defineProps({
   canResetPassword: {
@@ -68,7 +68,7 @@ const submit = () => {
       </div>
 
       <div class="block mt-4">
-        <Button
+        <CollectionButton
           class="w-full"
           :loading="form.processing"
           :label="__('auth.login.form.submit')"

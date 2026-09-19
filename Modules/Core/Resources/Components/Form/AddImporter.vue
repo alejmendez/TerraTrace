@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import Dialog from 'primevue/dialog';
 
 import VInput from '@Core/Components/Form/VInput.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import importerService from '@Fields/Services/ImporterService';
 
@@ -28,7 +28,7 @@ const addImporter = async () => {
 </script>
 
 <template>
-  <Button
+  <CollectionButton
     severity="secondary"
     @click.prevent="open = true"
     icon="pi pi-plus"
@@ -44,7 +44,7 @@ const addImporter = async () => {
       </div>
     </div>
     <div class="flex justify-end">
-      <Button type="submit" @click="addImporter" :label="__('generics.actions.create')" :loading="loading" />
+      <CollectionButton type="submit" @click="addImporter" :label="__('generics.actions.create')" :loading="loading" />
     </div>
   </Dialog>
 </template>

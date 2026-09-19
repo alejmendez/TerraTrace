@@ -3,7 +3,7 @@ import CollectionCardSection from '@Core/Components/Collection/CollectionCardSec
 import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
 import VSelect from '@Core/Components/Form/VSelect.vue';
 import VInput from '@Core/Components/Form/VInput.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
   form: Object,
@@ -114,7 +114,7 @@ const remove_supply = (index) => {
     </div>
 
     <div class="p-6">
-      <Button @click.prevent="add_supply" :label="__('task.buttons.add_supply')" />
+      <CollectionButton @click.prevent="add_supply" :label="__('task.buttons.add_supply')" />
     </div>
   </CollectionCardSection>
 </template>

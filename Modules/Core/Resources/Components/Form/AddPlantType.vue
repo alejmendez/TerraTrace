@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import Dialog from 'primevue/dialog';
 import VInput from '@Core/Components/Form/VInput.vue';
-import Button from '@Core/Components/Form/Button.vue';
+import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import plantTypeService from '@Fields/Services/PlantTypeService.js';
 
@@ -27,7 +27,7 @@ const addPlantType = async () => {
 </script>
 
 <template>
-  <Button
+  <CollectionButton
     severity="secondary"
     @click.prevent="open = true"
     icon="pi pi-plus"
@@ -43,7 +43,7 @@ const addPlantType = async () => {
       </div>
     </div>
     <div class="flex justify-end">
-      <Button type="submit" @click="addPlantType" :label="__('generics.actions.create')" :loading="loading" />
+      <CollectionButton type="submit" @click="addPlantType" :label="__('generics.actions.create')" :loading="loading" />
     </div>
   </Dialog>
 </template>
