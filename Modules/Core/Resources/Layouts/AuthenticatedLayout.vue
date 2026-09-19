@@ -1,7 +1,6 @@
 <script setup>
 import { usePage, Head, Link } from '@inertiajs/vue3';
 import { storeToRefs } from 'pinia';
-import Drawer from 'primevue/drawer';
 
 import CollectionConfirmDialog from '@Core/Components/Collection/CollectionConfirmDialog.vue';
 import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
@@ -87,25 +86,51 @@ const toast = useToast();
       </main>
     </section>
   </div>
-  <Drawer
-    v-model:visible="showDrawerRightMenu"
-    header="Administrar"
-    position="right"
-    @hide="drawerRightMenuStore.close"
-  >
-    <ul class="space-y-1">
-      <li v-for="item in menuRightItems" :key="item.link">
-        <Link
-          :href="item.link"
-          class="flex items-center rounded-lg px-3 py-2 text-[#315347] transition-colors hover:bg-[#edf5ed] hover:text-[#17663a]"
-          @click="drawerRightMenuStore.close"
-        >
-          <span class="material-symbols-rounded me-3" v-if="item.icon">{{ item.icon }}</span>
-          {{ __(item.text) }}
-        </Link>
-      </li>
-    </ul>
-  </Drawer>
+  <Teleport to="body">
+    <div
+      v-if="showDrawerRightMenu"
+      class="fixed inset-0 z-40 flex justify-end bg-[#102f27]/35 p-0"
+      role="presentation"
+      @click="drawerRightMenuStore.close"
+    >
+      <aside
+        class="flex h-full w-[280px] max-w-full flex-col bg-white shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Administrar"
+        @click.stop
+      >
+        <header class="flex shrink-0 items-center justify-between border-b border-[#e1e9e3] px-5 py-4">
+            <h2 class="text-lg font-extrabold text-[#102f27]">
+                Administrar
+            </h2>
+            <button
+                type="button"
+                class="text-[#61716c] hover:text-[#102f27]"
+                aria-label="Cerrar"
+                @click="drawerRightMenuStore.close"
+            >
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </header>
+        <ul class="grow space-y-1 overflow-y-auto p-3">
+            <li v-for="item in menuRightItems" :key="item.link">
+                <Link
+                    :href="item.link"
+                    class="flex items-center rounded-lg px-3 py-2 text-[#315347] transition-colors hover:bg-[#edf5ed] hover:text-[#17663a]"
+                    @click="drawerRightMenuStore.close"
+                >
+                    <span
+                        class="material-symbols-rounded me-3"
+                        v-if="item.icon"
+                    >{{ item.icon }}</span>
+                    {{ __(item.text) }}
+                </Link>
+            </li>
+        </ul>
+      </aside>
+    </div>
+  </Teleport>
 
   <CollectionConfirmDialog
     :visible="confirm.visible.value"

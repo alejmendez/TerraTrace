@@ -3,9 +3,6 @@ import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { getWeek } from 'date-fns';
 
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
@@ -101,15 +98,26 @@ const deleteHandler = async (id) => {
         </header>
       </template>
 
-      <DataTable :value="data.details" tableStyle="min-width: 50rem">
-        <Column field="plant_code" :header="__('harvest.form.details.plant_code.label')"></Column>
-        <Column field="quality" :header="__('harvest.form.details.quality.label')"></Column>
-        <Column :header="__('harvest.form.details.weight.label')">
-          <template #body="{ data }">
-            {{ formatNumber(data.weight) }}
-          </template>
-        </Column>
-      </DataTable>
+      <table class="w-full text-left text-sm">
+        <thead class="bg-[#edf5ed] text-[#284238] uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3">{{ __('harvest.form.details.plant_code.label') }}</th>
+            <th class="px-4 py-3">{{ __('harvest.form.details.quality.label') }}</th>
+            <th class="px-4 py-3">{{ __('harvest.form.details.weight.label') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="detail in data.details"
+            :key="detail.id"
+            class="border-b border-[#e1e9e3] hover:bg-[#f7faf7]"
+          >
+            <td class="px-4 py-3">{{ detail.plant_code }}</td>
+            <td class="px-4 py-3">{{ detail.quality }}</td>
+            <td class="px-4 py-3">{{ formatNumber(detail.weight) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </CollectionCardSection>
   </AuthenticatedLayout>
 </template>

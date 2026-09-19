@@ -1,12 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
 import { deleteRowTable } from '@Core/Utils/table';
 import { can } from '@Auth/Services/Auth';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
+import CollectionDialog from '@Core/Components/Collection/CollectionDialog.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
 import VariablesView from '@Fields/Pages/HarvestDetails/Views/VariablesView.vue';
@@ -143,13 +142,13 @@ const submitHandler = async () => {
     <LogsCard ref="logsCard" :plant_id="data.id" :harvest_available_years="harvest_available_years" v-show="isLogsTab" />
     <StatisticsCard :plant="data" v-show="isStatisticsTab" />
 
-    <Dialog v-model:visible="showModalNote" :header="__('plant.titles.add_variables')" modal :style="{ width: '75rem' }">
+    <CollectionDialog v-model:visible="showModalNote" :title="__('plant.titles.add_variables')" max-width="75rem">
       <VariablesView
         :form="form"
         :has-error="hasError"
         @submit="submitHandler"
         @cancel="resetVariables"
       />
-    </Dialog>
+    </CollectionDialog>
   </AuthenticatedLayout>
 </template>

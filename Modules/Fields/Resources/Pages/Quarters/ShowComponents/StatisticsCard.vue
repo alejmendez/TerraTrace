@@ -251,7 +251,7 @@ table tbody tr td.border_cell_left {
               :style="{
                 backgroundColor: scaleType === 'weight' ? plant?.colorByWeight : plant?.colorByQuantity,
               }"
-              v-tooltip.top="plant?.code"
+              :title="plant?.code"
               @click="setCurrentPlant(plant)"
             />
           </tr>
