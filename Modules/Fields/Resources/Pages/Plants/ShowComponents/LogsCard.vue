@@ -1,12 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-import Timeline from 'primevue/timeline';
-import Checkbox from 'primevue/checkbox';
-import ProgressSpinner from 'primevue/progressspinner';
-
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionCheckbox from '@Core/Components/Collection/CollectionCheckbox.vue';
 
 import PlantDetailService from '@Fields/Services/PlantDetailService';
 import { stringToFormat } from '@Core/Utils/date';
@@ -132,53 +129,51 @@ defineExpose({ filter });
     >
       <div v-if="loading">
         <div class="flex justify-center items-center h-screen">
-          <ProgressSpinner
-            style="width: 50px; height: 50px"
-            strokeWidth="8"
-            fill="transparent"
-            animationDuration=".5s"
-            aria-label="Progress Spinner"
-          />
+          <div
+            class="inline-block size-[50px] rounded-full border-4 border-[#e1e9e3] border-t-[#17663a] animate-spin"
+            role="status"
+            aria-label="Cargando"
+          ></div>
         </div>
       </div>
       <div v-else-if="detailsFiltered.length > 0">
-        <Timeline :value="detailsFiltered">
-          <template #marker="slotProps">
-            <span
-              class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm"
-              :style="{ backgroundColor: __(`harvest_details.form.${slotProps.item.type}.color`) }"
-            >
-              <i class="pi pi-circle-fill"></i>
-            </span>
-          </template>
-          <template #opposite="slotProps">
-            <span class="text-surface-500 dark:text-surface-400">{{ slotProps.item.plant_code }}</span>
-            <br />
-            <span class="text-surface-500 dark:text-surface-400">{{ stringToFormat(slotProps.item.updated_at, 'dd/MM/yyyy HH:mm') }}</span>
-            <div
-              class="text-surface-500 dark:text-surface-400"
-              v-if="slotProps.item.note"
-            >
-              Nota: {{ slotProps.item.note }}
-            </div>
-          </template>
-          <template #content="slotProps">
-            {{ __(`harvest_details.form.${slotProps.item.type}.label`) }} <br />
-            <div v-if="slotProps.item.type.endsWith('_photo')">
-              <img
-                :src="slotProps.item.value"
-                class="w-1/2 h-auto cursor-pointer"
-                @click="openImage(slotProps.item.value)"
+        <ol class="space-y-6">
+          <li
+            v-for="(item, idx) in detailsFiltered"
+            :key="idx"
+            class="flex gap-4"
+          >
+            <div class="shrink-0">
+              <span
+                class="flex size-8 items-center justify-center text-white rounded-full shadow-sm"
+                :style="{ backgroundColor: __(`harvest_details.form.${item.type}.color`) }"
               >
-            </div>
-            <div v-else>
-              {{ __(`harvest_details.form.${slotProps.item.type}.unit`) ? formatNumber(slotProps.item.value) : slotProps.item.value }}
-              <span v-if="__(`harvest_details.form.${slotProps.item.type}.unit`)">
-                ({{ __(`harvest_details.form.${slotProps.item.type}.unit`) }})
+                <span class="size-3 rounded-full bg-white"></span>
               </span>
             </div>
-          </template>
-        </Timeline>
+            <div class="shrink-0 w-40 text-sm text-[#61716c]">
+              <div>{{ item.plant_code }}</div>
+              <div>{{ stringToFormat(item.updated_at, 'dd/MM/yyyy HH:mm') }}</div>
+              <div v-if="item.note">Nota: {{ item.note }}</div>
+            </div>
+            <div class="grow">
+              {{ __(`harvest_details.form.${item.type}.label`) }}
+              <div v-if="item.type.endsWith('_photo')">
+                <img
+                  :src="item.value"
+                  class="w-1/2 h-auto cursor-pointer"
+                  @click="openImage(item.value)"
+                >
+              </div>
+              <div v-else>
+                {{ __(`harvest_details.form.${item.type}.unit`) ? formatNumber(item.value) : item.value }}
+                <span v-if="__(`harvest_details.form.${item.type}.unit`)">
+                  ({{ __(`harvest_details.form.${item.type}.unit`) }})
+                </span>
+              </div>
+            </div>
+          </li>
+        </ol>
       </div>
       <div v-else class="my-20">
         <p class="text-center text-surface-500 dark:text-surface-400">

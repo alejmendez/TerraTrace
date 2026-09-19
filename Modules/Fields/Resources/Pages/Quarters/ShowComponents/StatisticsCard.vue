@@ -1,10 +1,9 @@
 <script setup>
 import { ref, toRaw, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import Dialog from 'primevue/dialog';
-import ProgressSpinner from 'primevue/progressspinner';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
+import CollectionDialog from '@Core/Components/Collection/CollectionDialog.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
@@ -190,16 +189,28 @@ table tbody tr td.border_cell_left {
         :label="__('harvest.buttons.change_distribution')"
         @click.prevent="open = true"
       />
-      <Dialog v-model:visible="open" modal header="cambiar distribucion de arboles" :style="{ maxWidth: '500px' }">
-        <div class="grid gap-4 py-4">
-          <div class="grid items-center gap-4">
-            <CollectionInput id="distributionPlants" type="textarea" class="min-h-36" v-model="distributionPlants" />
+      <CollectionDialog
+        v-model:visible="open"
+        title="cambiar distribucion de arboles"
+        max-width="500px"
+      >
+        <CollectionInput
+          id="distributionPlants"
+          type="textarea"
+          class="min-h-36"
+          v-model="distributionPlants"
+        />
+
+        <template #footer>
+          <div class="flex justify-end">
+            <CollectionButton
+              type="submit"
+              :label="__('generics.actions.create')"
+              @click="changeDistribution"
+            />
           </div>
-        </div>
-        <div class="flex justify-end">
-          <CollectionButton type="submit" @click="changeDistribution" :label="__('generics.actions.create')" />
-        </div>
-      </Dialog>
+        </template>
+      </CollectionDialog>
     </div>
 
     <div class="py-6 grid md:grid-cols-2 gap-x-16 gap-y-4 sm:grid-cols-1">
@@ -213,13 +224,11 @@ table tbody tr td.border_cell_left {
     </div>
 
     <div v-show="loading" class="text-center mt-5">
-      <ProgressSpinner
-        style="width: 50px; height: 50px"
-        strokeWidth="8"
-        fill="transparent"
-        animationDuration=".5s"
-        aria-label="Progress Spinner"
-      />
+      <div
+        class="inline-block size-[50px] rounded-full border-4 border-[#e1e9e3] border-t-[#17663a] animate-spin"
+        role="status"
+        aria-label="Cargando"
+      ></div>
     </div>
 
     <div v-show="!loading" class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
