@@ -1,9 +1,6 @@
 <script setup>
 import { ref, computed, reactive, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import { useToast } from 'primevue/usetoast';
-import { useConfirm } from 'primevue/useconfirm';
-import Toast from 'primevue/toast';
 
 import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
 import Column from 'primevue/column';
@@ -12,6 +9,8 @@ import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
 import Select from 'primevue/select';
 
+import { useConfirm } from '@Core/Composables/useConfirm';
+import { useToast } from '@Core/Composables/useToast';
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
@@ -140,8 +139,6 @@ const number_format = (n) => {
 </script>
 
 <template>
-  <Toast />
-
   <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 items-stretch mb-4">
     <CollectionCardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
       <div class="text-gray-400 pb-1">{{ __('harvest.table_filters.year') }}</div>

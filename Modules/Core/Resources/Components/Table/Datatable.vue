@@ -5,10 +5,10 @@ import DataTable from 'primevue/datatable';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import InputText from 'primevue/inputtext';
-import { useToast } from 'primevue/usetoast';
 import { trans } from 'laravel-vue-i18n';
 
 import { useSideBarStore } from '@Core/Stores/sidebar';
+import { useToast } from '@Core/Composables/useToast';
 
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
