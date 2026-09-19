@@ -1,7 +1,7 @@
 <script setup>
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
 const props = defineProps({
   form: Object,
@@ -14,7 +14,7 @@ const form = props.form;
 
 <template>
   <CollectionCardSection>
-    <VInput
+    <CollectionInput
       id="name"
       v-model="form.name"
       classWrapper="col-span-2"
@@ -22,7 +22,7 @@ const form = props.form;
       :message="form.errors.name"
     />
 
-    <VSelect
+    <CollectionSelect
       id="priority"
       v-model="form.priority"
       :placeholder="__('generics.please_select')"
@@ -31,7 +31,7 @@ const form = props.form;
       :message="form.errors.priority"
     />
 
-    <VSelect
+    <CollectionSelect
       id="status"
       v-model="form.status"
       :placeholder="__('generics.please_select')"
@@ -40,7 +40,7 @@ const form = props.form;
       :message="form.errors.status"
     />
 
-    <VInput
+    <CollectionInput
       id="start_date"
       type="date"
       v-model="form.start_date"
@@ -48,7 +48,7 @@ const form = props.form;
       :message="form.errors.start_date"
     />
 
-    <VInput
+    <CollectionInput
       id="end_date"
       type="date"
       v-model="form.end_date"

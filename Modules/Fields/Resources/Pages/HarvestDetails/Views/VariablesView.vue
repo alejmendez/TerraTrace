@@ -4,8 +4,8 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import InputGroup from 'primevue/inputgroup';
 
-import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 const props = defineProps({
   form: {
@@ -51,7 +51,7 @@ const openSoilSanitationPhoto = () => {
 
 <template>
   <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-x-16 gap-y-4 mb-5">
-    <VInput
+    <CollectionInput
       id="height"
       class="mb-2"
       v-model="form.height"
@@ -64,14 +64,14 @@ const openSoilSanitationPhoto = () => {
       :message="form.errors.height"
     />
 
-    <VInput
+    <CollectionInput
       id="notes_height"
       class="mb-2"
       v-model="form.notes.height"
       :label="__('harvest_details.form.notes.label') + ` (${__('harvest_details.form.height.label')})`"
     />
 
-    <VInput
+    <CollectionInput
       id="crown_diameter"
       class="mb-2"
       v-model="form.crown_diameter"
@@ -84,14 +84,14 @@ const openSoilSanitationPhoto = () => {
       :message="form.errors.crown_diameter"
     />
 
-    <VInput
+    <CollectionInput
       id="notes_crown_diameter"
       class="mb-2"
       v-model="form.notes.crown_diameter"
       :label="__('harvest_details.form.notes.label') + ` (${__('harvest_details.form.crown_diameter.label')})`"
     />
 
-    <VInput
+    <CollectionInput
       id="trunk_diameter"
       class="mb-2"
       v-model="form.trunk_diameter"
@@ -104,14 +104,14 @@ const openSoilSanitationPhoto = () => {
       :message="form.errors.trunk_diameter"
     />
 
-    <VInput
+    <CollectionInput
       id="notes_trunk_diameter"
       class="mb-2"
       v-model="form.notes.trunk_diameter"
       :label="__('harvest_details.form.notes.label') + ` (${__('harvest_details.form.trunk_diameter.label')})`"
     />
 
-    <VInput
+    <CollectionInput
       id="root_diameter"
       class="mb-2"
       v-model="form.root_diameter"
@@ -124,14 +124,14 @@ const openSoilSanitationPhoto = () => {
       :message="form.errors.root_diameter"
     />
 
-    <VInput
+    <CollectionInput
       id="notes_root_diameter"
       class="mb-2"
       v-model="form.notes.root_diameter"
       :label="__('harvest_details.form.notes.label') + ` (${__('harvest_details.form.root_diameter.label')})`"
     />
 
-    <VInput
+    <CollectionInput
       id="invasion_radius"
       class="mb-2"
       v-model="form.invasion_radius"
@@ -144,14 +144,14 @@ const openSoilSanitationPhoto = () => {
       :message="form.errors.invasion_radius"
     />
 
-    <VInput
+    <CollectionInput
       id="notes_invasion_radius"
       class="mb-2"
       v-model="form.notes.invasion_radius"
       :label="__('harvest_details.form.notes.label') + ` (${__('harvest_details.form.invasion_radius.label')})`"
     />
 
-    <VElementFormWrapper :label="__('harvest_details.form.foliage_sanitation.label')" :message="form.errors.foliage_sanitation">
+    <CollectionFieldWrapper :label="__('harvest_details.form.foliage_sanitation.label')" :message="form.errors.foliage_sanitation">
       <InputGroup>
         <InputText
           id="foliage_sanitation"
@@ -164,9 +164,9 @@ const openSoilSanitationPhoto = () => {
           @click="openFoliageSanitationPhoto"
         />
       </InputGroup>
-    </VElementFormWrapper>
+    </CollectionFieldWrapper>
 
-    <VElementFormWrapper :label="__('harvest_details.form.trunk_sanitation.label')" :message="form.errors.trunk_sanitation">
+    <CollectionFieldWrapper :label="__('harvest_details.form.trunk_sanitation.label')" :message="form.errors.trunk_sanitation">
       <InputGroup>
         <InputText
           id="trunk_sanitation"
@@ -179,9 +179,9 @@ const openSoilSanitationPhoto = () => {
           @click="openTrunkSanitationPhoto"
         />
       </InputGroup>
-    </VElementFormWrapper>
+    </CollectionFieldWrapper>
 
-    <VElementFormWrapper :label="__('harvest_details.form.soil_sanitation.label')" :message="form.errors.soil_sanitation">
+    <CollectionFieldWrapper :label="__('harvest_details.form.soil_sanitation.label')" :message="form.errors.soil_sanitation">
       <InputGroup>
         <InputText
           id="soil_sanitation"
@@ -194,9 +194,9 @@ const openSoilSanitationPhoto = () => {
           @click="openSoilSanitationPhoto"
         />
       </InputGroup>
-    </VElementFormWrapper>
+    </CollectionFieldWrapper>
 
-    <VInput
+    <CollectionInput
       id="irrigation_system"
       class="mb-2"
       v-model="form.irrigation_system"

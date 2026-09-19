@@ -10,7 +10,7 @@ import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
@@ -63,16 +63,16 @@ const deleteHandler = async (id) => {
     </CollectionPageHeader>
 
     <CollectionCardSection>
-      <VInput :label="__('harvest.form.date.label')" :value="data.date_rendered" readonly />
-      <VInput :label="__('harvest.form.quarter_ids.label')" :value="quarters" readonly />
+      <CollectionInput :label="__('harvest.form.date.label')" :value="data.date_rendered" readonly />
+      <CollectionInput :label="__('harvest.form.quarter_ids.label')" :value="quarters" readonly />
 
-      <VInput :label="__('harvest.form.batch.label')" :value="data.batch" readonly />
-      <VInput :label="__('harvest.form.dog_id.label')" :value="data.dog.name" readonly />
+      <CollectionInput :label="__('harvest.form.batch.label')" :value="data.batch" readonly />
+      <CollectionInput :label="__('harvest.form.dog_id.label')" :value="data.dog.name" readonly />
 
-      <VInput :label="__('harvest.form.farmer_id.label')" :value="data.farmer.name" readonly />
-      <VInput :label="__('harvest.form.assistant_id.label')" :value="data.assistant.name" readonly />
+      <CollectionInput :label="__('harvest.form.farmer_id.label')" :value="data.farmer.name" readonly />
+      <CollectionInput :label="__('harvest.form.assistant_id.label')" :value="data.assistant.name" readonly />
 
-      <VInput
+      <CollectionInput
         id="note"
         type="textarea"
         v-model="data.note"
@@ -93,7 +93,7 @@ const deleteHandler = async (id) => {
 
           <div class="flex items-center gap-2">
             {{ __('harvest.form.weight.label') }}
-            <VInput
+            <CollectionInput
               :value="formatNumber(data.weight)"
               readonly
             />

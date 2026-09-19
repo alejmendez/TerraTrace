@@ -5,9 +5,9 @@ import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 import QuarterService from '@Fields/Services/QuarterService.js';
 import { can } from '@Auth/Services/Auth';
@@ -193,7 +193,7 @@ table tbody tr td.border_cell_left {
       <Dialog v-model:visible="open" modal header="cambiar distribucion de arboles" :style="{ maxWidth: '500px' }">
         <div class="grid gap-4 py-4">
           <div class="grid items-center gap-4">
-            <VInput id="distributionPlants" type="textarea" class="min-h-36" v-model="distributionPlants" />
+            <CollectionInput id="distributionPlants" type="textarea" class="min-h-36" v-model="distributionPlants" />
           </div>
         </div>
         <div class="flex justify-end">
@@ -203,7 +203,7 @@ table tbody tr td.border_cell_left {
     </div>
 
     <div class="py-6 grid md:grid-cols-2 gap-x-16 gap-y-4 sm:grid-cols-1">
-      <VSelect
+      <CollectionSelect
         id="scaleType"
         v-model="scaleType"
         :placeholder="__('generics.please_select')"

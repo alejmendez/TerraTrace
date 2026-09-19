@@ -9,7 +9,7 @@ import { formatNumber } from '@Core/Utils/format';
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
+import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 
 const props = defineProps({
   data: Object,
@@ -83,46 +83,46 @@ const total_categories_not_commercial = computed(() => {
       :breadcrumbs="[{ to: 'liquidations.index', text: __('liquidation.titles.entity_breadcrumb') }, { text: __('generics.actions.show') }]"
     />
     <CollectionCardSection>
-      <VElementFormWrapper :label="__('liquidation.form.date.label')">
+      <CollectionFieldWrapper :label="__('liquidation.form.date.label')">
         <div>
           {{ date_rendered }}
         </div>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
 
-      <VElementFormWrapper :label="__('liquidation.form.importer_id.label')">
+      <CollectionFieldWrapper :label="__('liquidation.form.importer_id.label')">
         <div>
           {{ data.importer_id }}
         </div>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
 
-      <VElementFormWrapper :label="__('liquidation.form.delivery_date.label')">
+      <CollectionFieldWrapper :label="__('liquidation.form.delivery_date.label')">
         <div>
           {{ data.delivery_date }}
         </div>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
 
-      <VElementFormWrapper :label="__('liquidation.form.reception_date.label')">
+      <CollectionFieldWrapper :label="__('liquidation.form.reception_date.label')">
         <div>
           {{ data.reception_date }}
         </div>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
     </CollectionCardSection>
     <CollectionCardSection>
-      <VElementFormWrapper :label="__('liquidation.form.weight_with_earth.label')">
+      <CollectionFieldWrapper :label="__('liquidation.form.weight_with_earth.label')">
         <div>
           {{ formatNumber(data.weight_with_earth) }}
         </div>
-      </VElementFormWrapper>
-      <VElementFormWrapper :label="__('liquidation.form.weight_washed.label')">
+      </CollectionFieldWrapper>
+      <CollectionFieldWrapper :label="__('liquidation.form.weight_washed.label')">
         <div>
           {{ formatNumber(data.weight_washed) }}
         </div>
-      </VElementFormWrapper>
-      <VElementFormWrapper :label="__('liquidation.form.dollar_value.label')">
+      </CollectionFieldWrapper>
+      <CollectionFieldWrapper :label="__('liquidation.form.dollar_value.label')">
         <div>
           {{ formatNumber(data.dollar_value) }}
         </div>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
     </CollectionCardSection>
     <CollectionCardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
       <div class="col-span-4 font-semibold">

@@ -6,8 +6,8 @@ import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import BulkWrapper from '@Core/Components/BulkWrapper.vue';
 
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VInputFile from '@Core/Components/Form/VInputFile.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput.vue';
 
 import { getDataSelect } from '@Core/Services/Selects';
 
@@ -73,7 +73,7 @@ const changeFileHandler = (e) => {
         downloadRoute="plants.download.bulk.template"
       >
         <div class="px-6 pb-6 grid grid-cols-2 gap-x-16 gap-y-4">
-          <VSelect
+          <CollectionSelect
             id="field_id"
             v-model="form.field_id"
             :placeholder="__('generics.please_select')"
@@ -83,7 +83,7 @@ const changeFileHandler = (e) => {
             @change="() => submitHandler()"
           />
 
-          <VSelect
+          <CollectionSelect
             id="quarter_id"
             v-model="form.quarter_id"
             :placeholder="__('generics.please_select')"
@@ -95,7 +95,7 @@ const changeFileHandler = (e) => {
           />
 
           <div class="form-text col-span-2 form-text-type">
-            <VInputFile
+            <CollectionFileInput
               :label="__('generics.form.file.select_a_file')"
               :withRemove="false"
               :showPathFile="true"

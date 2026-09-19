@@ -13,7 +13,7 @@ import InputText from 'primevue/inputtext';
 import Select from 'primevue/select';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
 import Datatable from '@Core/Components/Table/Datatable.vue';
 import HarvestService from '@Fields/Services/HarvestService.js';
@@ -145,7 +145,7 @@ const number_format = (n) => {
   <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 items-stretch mb-4">
     <CollectionCardSection sectionClass="flex-1 mt-5 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5" wrapperClass="p-5">
       <div class="text-gray-400 pb-1">{{ __('harvest.table_filters.year') }}</div>
-      <VSelect
+      <CollectionSelect
         id="year"
         v-model="form.year"
         :placeholder="__('generics.please_select')"

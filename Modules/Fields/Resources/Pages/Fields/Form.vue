@@ -2,9 +2,8 @@
 import { ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VInputDni from '@Core/Components/Form/VInputDni.vue';
-import VInputFile from '@Core/Components/Form/VInputFile.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput.vue';
 
 const props = defineProps({
   form: Object,
@@ -30,14 +29,14 @@ const changeDocumentsHandler = (e) => {
 <template>
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
-      <VInput
+      <CollectionInput
         id="name"
         v-model="form.name"
         :label="__('field.form.name.label')"
         :message="form.errors.name"
       />
 
-      <VInput
+      <CollectionInput
         id="location"
         maxlenmaxlength="100"
         v-model="form.location"
@@ -45,7 +44,7 @@ const changeDocumentsHandler = (e) => {
         :message="form.errors.location"
       />
 
-      <VInput
+      <CollectionInput
         id="size"
         type="number"
         :min="0"
@@ -56,7 +55,7 @@ const changeDocumentsHandler = (e) => {
         :message="form.errors.size"
       />
 
-      <VInput
+      <CollectionInput
         id="plants_count"
         :label="__('quarter.form.plants_count.label')"
         v-model="form.plants_count"
@@ -66,14 +65,14 @@ const changeDocumentsHandler = (e) => {
     </CollectionCardSection>
 
     <CollectionCardSection>
-      <VInputDni
+      <CollectionInput
         id="owner_dni"
         v-model="form.owner_dni"
         :label="__('field.form.owner_dni.label')"
         :message="form.errors.owner_dni"
       />
 
-      <VInput
+      <CollectionInput
         id="owner_name"
         v-model="form.owner_name"
         :label="__('field.form.owner_name.label')"
@@ -83,7 +82,7 @@ const changeDocumentsHandler = (e) => {
 
     <CollectionCardSection :header-text="__('field.sections.blueprint')">
       <div class="form-text col-span-2 form-text-type">
-        <VInputFile
+        <CollectionFileInput
           :image="blueprintPreview"
           :imagePreview="true"
           :label="__('field.form.blueprint.label')"
@@ -94,7 +93,7 @@ const changeDocumentsHandler = (e) => {
 
     <CollectionCardSection :header-text="__('field.sections.documents')">
       <div class="form-text col-span-2 form-text-type">
-        <VInputFile
+        <CollectionFileInput
           :files="documents"
           :imagePreview="false"
           :multiple="true"

@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import MultiSelect from 'primevue/multiselect';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import AddImporter from '@Core/Components/Form/AddImporter.vue';
 
 const props = defineProps({
@@ -28,14 +28,14 @@ const addImporterCallback = (newType) => {
 <template>
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
-      <VInput
+      <CollectionInput
         id="batch_number"
         v-model="form.batch_number"
         :label="__('batch.form.batch_number.label')"
         :message="form.errors.batch_number"
       />
 
-      <VInput
+      <CollectionInput
         id="delivery_date"
         type="date"
         v-model="form.delivery_date"
@@ -45,7 +45,7 @@ const addImporterCallback = (newType) => {
       />
 
       <div class="grid grid-cols-12">
-        <VSelect
+        <CollectionSelect
           id="importer_id"
           v-model="form.importer_id"
           classWrapper="col-span-11"
@@ -59,7 +59,7 @@ const addImporterCallback = (newType) => {
         </div>
       </div>
 
-      <VElementFormWrapper :classWrapper="props.classWrapper" :label="__('batch.form.harvests.label')" :message="form.errors.harvests">
+      <CollectionFieldWrapper :classWrapper="props.classWrapper" :label="__('batch.form.harvests.label')" :message="form.errors.harvests">
         <MultiSelect
           id="harvests"
           v-model="form.harvests"
@@ -76,16 +76,16 @@ const addImporterCallback = (newType) => {
             </div>
           </template>
         </MultiSelect>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
 
-      <VInput
+      <CollectionInput
         id="carrier"
         v-model="form.carrier"
         :label="__('batch.form.carrier.label')"
         :message="form.errors.carrier"
       />
 
-      <VInput
+      <CollectionInput
         id="current_weight"
         type="number"
         v-model="form.current_weight"

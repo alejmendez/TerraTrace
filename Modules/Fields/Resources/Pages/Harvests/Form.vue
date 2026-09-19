@@ -7,11 +7,11 @@ import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
-import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
+import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 const props = defineProps({
   form: Object,
@@ -78,15 +78,15 @@ watch(totalWeight, (newValue) => {
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
       <div class="grid grid-cols-2 gap-x-2 gap-y-4">
-        <VElementFormWrapper :label="__('harvest.form.date.label_rendered')">
+        <CollectionFieldWrapper :label="__('harvest.form.date.label_rendered')">
           <InputText
             fluid
             class="mt-1"
             v-model="date_rendered"
             variant="filled"
           />
-        </VElementFormWrapper>
-        <VInput
+        </CollectionFieldWrapper>
+        <CollectionInput
           id="date"
           v-model="form.date"
           type="date"
@@ -96,7 +96,7 @@ watch(totalWeight, (newValue) => {
         />
       </div>
 
-      <VSelectMultiple
+      <CollectionMultiSelect
         v-model="form.quarter_ids"
         optionGroupLabel="text"
         optionGroupChildren="items"
@@ -106,7 +106,7 @@ watch(totalWeight, (newValue) => {
         :message="form.errors.quarter_ids"
       />
 
-      <VInput
+      <CollectionInput
         id="batch"
         v-model="form.batch"
         maxlength="2"
@@ -115,7 +115,7 @@ watch(totalWeight, (newValue) => {
         :message="form.errors.batch"
       />
 
-      <VSelect
+      <CollectionSelect
         id="dog_id"
         v-model="form.dog_id"
         :placeholder="__('generics.please_select')"
@@ -124,7 +124,7 @@ watch(totalWeight, (newValue) => {
         :message="form.errors.dog_id"
       />
 
-      <VSelect
+      <CollectionSelect
         id="farmer_id"
         v-model="form.farmer_id"
         :placeholder="__('generics.please_select')"
@@ -133,7 +133,7 @@ watch(totalWeight, (newValue) => {
         :message="form.errors.farmer_id"
       />
 
-      <VSelect
+      <CollectionSelect
         id="assistant_id"
         v-model="form.assistant_id"
         :placeholder="__('generics.please_select')"
@@ -142,7 +142,7 @@ watch(totalWeight, (newValue) => {
         :message="form.errors.assistant_id"
       />
 
-      <VInput
+      <CollectionInput
         id="note"
         type="textarea"
         v-model="form.note"
@@ -180,7 +180,7 @@ watch(totalWeight, (newValue) => {
         class="px-6 py-3 grid grid-cols-2 gap-x-16 gap-y-4"
         v-for="(detail, index) in form.details"
       >
-        <VInput
+        <CollectionInput
           :id="`details_plant_code_${index}`"
           v-model="detail.plant_code"
           :label="__('harvest.form.details.plant_code.label')"
@@ -188,7 +188,7 @@ watch(totalWeight, (newValue) => {
         />
 
         <div class="grid grid-cols-9 gap-x-16 gap-y-4">
-          <VSelect
+          <CollectionSelect
             :id="`details_quality_${index}`"
             class="col-span-4"
             v-model="detail.quality"
@@ -198,7 +198,7 @@ watch(totalWeight, (newValue) => {
             :message="form.errors[`details.${index}.quality`]"
           />
 
-          <VInput
+          <CollectionInput
             :id="`details_weight_${index}`"
             type="number"
             class="col-span-4"

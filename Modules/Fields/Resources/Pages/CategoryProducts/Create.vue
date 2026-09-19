@@ -3,8 +3,8 @@ import { Link, useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VCheckbox from '@Core/Components/Form/VCheckbox.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionCheckbox from '@Core/Components/Collection/CollectionCheckbox.vue';
 
 const form = useForm({
   name: '',
@@ -28,14 +28,14 @@ const submitHandler = () => form.post(route('category_products.store'));
       @submit.prevent="submitHandler"
     >
       <div class="grid gap-4">
-        <VInput
+        <CollectionInput
           v-model="form.name"
           label="Nombre"
           :message="form.errors.name"
           autocomplete="off"
           required
         />
-        <VCheckbox
+        <CollectionCheckbox
           v-model="form.is_commercial"
           label="Es comercial"
           :message="form.errors.is_commercial"

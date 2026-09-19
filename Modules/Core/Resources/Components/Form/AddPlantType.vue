@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import Dialog from 'primevue/dialog';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import plantTypeService from '@Fields/Services/PlantTypeService.js';
@@ -35,7 +35,7 @@ const addPlantType = async () => {
   <Dialog v-model:visible="open" modal header="Agregar un tipo de planta" :style="{ maxWidth: '425px' }">
     <div class="grid gap-4 py-4">
       <div class="grid items-center gap-4">
-        <VInput
+        <CollectionInput
           id="plant_type_name"
           v-model="plant_type_name"
           :label="__('plant.form.plant_type_id.label')"

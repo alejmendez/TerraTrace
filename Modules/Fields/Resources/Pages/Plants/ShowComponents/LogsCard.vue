@@ -6,7 +6,7 @@ import Checkbox from 'primevue/checkbox';
 import ProgressSpinner from 'primevue/progressspinner';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
 import PlantDetailService from '@Fields/Services/PlantDetailService';
 import { stringToFormat } from '@Core/Utils/date';
@@ -99,7 +99,7 @@ defineExpose({ filter });
     >
       <div class="mb-4">
         <div class="text-gray-400 pb-1">Año de cosecha</div>
-        <VSelect
+        <CollectionSelect
           v-model="selectedYear"
           :placeholder="__('generics.please_select')"
           :options="year_options"
@@ -107,13 +107,13 @@ defineExpose({ filter });
         />
       </div>
       <div class="justify-center">
-        <Checkbox v-model="selectAll" :inputId="`all-categories`" name="category" value="all" @change="selectAllHandler" />
+        <CollectionCheckbox v-model="selectAll" :inputId="`all-categories`" name="category" value="all" @change="selectAllHandler" />
         <label class="ms-2" :for="`all-categories`">{{ __('harvest_details.all_categories') }}</label>
 
         <span class="ms-8 text-surface-500 dark:text-surface-400">{{ __('harvest_details.selected', { size: selectedCategories.length }) }}</span>
 
         <div v-for="category of categories" :key="category.key" class="flex items-center gap-2 my-4">
-          <Checkbox v-model="selectedCategories" :inputId="category.key" name="category" :value="category.name" @change="selectHandler" />
+          <CollectionCheckbox v-model="selectedCategories" :inputId="category.key" name="category" :value="category.name" @change="selectHandler" />
           <label :for="category.key">
             {{ __(`harvest_details.form.${category.name}.label`) }}
             <!--

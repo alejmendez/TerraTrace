@@ -1,8 +1,8 @@
 <script setup>
 import Button from 'primevue/button';
 
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 const props = defineProps({
   form: {
@@ -24,7 +24,7 @@ const emit = defineEmits(['submit', 'submitAndLoadAnother', 'resetQr']);
 
 <template>
   <div>
-    <VSelect
+    <CollectionSelect
       id="quality"
       v-model="form.quality"
       :placeholder="__('generics.please_select')"
@@ -33,7 +33,7 @@ const emit = defineEmits(['submit', 'submitAndLoadAnother', 'resetQr']);
       :message="form.errors.quality"
     />
 
-    <VInput
+    <CollectionInput
       id="weight"
       v-model="form.weight"
       type="number"

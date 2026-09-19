@@ -2,8 +2,8 @@
 import { ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 import AddPlantType from '@Core/Components/Form/AddPlantType.vue';
 import { getDataSelect } from '@Core/Services/Selects';
@@ -40,7 +40,7 @@ const handler_input_row = (e) => {
 <template>
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection :header-text="__('plant.sections.location')">
-      <VSelect
+      <CollectionSelect
         id="field_id"
         v-model="form.field_id"
         :placeholder="__('generics.please_select')"
@@ -50,7 +50,7 @@ const handler_input_row = (e) => {
         @change="handlerChangeFieldId"
       />
 
-      <VSelect
+      <CollectionSelect
         id="quarter_id"
         v-model="form.quarter_id"
         :placeholder="__('generics.please_select')"
@@ -59,7 +59,7 @@ const handler_input_row = (e) => {
         :message="form.errors.quarter_id"
       />
 
-      <VInput
+      <CollectionInput
         id="row"
         maxlength="2"
         v-model="form.row"
@@ -70,7 +70,7 @@ const handler_input_row = (e) => {
     </CollectionCardSection>
 
     <CollectionCardSection>
-      <VInput
+      <CollectionInput
         id="code"
         v-model="form.code"
         :label="__('plant.form.code.label')"
@@ -78,7 +78,7 @@ const handler_input_row = (e) => {
       />
 
       <div class="grid grid-cols-12">
-        <VSelect
+        <CollectionSelect
           id="plant_type_id"
           v-model="form.plant_type_id"
           :classWrapper="'col-span-11'"
@@ -92,7 +92,7 @@ const handler_input_row = (e) => {
         </div>
       </div>
 
-      <VInput
+      <CollectionInput
         id="planned_at"
         type="date"
         v-model="form.planned_at"
@@ -101,7 +101,7 @@ const handler_input_row = (e) => {
         :max-date="new Date()"
       />
 
-      <VInput
+      <CollectionInput
         id="nursery_origin"
         v-model="form.nursery_origin"
         :label="__('plant.form.nursery_origin.label')"

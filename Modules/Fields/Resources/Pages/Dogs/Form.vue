@@ -2,9 +2,9 @@
 import { ref, watch } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VInputFile from '@Core/Components/Form/VInputFile.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { getAge } from '@Core/Utils/date';
@@ -49,7 +49,7 @@ const remove_vaccine = (index) => {
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
       <div class="form-text col-span-2 form-text-type">
-        <VInputFile
+        <CollectionFileInput
           :image="avatarPreview"
           :imagePreview="true"
           :label="__('dog.form.avatar.label')"
@@ -57,21 +57,21 @@ const remove_vaccine = (index) => {
         />
       </div>
 
-      <VInput
+      <CollectionInput
         id="name"
         v-model="form.name"
         :label="__('dog.form.name.label')"
         :message="form.errors.name"
       />
 
-      <VInput
+      <CollectionInput
         id="breed"
         v-model="form.breed"
         :label="__('dog.form.breed.label')"
         :message="form.errors.breed"
       />
 
-      <VSelect
+      <CollectionSelect
         id="gender"
         v-model="form.gender"
         :placeholder="__('generics.please_select')"
@@ -80,7 +80,7 @@ const remove_vaccine = (index) => {
         :message="form.errors.gender"
       />
 
-      <VInput
+      <CollectionInput
         id="birthdate"
         type="date"
         v-model="form.birthdate"
@@ -90,7 +90,7 @@ const remove_vaccine = (index) => {
         :maxDate="new Date()"
       />
 
-      <VInput
+      <CollectionInput
         id="age"
         :label="__('dog.form.age.label')"
         v-model="form.age"
@@ -98,7 +98,7 @@ const remove_vaccine = (index) => {
         :message="form.errors.age"
       />
 
-      <VSelect
+      <CollectionSelect
         id="field_id"
         v-model="form.field_id"
         :placeholder="__('generics.please_select')"
@@ -107,14 +107,14 @@ const remove_vaccine = (index) => {
         :message="form.errors.field_id"
       />
 
-      <VInput
+      <CollectionInput
         id="veterinary"
         v-model="form.veterinary"
         :label="__('dog.form.veterinary.label')"
         :message="form.errors.veterinary"
       />
 
-      <VSelect
+      <CollectionSelect
         id="couple_id"
         v-model="form.couple_id"
         :placeholder="__('generics.please_select')"
@@ -129,7 +129,7 @@ const remove_vaccine = (index) => {
         class="p-6 grid grid-cols-2 gap-x-16 gap-y-4"
         v-for="(vaccine, index) in form.vaccines"
       >
-        <VInput
+        <CollectionInput
           :id="`vaccines_name_${index}`"
           v-model="vaccine.name"
           :label="__('dog.form.vaccines.name.label')"
@@ -138,7 +138,7 @@ const remove_vaccine = (index) => {
 
         <div class="grid grid-cols-9 gap-x-2 gap-y-4">
           <div class="col-span-8">
-            <VInput
+            <CollectionInput
               :id="`vaccines_date_${index}`"
               type="date"
               v-model="vaccine.date"

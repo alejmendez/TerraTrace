@@ -1,6 +1,6 @@
 <script setup>
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 const props = defineProps({
   form: Object,
@@ -21,14 +21,14 @@ textarea.p-textarea.note {
 <template>
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection :header-text="__('tool.sections.details')">
-      <VInput
+      <CollectionInput
         id="name"
         v-model="form.name"
         :label="__('tool.form.name.label')"
         :message="form.errors.name"
       />
 
-      <VInput
+      <CollectionInput
         id="purchase_date"
         type="date"
         v-model="form.purchase_date"
@@ -37,7 +37,7 @@ textarea.p-textarea.note {
         :maxDate="new Date()"
       />
 
-      <VInput
+      <CollectionInput
         id="last_maintenance"
         type="date"
         v-model="form.last_maintenance"
@@ -46,21 +46,21 @@ textarea.p-textarea.note {
         :maxDate="new Date()"
       />
 
-      <VInput
+      <CollectionInput
         id="purchase_location"
         v-model="form.purchase_location"
         :label="__('tool.form.purchase_location.label')"
         :message="form.errors.purchase_location"
       />
 
-      <VInput
+      <CollectionInput
         id="type"
         v-model="form.type"
         :label="__('tool.form.type.label')"
         :message="form.errors.type"
       />
 
-      <VInput
+      <CollectionInput
         id="contact"
         v-model="form.contact"
         :label="__('tool.form.contact.label')"
@@ -69,7 +69,7 @@ textarea.p-textarea.note {
     </CollectionCardSection>
 
     <CollectionCardSection :header-text="__('tool.sections.note')" wrapperClass="">
-      <VInput
+      <CollectionInput
         id="note"
         type="textarea"
         class="min-h-36 note"

@@ -3,7 +3,7 @@ import { Link, useForm } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 const form = useForm({
   name: '',
@@ -26,7 +26,7 @@ const submitHandler = () => form.post(route('importers.store'));
       @submit.prevent="submitHandler"
     >
       <div class="grid gap-4">
-        <VInput
+        <CollectionInput
           v-model="form.name"
           label="Nombre"
           :message="form.errors.name"

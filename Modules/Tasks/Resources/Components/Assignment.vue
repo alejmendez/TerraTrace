@@ -2,8 +2,8 @@
 import { ref, watch } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSelect.vue';
 
 import { getDataSelect } from '@Core/Services/Selects';
 
@@ -70,7 +70,7 @@ watch(
 
 <template>
   <CollectionCardSection :header-text="__('task.sections.assignment')">
-    <VSelect
+    <CollectionSelect
       id="field_id"
       v-model="form.field_id"
       :placeholder="__('generics.please_select')"
@@ -79,7 +79,7 @@ watch(
       :message="form.errors.field_id"
     />
 
-    <VSelectMultiple
+    <CollectionMultiSelect
       id="quarter_id"
       v-model="form.quarter_id"
       :placeholder="__('generics.please_select')"
@@ -88,7 +88,7 @@ watch(
       :message="form.errors.quarter_id"
     />
 
-    <VSelectMultiple
+    <CollectionMultiSelect
       id="rows"
       v-model="form.rows"
       :placeholder="__('generics.please_select')"
@@ -98,7 +98,7 @@ watch(
       :message="form.errors.rows"
     />
 
-    <VSelectMultiple
+    <CollectionMultiSelect
       id="plant_id"
       v-model="form.plant_id"
       :placeholder="__('generics.please_select')"
@@ -108,7 +108,7 @@ watch(
       :message="form.errors.plant_id"
     />
 
-    <VSelect
+    <CollectionSelect
       id="responsible_id"
       v-model="form.responsible_id"
       :placeholder="__('generics.please_select')"

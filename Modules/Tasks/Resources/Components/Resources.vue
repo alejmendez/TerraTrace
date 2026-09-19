@@ -1,8 +1,8 @@
 <script setup>
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelectMultiple from '@Core/Components/Form/VSelectMultiple.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
@@ -35,7 +35,7 @@ const remove_supply = (index) => {
 <template>
   <CollectionCardSection :header-text="__('task.sections.resources')" wrapperClass="">
     <div class="p-6 grid md:grid-cols-3 gap-x-16 gap-y-4 sm:grid-cols-1">
-      <VSelectMultiple
+      <CollectionMultiSelect
         class="mt-1"
         v-model="form.tools"
         :options="props.tools"
@@ -44,7 +44,7 @@ const remove_supply = (index) => {
         :message="form.errors.tools"
       />
 
-      <VSelectMultiple
+      <CollectionMultiSelect
         class="mt-1"
         v-model="form.machineries"
         :options="props.machineries"
@@ -53,7 +53,7 @@ const remove_supply = (index) => {
         :message="form.errors.machineries"
       />
 
-      <VSelectMultiple
+      <CollectionMultiSelect
         class="mt-1"
         v-model="form.security_equipments"
         :options="props.security_equipments"
@@ -67,7 +67,7 @@ const remove_supply = (index) => {
       class="px-6 py-2 grid grid-cols-2 gap-x-16 gap-y-4"
       v-for="(supply, index) in form.supplies"
     >
-      <VInput
+      <CollectionInput
         :id="`supplies_name_${index}`"
         v-model="supply.name"
         :label="__('task.form.supplies.name.label')"
@@ -76,13 +76,13 @@ const remove_supply = (index) => {
       <!-- class="col-span-4" -->
       <div class="grid grid-cols-10">
         <div class="grid grid-cols-3 gap-x-4 gap-y-4 col-span-9">
-          <VInput
+          <CollectionInput
             :id="`supplies_brand_${index}`"
             v-model="supply.brand"
             :label="__('task.form.supplies.brand.label')"
             :message="form.errors[`supplies.${index}.brand`]"
           />
-          <VInput
+          <CollectionInput
             :id="`supplies_quantity_${index}`"
             v-model="supply.quantity"
             type="number"
@@ -93,7 +93,7 @@ const remove_supply = (index) => {
             :message="form.errors[`supplies.${index}.quantity`]"
           />
 
-          <VSelect
+          <CollectionSelect
             :id="`supplies_unit_${index}`"
             v-model="supply.unit"
             :placeholder="__('generics.please_select')"

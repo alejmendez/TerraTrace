@@ -1,7 +1,7 @@
 <script setup>
 import { useForm, router } from '@inertiajs/vue3';
 
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
 const props = defineProps({
   fields: Array,
@@ -33,7 +33,7 @@ const fieldChangeHandler = () => {
       </div>
     </div>
     <div class="col-end-5">
-      <VSelect
+      <CollectionSelect
         id="field"
         v-model="form.field_id"
         :placeholder="__('generics.please_select')"

@@ -2,8 +2,8 @@
 import { useForm, Link, Head } from '@inertiajs/vue3';
 
 import GuestLayout from '@Core/Layouts/GuestLayout.vue';
-import Checkbox from '@Core/Components/Form/Checkbox.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
+import CollectionCheckbox from '@Core/Components/Collection/CollectionCheckbox.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 defineProps({
@@ -41,7 +41,7 @@ const submit = () => {
     </div>
 
     <form @submit.prevent="submit">
-      <VInput
+      <CollectionInput
         id="email"
         type="email"
         classWrapper="mt-4"
@@ -50,7 +50,7 @@ const submit = () => {
         :message="form.errors.email"
       />
 
-      <VInput
+      <CollectionInput
         id="password"
         type="password"
         autocomplete="current-password"
@@ -62,7 +62,7 @@ const submit = () => {
 
       <div class="block mt-4">
         <label class="flex items-center">
-          <Checkbox name="remember" v-model="form.remember" />
+          <CollectionCheckbox name="remember" v-model="form.remember" />
           <span class="ms-2 text-sm text-gray-600 dark:text-slate-300">{{ __('auth.login.form.remember_me') }}</span>
         </label>
       </div>

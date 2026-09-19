@@ -10,10 +10,10 @@ import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
+import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import AddImporter from '@Core/Components/Form/AddImporter.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 const props = defineProps({
@@ -73,7 +73,7 @@ const total_categories_not_commercial = computed(() => {
 <template>
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
-      <VElementFormWrapper :label="__('liquidation.form.date.label')" :message="form.errors.date">
+      <CollectionFieldWrapper :label="__('liquidation.form.date.label')" :message="form.errors.date">
         <InputGroup>
           <InputText
             fluid
@@ -83,10 +83,10 @@ const total_categories_not_commercial = computed(() => {
           />
           <CollectionButton severity="secondary" icon="pi pi-calendar" @click="handler_open_datepicker" />
         </InputGroup>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
 
       <div class="grid grid-cols-12">
-        <VSelect
+        <CollectionSelect
           id="importer_id"
           v-model="form.importer_id"
           classWrapper="col-span-11"
@@ -100,7 +100,7 @@ const total_categories_not_commercial = computed(() => {
         </div>
       </div>
 
-      <VInput
+      <CollectionInput
         id="delivery_date"
         type="date"
         v-model="form.delivery_date"
@@ -109,7 +109,7 @@ const total_categories_not_commercial = computed(() => {
         :maxDate="new Date()"
       />
 
-      <VInput
+      <CollectionInput
         id="reception_date"
         type="date"
         v-model="form.reception_date"
@@ -118,7 +118,7 @@ const total_categories_not_commercial = computed(() => {
         :maxDate="new Date()"
       />
 
-      <VSelect
+      <CollectionSelect
         id="field_id"
         v-model="form.field_id"
         :placeholder="__('generics.please_select')"
@@ -128,7 +128,7 @@ const total_categories_not_commercial = computed(() => {
       />
     </CollectionCardSection>
     <CollectionCardSection>
-      <VElementFormWrapper :label="__('liquidation.form.weight_with_earth.label')" :message="form.errors.weight_with_earth">
+      <CollectionFieldWrapper :label="__('liquidation.form.weight_with_earth.label')" :message="form.errors.weight_with_earth">
         <InputGroup>
           <InputText
             fluid
@@ -140,8 +140,8 @@ const total_categories_not_commercial = computed(() => {
           />
           <InputGroupAddon>{{ __('liquidation.weight_unit') }}</InputGroupAddon>
         </InputGroup>
-      </VElementFormWrapper>
-      <VElementFormWrapper :label="__('liquidation.form.weight_washed.label')" :message="form.errors.weight_washed">
+      </CollectionFieldWrapper>
+      <CollectionFieldWrapper :label="__('liquidation.form.weight_washed.label')" :message="form.errors.weight_washed">
         <InputGroup>
           <InputText
             fluid
@@ -153,8 +153,8 @@ const total_categories_not_commercial = computed(() => {
           />
           <InputGroupAddon>{{ __('liquidation.weight_unit') }}</InputGroupAddon>
         </InputGroup>
-      </VElementFormWrapper>
-      <VElementFormWrapper :label="__('liquidation.form.dollar_value.label')" :message="form.errors.dollar_value">
+      </CollectionFieldWrapper>
+      <CollectionFieldWrapper :label="__('liquidation.form.dollar_value.label')" :message="form.errors.dollar_value">
         <InputGroup>
           <InputText
             fluid
@@ -166,7 +166,7 @@ const total_categories_not_commercial = computed(() => {
           />
           <InputGroupAddon>{{ __('liquidation.currency_unit') }}</InputGroupAddon>
         </InputGroup>
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
     </CollectionCardSection>
     <CollectionCardSection :headerText="__('liquidation.sections.commercial_categories')" wrapperClass="p-4 grid md:grid-cols-10 sm:grid-cols-1 gap-x-2 gap-y-1">
       <div class="col-span-4 font-semibold">
@@ -184,7 +184,7 @@ const total_categories_not_commercial = computed(() => {
           {{ form.products[commercial.id].name }}
         </div>
         <div class="col-span-3">
-          <VInput
+          <CollectionInput
             v-model="form.products[commercial.id].price"
             :message="form.errors[`products.${index}.price`]"
             type="number"
@@ -194,7 +194,7 @@ const total_categories_not_commercial = computed(() => {
           />
         </div>
         <div class="col-span-3">
-          <VInput
+          <CollectionInput
             v-model="form.products[commercial.id].weight"
             :message="form.errors[`products.${index}.weight`]"
             type="number"
@@ -227,7 +227,7 @@ const total_categories_not_commercial = computed(() => {
           {{ form.products[commercial.id].name }}
         </div>
         <div class="col-span-3">
-          <VInput
+          <CollectionInput
             v-model="form.products[commercial.id].weight"
             :message="form.errors[`products.${index}.weight`]"
             type="number"

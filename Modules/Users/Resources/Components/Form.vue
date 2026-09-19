@@ -2,11 +2,10 @@
 import { ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInputFile from '@Core/Components/Form/VInputFile.vue';
-import VInputDni from '@Core/Components/Form/VInputDni.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
-import VElementFormWrapper from '@Core/Components/Form/VElementFormWrapper.vue';
+import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionFieldWrapper from '@Core/Components/Collection/CollectionFieldWrapper.vue';
 import InputMask from 'primevue/inputmask';
 
 const props = defineProps({
@@ -33,7 +32,7 @@ const changeFileHandler = (e) => {
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection :header-text="__('user.sections.details')">
       <div class="form-text col-span-2 form-text-type">
-        <VInputFile
+        <CollectionFileInput
           :image="avatarPreview"
           :imagePreview="true"
           :label="__('generics.form.file.select_a_image')"
@@ -41,43 +40,43 @@ const changeFileHandler = (e) => {
         />
       </div>
 
-      <VInputDni
+      <CollectionInput
         id="dni"
         v-model="form.dni"
         :label="__('user.form.dni.label')"
         :message="form.errors.dni"
       />
 
-      <VInput
+      <CollectionInput
         id="name"
         v-model="form.name"
         :label="__('user.form.name.label')"
         :message="form.errors.name"
       />
 
-      <VInput
+      <CollectionInput
         id="last_name"
         v-model="form.last_name"
         :label="__('user.form.last_name.label')"
         :message="form.errors.last_name"
       />
 
-      <VInput
+      <CollectionInput
         id="email"
         v-model="form.email"
         :label="__('user.form.email.label')"
         :message="form.errors.email"
       />
 
-      <VElementFormWrapper :classWrapper="props.classWrapper" :label="__('user.form.phone.label')" :message="form.errors.phone">
+      <CollectionFieldWrapper :classWrapper="props.classWrapper" :label="__('user.form.phone.label')" :message="form.errors.phone">
         <InputMask
           v-model="form.phone"
           mask="(+99) 9 9999 9999"
           fluid
         />
-      </VElementFormWrapper>
+      </CollectionFieldWrapper>
 
-      <VInput
+      <CollectionInput
         id="password"
         type="password"
         v-model="form.password"
@@ -86,7 +85,7 @@ const changeFileHandler = (e) => {
       />
     </CollectionCardSection>
     <CollectionCardSection :header-text="__('user.sections.roles')" v-if="props.showRole">
-      <VSelect
+      <CollectionSelect
         id="role"
         v-model="form.role"
         :placeholder="__('generics.please_select')"

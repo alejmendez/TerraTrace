@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
 import { getGraph } from '@Fields/Services/Graphs';
 
@@ -169,7 +169,7 @@ onMounted(async () => {
     <CollectionCardSection wrapperClass="p-6 grid md:grid-cols-3 gap-x-16 gap-y-4 sm:grid-cols-1">
       <div>
         <div class="text-gray-400 pb-1">Tipo de gráfica</div>
-        <VSelect
+        <CollectionSelect
           v-model="type_graph"
           :placeholder="__('generics.please_select')"
           :options="types_graphs"

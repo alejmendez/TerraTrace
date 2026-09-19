@@ -2,9 +2,9 @@
 import { ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
-import VInput from '@Core/Components/Form/VInput.vue';
-import VInputFile from '@Core/Components/Form/VInputFile.vue';
-import VSelect from '@Core/Components/Form/VSelect.vue';
+import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 
 const props = defineProps({
   form: Object,
@@ -26,7 +26,7 @@ const changeFileHandler = (e) => {
 <template>
   <form @submit.prevent="props.submitHandler">
     <CollectionCardSection>
-      <VSelect
+      <CollectionSelect
         id="field_id"
         v-model="form.field_id"
         :placeholder="__('generics.please_select')"
@@ -37,14 +37,14 @@ const changeFileHandler = (e) => {
     </CollectionCardSection>
 
     <CollectionCardSection>
-      <VInput
+      <CollectionInput
         id="name"
         v-model="form.name"
         :label="__('quarter.form.name.label')"
         :message="form.errors.name"
       />
 
-      <VInput
+      <CollectionInput
         id="area"
         type="number"
         v-model="form.area"
@@ -55,7 +55,7 @@ const changeFileHandler = (e) => {
         :message="form.errors.area"
       />
 
-      <VSelect
+      <CollectionSelect
         id="responsible_id"
         v-model="form.responsible_id"
         :placeholder="__('generics.please_select')"
@@ -67,7 +67,7 @@ const changeFileHandler = (e) => {
 
     <CollectionCardSection :header-text="__('quarter.sections.blueprint')">
       <div class="form-text col-span-2 form-text-type">
-        <VInputFile
+        <CollectionFileInput
           :image="blueprintPreview"
           :imagePreview="true"
           :label="__('quarter.form.blueprint.label')"
