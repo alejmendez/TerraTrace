@@ -108,9 +108,17 @@ selects, tablas de sólo lectura).
   (`FieldService::forSelect()`, `HarvestService::availableYears()`,
   etc.).
 - El `Modules\Core\Registry\EntityDispatcher` mantiene un mapa
-  `entity => [ServiceClass, method]` (más algunas entradas
-  estáticas para listas de traducción como `scale_type` o
-  `genders`).
+  `entity => [ServiceClass, method]` puramente — sólo entradas
+  service-backed. El branch "static" / translation-driven que
+  alguna vez existió para `scale_type`, `genders` y
+  `is_commercial_options` fue retirado: ninguna ruta activa los
+  usaba (los controllers ya tenían helpers locales o llamaban al
+  service directo).
+- Listas verdaderamente estáticas viven en el frontend como
+  constantes en `Modules\Core\Resources\Constants/` (ej.
+  `gender.js`, `scaleType.js`, `isCommercial.js`), con `labelKey`
+  en vez de `text`. El consumidor las mapea a `{value, text}` con
+  `__()` y se ahorra el roundtrip HTTP.
 - El consumidor llama `EntityDispatcher::dispatch('field')` — desde
   un controlador HTTP, un service, o el endpoint legacy
   `Modules\Core\Http\Controllers\SelectsController`

@@ -38,11 +38,6 @@ class EntityDispatcherTest extends TestCase
             $catalogue['couple']
         );
 
-        // Static entries.
-        $this->assertSame('static', $catalogue['scale_type']);
-        $this->assertSame('static', $catalogue['genders']);
-        $this->assertSame('static', $catalogue['is_commercial_options']);
-
         // Catalogue is alphabetically sorted (helper invariant).
         $this->assertSame(
             array_keys($catalogue),
@@ -58,35 +53,6 @@ class EntityDispatcherTest extends TestCase
         $this->assertSame([], EntityDispatcher::dispatch('field'));
     }
 
-    public function test_dispatch_returns_translated_options_for_static_lists(): void
-    {
-        $this->assertSame(
-            [
-                ['value' => 'weight', 'text' => trans('quarter.show.statistics.scale_type.options.weight')],
-                ['value' => 'quantity', 'text' => trans('quarter.show.statistics.scale_type.options.quantity')],
-            ],
-            EntityDispatcher::dispatch('scale_type')
-        );
-
-        $this->assertSame(
-            [
-                ['value' => 'M', 'text' => trans('dog.form.gender.options.male')],
-                ['value' => 'F', 'text' => trans('dog.form.gender.options.female')],
-            ],
-            EntityDispatcher::dispatch('genders')
-        );
-    }
-
-    public function test_dispatch_is_commercial_options_has_three_rows(): void
-    {
-        $options = EntityDispatcher::dispatch('is_commercial_options');
-
-        $this->assertCount(3, $options);
-        $this->assertNull($options[0]['value']);
-        $this->assertTrue($options[1]['value']);
-        $this->assertFalse($options[2]['value']);
-    }
-
     public function test_dispatch_throws_for_unknown_entity(): void
     {
         $this->expectException(RuntimeException::class);
@@ -99,13 +65,10 @@ class EntityDispatcherTest extends TestCase
     {
         $result = EntityDispatcher::dispatchMany([
             'field' => [],
-            'genders' => [],
-            'scale_type' => [],
+            'user' => [],
         ]);
 
-        $this->assertSame(['field', 'genders', 'scale_type'], array_keys($result));
-        $this->assertCount(2, $result['genders']);
-        $this->assertCount(2, $result['scale_type']);
+        $this->assertSame(['field', 'user'], array_keys($result));
         $this->assertSame([], $result['field']);
     }
 

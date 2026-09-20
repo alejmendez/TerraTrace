@@ -11,10 +11,10 @@ import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHead
 import CollectionPagination from '@Core/Components/Collection/CollectionPagination.vue';
 import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
 import { formatNumber } from '@Core/Utils/format';
+import { IS_COMMERCIAL_OPTIONS } from '@Core/Constants/isCommercial';
 import { can } from '@Auth/Services/Auth';
 
 const props = defineProps({
-  isCommercialOptions: Array,
   meta: Object,
   records: Array,
   summary: Object,
@@ -129,6 +129,14 @@ const totalCategorias = computed(() => formatNumber(props.summary?.categories ||
 const totalComercial = computed(() => formatNumber(props.summary?.commercial || 0, 0));
 const totalNoComercial = computed(() => formatNumber(props.summary?.non_commercial || 0, 0));
 
+// Filter dropdown uses the static IS_COMMERCIAL_OPTIONS constant —
+// the strings live in i18n, no controller roundtrip needed. We
+// stringify `null` so the <select> comparison stays simple.
+const isCommercialFilter = IS_COMMERCIAL_OPTIONS.map((o) => ({
+  value: o.value === null ? '' : String(o.value),
+  text: __(o.labelKey),
+}));
+
 const commercialLabel = (value) => (value ? 'Sí' : 'No');
 const commercialBadgeClass = (value) => (value ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200');
 
@@ -184,9 +192,7 @@ onUnmounted(() => clearTimeout(searchTimer));
             aria-label="Filtrar por tipo comercial"
             @change="setFilter('is_commercial', $event.target.value)"
           >
-            <option value="">Todos los tipos</option>
-            <option value="true">Comerciales</option>
-            <option value="false">No comerciales</option>
+            <option v-for="opt in isCommercialFilter" :key="opt.value" :value="opt.value">{{ opt.text }}</option>
           </select>
           <select
             class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"

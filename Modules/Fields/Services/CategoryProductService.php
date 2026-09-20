@@ -122,17 +122,4 @@ class CategoryProductService
             ->get()
             ->toArray();
     }
-
-    /**
-     * Static "is commercial" filter options (all / yes / no). Used by
-     * the CategoryProducts index filter dropdown.
-     */
-    public function isCommercialOptions(): array
-    {
-        return [
-            ['value' => null, 'text' => trans('generics.all')],
-            ['value' => true, 'text' => trans('generics.yes')],
-            ['value' => false, 'text' => trans('generics.no')],
-        ];
-    }
 }

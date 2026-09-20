@@ -9,11 +9,11 @@ import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 
 import QuarterService from '@Fields/Services/QuarterService.js';
+import { SCALE_TYPE } from '@Core/Constants/scaleType';
 import { can } from '@Auth/Services/Auth';
 
 const props = defineProps({
   quarter: Object,
-  scale_types: Array,
 });
 
 const plants = ref([]);
@@ -26,7 +26,7 @@ const distributionPlants = ref('');
 const current_plant = ref({});
 const detail_current_plant = ref({});
 
-const scaleTypes = ref(props.scale_types);
+const scaleTypes = ref(SCALE_TYPE.map((s) => ({ value: s.value, text: __(s.labelKey) })));
 const scaleType = ref(scaleTypes.value[0]);
 
 // TODO: Se oculta temporalmente, buscar alguna alternativa para que no se pueda editar la distribución de plantas

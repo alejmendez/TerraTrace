@@ -30,7 +30,6 @@ class CategoryProductsController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'isCommercialOptions' => $this->categoryProducts->isCommercialOptions(),
         ]);
     }
 

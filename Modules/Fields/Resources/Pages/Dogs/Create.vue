@@ -7,9 +7,7 @@ import FormDog from '@Fields/Pages/Dogs/Form.vue';
 
 const props = defineProps({
   fields: Array,
-  fields: Array,
   couples: Array,
-  genders: Array,
 });
 
 const form = useForm({
@@ -44,7 +42,6 @@ const submitHandler = () => form.post(route('dogs.store'), form.avatar ? { force
       :form="form"
       :fields="props.fields"
       :couples="props.couples"
-      :genders="props.genders"
       :submitHandler="submitHandler"
     />
   </AuthenticatedLayout>

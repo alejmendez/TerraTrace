@@ -22,7 +22,6 @@ const props = defineProps({
   fields: Array,
   quarters: Array,
   users: Array,
-  scale_types: Array,
 });
 
 const { data: quarter } = props.data;
@@ -115,7 +114,6 @@ const deleteHandler = async (id) => {
 
     <StatisticsCard
       :quarter="quarter"
-      :scale_types="props.scale_types"
       v-show="isStatisticsTab"
     />
   </AuthenticatedLayout>

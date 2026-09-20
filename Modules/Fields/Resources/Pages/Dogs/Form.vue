@@ -8,12 +8,12 @@ import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { getAge } from '@Core/Utils/date';
+import { GENDERS } from '@Core/Constants/gender';
 
 const props = defineProps({
   form: Object,
   fields: Array,
   couples: Array,
-  genders: Array,
   submitHandler: Function,
 });
 
@@ -21,7 +21,7 @@ const form = props.form;
 
 const avatarPreview = ref(form.avatar);
 
-const genders = ref(props.genders);
+const genders = ref(GENDERS.map((g) => ({ value: g.value, text: __(g.labelKey) })));
 
 form.gender = genders.value.find((a) => a.value == form.gender);
 

@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Registry;
 
-use Closure;
 use Modules\Auth\Services\AuthService;
 use Modules\Fields\Services\CategoryProductService;
 use Modules\Fields\Services\DogService;
@@ -25,17 +24,16 @@ use RuntimeException;
  * (`/api/selects/{entity}`) still serves, delegating each one to
  * the module owner.
  *
- * Two kinds of entries:
+ * Every entry is service-backed: the entity maps to
+ * `[ServiceClass, method]` and the dispatcher resolves the service
+ * through the container (so constructor deps work) and calls the
+ * method. Most entries are the `forSelect()` helper each entity
+ * service exposes (see AGENTS.md §3).
  *
- *   - Service-backed  → entity maps to `[ServiceClass, method]`;
- *                       the dispatcher resolves the service through
- *                       the container (so constructor deps work) and
- *                       calls the method. Most entries are the
- *                       `forSelect()` helper each entity service
- *                       exposes (see AGENTS.md §3).
- *   - Static          → entity maps to a Closure; used for
- *                       translation-driven lists (`scale_type`,
- *                       `genders`) that don't belong to any module.
+ * Truly-static option lists (genders, scale_type, is-commercial
+ * filters) live in the frontend as TS constants under
+ * `Modules/Core/Resources/js/constants/`, not here — they don't
+ * need an HTTP round-trip.
  *
  * Adding a new entity: register it here and (if it's data-driven)
  * expose the corresponding method on its module's service. No
@@ -83,29 +81,6 @@ class EntityDispatcher
     ];
 
     /**
-     * Static / translation-driven entries. Built lazily because
-     * closures that call `trans()` can't live inside a const array.
-     *
-     * @return array<string, Closure(array<string,mixed>): mixed>
-     */
-    private static function staticMap(): array
-    {
-        return [
-            'scale_type' => static fn () => [
-                ['value' => 'weight', 'text' => trans('quarter.show.statistics.scale_type.options.weight')],
-                ['value' => 'quantity', 'text' => trans('quarter.show.statistics.scale_type.options.quantity')],
-            ],
-
-            'is_commercial_options' => static fn () => app(CategoryProductService::class)->isCommercialOptions(),
-
-            'genders' => static fn () => [
-                ['value' => 'M', 'text' => trans('dog.form.gender.options.male')],
-                ['value' => 'F', 'text' => trans('dog.form.gender.options.female')],
-            ],
-        ];
-    }
-
-    /**
      * Resolve a single entity by name.
      *
      * @param  array<string, mixed>  $filter  currently unused — service
@@ -115,17 +90,13 @@ class EntityDispatcher
      */
     public static function dispatch(string $entity, array $filter = [])
     {
-        if (isset(self::SERVICE_MAP[$entity])) {
-            [$class, $method] = self::SERVICE_MAP[$entity];
-
-            return app($class)->{$method}();
+        if (! isset(self::SERVICE_MAP[$entity])) {
+            throw new RuntimeException("Entity '{$entity}' is not registered in EntityDispatcher.");
         }
 
-        if (isset(self::staticMap()[$entity])) {
-            return self::staticMap()[$entity]($filter);
-        }
+        [$class, $method] = self::SERVICE_MAP[$entity];
 
-        throw new RuntimeException("Entity '{$entity}' is not registered in EntityDispatcher.");
+        return app($class)->{$method}();
     }
 
     /**
@@ -153,7 +124,7 @@ class EntityDispatcher
     }
 
     /**
-     * @return array<string, string> entity => "Service::method" or "static"
+     * @return array<string, string> entity => "Service::method"
      */
     public static function catalogue(): array
     {
@@ -161,10 +132,6 @@ class EntityDispatcher
 
         foreach (self::SERVICE_MAP as $entity => [$class, $method]) {
             $catalogue[$entity] = $class.'::'.$method;
-        }
-
-        foreach (array_keys(self::staticMap()) as $entity) {
-            $catalogue[$entity] = 'static';
         }
 
         ksort($catalogue);

@@ -12,17 +12,19 @@ import CollectionPagination from '@Core/Components/Collection/CollectionPaginati
 import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
 import { formatNumber } from '@Core/Utils/format';
 import { getAge } from '@Core/Utils/date';
+import { GENDERS } from '@Core/Constants/gender';
 import { can } from '@Auth/Services/Auth';
 
 const props = defineProps({
   couples: Array,
   fields: Array,
-  genders: Array,
   meta: Object,
   records: Array,
   summary: Object,
   toast: Object,
 });
+
+const genderOptions = GENDERS.map((g) => ({ value: g.value, text: __(g.labelKey) }));
 
 const canCreate = can('dogs.create');
 const canDestroy = can('dogs.destroy');
@@ -199,7 +201,7 @@ onUnmounted(() => clearTimeout(searchTimer));
             @change="setFilter('gender', $event.target.value)"
           >
             <option value="">Todos los géneros</option>
-            <option v-for="gender in genders" :key="gender.value" :value="gender.value">{{ gender.text }}</option>
+            <option v-for="gender in genderOptions" :key="gender.value" :value="gender.value">{{ gender.text }}</option>
           </select>
           <select
             class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"

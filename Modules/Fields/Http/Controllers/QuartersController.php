@@ -91,7 +91,6 @@ class QuartersController extends Controller
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->forSelect(),
             'users' => $this->users->responsibles(),
-            'scale_types' => $this->scaleTypesForSelect(),
         ]);
     }
 
@@ -146,19 +145,6 @@ class QuartersController extends Controller
         $this->quarters->updatePlantPositions($id, request('data', []));
 
         return response()->noContent();
-    }
-
-    /**
-     * Static scale-type option list from translations. Kept on the
-     * controller because the values are fixed and promoting to a
-     * dedicated service would be over-engineering.
-     */
-    private function scaleTypesForSelect(): array
-    {
-        return [
-            ['value' => 'weight', 'text' => trans('quarter.show.statistics.scale_type.options.weight')],
-            ['value' => 'quantity', 'text' => trans('quarter.show.statistics.scale_type.options.quantity')],
-        ];
     }
 
     protected function storeBlueprint(UpdateQuarterRequest|StoreQuarterRequest $request)

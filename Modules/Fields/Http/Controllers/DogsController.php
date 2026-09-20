@@ -38,7 +38,6 @@ class DogsController extends Controller
             'summary' => $payload['summary'],
             'fields' => $this->fields->forSelect(),
             'couples' => $this->users->couples(),
-            'genders' => $this->gendersForSelect(),
         ]);
     }
 
@@ -50,7 +49,6 @@ class DogsController extends Controller
         return Inertia::render('Fields::Dogs/Create', [
             'fields' => $this->fields->forSelect(),
             'couples' => $this->users->couples(),
-            'genders' => $this->gendersForSelect(),
         ]);
     }
 
@@ -94,7 +92,6 @@ class DogsController extends Controller
             'data' => new DogResource($dog),
             'fields' => $this->fields->forSelect(),
             'couples' => $this->users->couples(),
-            'genders' => $this->gendersForSelect(),
         ]);
     }
 
@@ -123,19 +120,6 @@ class DogsController extends Controller
         $this->dogs->delete($id);
 
         return response()->noContent();
-    }
-
-    /**
-     * Static {value, text} list of M / F with i18n labels. Kept here
-     * because the values are constant; promoting to its own service
-     * would be over-engineering for two fixed options.
-     */
-    private function gendersForSelect(): array
-    {
-        return [
-            ['value' => 'M', 'text' => trans('dog.form.gender.options.male')],
-            ['value' => 'F', 'text' => trans('dog.form.gender.options.female')],
-        ];
     }
 
     protected function storeAvatar(UpdateDogRequest|StoreDogRequest $request)
