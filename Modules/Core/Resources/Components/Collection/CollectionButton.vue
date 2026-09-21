@@ -91,7 +91,15 @@ const classes = computed(() => {
         ],
     };
 
-    return [...base, ...(variants[props.severity] ?? variants.primary)];
+    /**
+     * `attrs.class` lets the consumer extend or override the rendered
+     * classes (e.g. `class="w-full"` on a full-width submit button).
+     * Without this merge, `inheritAttrs: false` + `useAttrs()` swallows
+     * the user-provided class because we never spread `v-bind="attrs"`
+     * onto the rendered <component>. Position at the end so it's the
+     * last word in the class list, matching Vue's fallthrough convention.
+     */
+    return [...base, ...(variants[props.severity] ?? variants.primary), attrs.class];
 });
 
 /**

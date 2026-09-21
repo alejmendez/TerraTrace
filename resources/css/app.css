@@ -205,6 +205,24 @@ body {
 }
 
 .terra-sidebar .aside-left-menu .menu-element {
+  /*
+   * `display: flex` (not `inline-flex`) so the <a> spans the full
+   * sidebar width — the active-state background covers the whole row,
+   * matching the parent <button> groups above.
+   *
+   * The original PrimeVue era relied on each <AccordionPanel> applying
+   * `display: flex` to its descendants implicitly. When the refactor
+   * replaced panels with raw <div>s, the <a> fell back to its native
+   * `display: inline`, and the inner block-level icon <div> forced a
+   * line break — so icon and text stacked vertically inside every menu
+   * item. `flex` + `items-center` restores the side-by-side layout
+   * without changing the visual width.
+   *
+   * `gap-2` (8px) replaces the `mr-2` the icon div used to carry.
+   */
+  display: flex;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
   max-width: 100%;
   min-height: 43px;

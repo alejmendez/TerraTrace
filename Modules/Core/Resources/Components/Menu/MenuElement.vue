@@ -1,7 +1,9 @@
 <script setup>
+import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 import { useSideBarStore } from '@Core/Stores/sidebar.js';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -16,7 +18,7 @@ const props = defineProps({
   },
   icon: {
     type: String,
-    default: 'fa-solid fa-circle',
+    default: '',
   },
   active: {
     type: Boolean,
@@ -31,6 +33,28 @@ const closeSideBarOnMobile = () => {
     sideBarStore.close();
   }
 };
+
+/**
+ * `icon` historically arrives as an HTML string from the `menus.icon`
+ * column (e.g. `<span class="material-symbols-rounded">insert_chart</span>`).
+ * Extract the ligature name so it can be looked up in CollectionIcon.
+ * Returns `null` if the prop doesn't match that shape (e.g. an empty
+ * string or a plain slug already), which falls back to no icon rather
+ * than rendering raw HTML.
+ */
+const iconName = computed(() => {
+  const raw = props.icon;
+  if (!raw) {
+    return null;
+  }
+  const match = raw.match(/>([^<]+)</);
+  if (match) {
+    return match[1].trim();
+  }
+  // Plain slug without HTML wrapping — pass through directly.
+  const trimmed = raw.trim();
+  return trimmed === '' ? null : trimmed;
+});
 </script>
 
 <template>
@@ -40,8 +64,8 @@ const closeSideBarOnMobile = () => {
     :class="{ active: props.active }"
     @click="closeSideBarOnMobile"
   >
-    <div class="w-[25px] mr-2 flex justify-center">
-      <span v-html="props.icon"></span>
+    <div class="w-[25px] flex justify-center">
+      <CollectionIcon v-if="iconName" :name="iconName" :size="18" />
     </div>
     {{ props.text }}
   </Link>

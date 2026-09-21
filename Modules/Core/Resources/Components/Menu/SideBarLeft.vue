@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 import MenuElement from './MenuElement.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 import { menuElements } from '@Core/Services/Menu.js';
 
 const page = usePage();
@@ -48,7 +49,14 @@ function isOpen(index) {
 
 <template>
     <aside class="aside-left-menu min-h-[calc(100vh-50px)] ps-[15px] pe-[20px]">
-        <div class="flex flex-col justify-between space-y-[10px] mt-3 mb-10">
+        <!--
+            Stack groups top-to-bottom. The previous `justify-between` came from
+            the PrimeVue-accordion era, where each <AccordionPanel> absorbed the
+            spread visually. With raw <div> panels, `justify-between` distributes
+            ~120px gaps between groups and pushes most items below the fold.
+            `space-y-[10px]` keeps a small, even rhythm between groups.
+        -->
+        <div class="flex flex-col space-y-[10px] mt-3 mb-10">
             <div v-for="(menu, index) in menuData" :key="index">
                 <div v-if="menu.link">
                     <MenuElement
@@ -66,9 +74,10 @@ function isOpen(index) {
                         @click="togglePanel(index)"
                     >
                         <span class="text-sm font-semibold">{{ menu.text }}</span>
-                        <span class="material-symbols-rounded">
-                            {{ isOpen(index) ? 'expand_less' : 'expand_more' }}
-                        </span>
+                        <CollectionIcon
+                            :name="isOpen(index) ? 'expand_less' : 'expand_more'"
+                            :size="18"
+                        />
                     </button>
                     <div v-show="isOpen(index)" class="ps-4">
                         <MenuElement
