@@ -24,12 +24,13 @@ cuando aplica.
 | Backend | PHP 8.2+, Laravel 12, Eloquent, Sanctum, Spatie permissions |
 | Runtime | Laravel Octane |
 | Frontend | Vue 3, Inertia 3, Tailwind 4 (Vite), Ziggy |
-| Iconografía | `@lucide/vue` (NO `primeicons`/`material-symbols` en código nuevo) |
+| Iconografía | `@lucide/vue` (vía `<CollectionIcon name="...">`) |
 | Datos auxiliares | Laravel Excel (importadores), Faker |
+| Editor de texto rico | Quill 2.x + `quill-mention` (wrapper propio en `Core/Components/Form/VEditor.vue`) |
 
-**NO se usan (migración en curso):** PrimeVue (componentes y `useToast`/
-`useConfirm`), Axios como dependencia (sustituido por Inertia + `fetch`
-nativo donde Inertia no llega).
+**Eliminado (no se usa, no se reintroduce):** PrimeVue, PrimeIcons, `@primevue/themes`,
+`useToast`/`useConfirm` originales de PrimeVue. Axios sigue como dependencia global heredada
+de Laravel; su uso queda restringido a features donde Inertia + `fetch` no llegan.
 
 ---
 
@@ -356,44 +357,50 @@ verificar que no exista ya.
 
 ## 7. Migración PrimeVue → Collection UI
 
-**Estado:** todas las vistas `List.vue` migradas (Fields, Plants, Quarters,
-Dogs, Users, Tools, SecurityEquipments, Machineries, Owners, PlantTypes,
-Tasks, Harvests, Batches, Liquidations, Importers, CategoryProducts).
-Componentes base disponibles en `Modules/Core/Resources/Components/Collection/`.
+**Estado (2026-Q3):** completa. Las 5 deps de PrimeVue
+(`primevue`, `primeicons`, `@primevue/themes`) fueron removidas de
+`package.json` y de `node_modules`. El último PrimeVue plugin init fue
+borrado en `Modules/Core/Resources/Libs/prime.js` (junto con la carpeta
+`PrimePresents/` que hospedaba los 5 presets de tema) y el theme
+switcher de 5 colores de `MenuUser.vue` se reemplazó por un toggle
+light/dark puro Tailwind. El CSS de los componentes PrimeVue
+(`.p-button.p-component`, `.p-datatable`, `.p-accordion*`, `.p-toast`,
+`.swal2-modal`) y las CSS vars de tema (`--p-primary-*`) se borraron de
+`resources/css/app.css`.
 
-**Reglas:**
+**Sustituciones finales:**
 
-1. **Una vista por commit.** No migrar dos `List.vue` en el mismo PR.
-2. **Conservar el contrato backend.** `List<Entity>::call()` queda mientras
-   coexistan vistas legacy; `List<Entity>::collection()` se añade cuando
-   se migra la vista correspondiente.
-3. **Conservar permisos.** No eliminar `can('<ent>.<acción>')` al migrar;
-   sólo cambia el componente que renderiza el botón.
-4. **No reintroducir PrimeVue.** Si una migración parece requerir un
-   componente de PrimeVue, evaluar primero si tiene equivalente
-   `Collection*` o si vale la pena crearlo.
-5. **Eliminar dependencia sólo al final.** `PrimeVue` permanece en
-   `package.json` hasta que la última vista legacy (Show pages,
-   HarvestTable.vue, etc.) se haya migrado y borrado.
+| Antes | Ahora |
+|---|---|
+| `primevue/datatable` + `Column` + filtros | `Core/Components/Table/Datatable.vue` eliminado; tablas usan HTML + Tailwind + `<CollectionPagination>` |
+| `primevue/editor` | `Core/Components/Form/VEditor.vue` envuelve Quill 2.0.2 + `quill-mention` directo |
+| `useToast()` / `useConfirm()` de PrimeVue | composables propios en `Core/Composables/` (mismo shape, sin deps) |
+| `--p-primary-500/300/600` | hex Tailwind: `text-[#17663a]` / `hover:text-[#86c798]` / `dark:hover:text-[#105534]` |
+| `pi pi-*` (PrimeIcons) | `<CollectionIcon name="...">` (lucide-vue) |
+| 5 temas PrimeVue (`Apple`/`Cobalt`/etc.) | toggle light/dark puro CSS (`html.dark`) |
 
-**Próximas tandas pendientes:**
+**Convenciones del editor Quill (VEditor.vue):** el binding `v-model`
+es un HTML string. La mención usa `mentionDenotationChars: ['@']` y el
+`source` filtra por `option.text` de la prop `options`
+(`{ value, text }[]`). El wrapper maneja el ciclo Quill ↔ Vue con un
+flag `suppressNextSync` para que `dangerouslyPasteHTML` no re-dispare
+el watcher y haga saltar el cursor.
 
-- **Show pages** con PrimeVue (`Quarters/Show`, `Plants/Show`,
-  `Fields/Show`, `Tasks/Show`, `Harvests/Show`, `Batches/Show`,
-  `Liquidations/Show`, `Harvests/Show`, etc.).
-- **`HarvestTable.vue`** (componente usado por Quarters/Fields Show).
-- **Componentes `Form*.vue`** (FormDog, FormPlant, etc.) que aún
-  importan PrimeVue `InputText`, `InputNumber`, etc. vía `VInput` y
-  `VInputNumber` (transitivo).
-- **`HeaderCrud` / `CardSection`** y otros componentes compartidos
-  que aún usan PrimeVue.
-- **`Tasks/Comments`** (componente que renderiza PrimeVue `Timeline`).
+**Notas para consumidores de VEditor:** el componente `CollectionButton`
+no tiene prop `icon` (era un residuo heredado de PrimeVue Button). Si
+necesitas icono, usa el slot por defecto: `<CollectionButton>
+<CollectionIcon name="..."/> Label</CollectionButton>`.
 
 ---
 
 ## 8. Lo que NO se hace en este proyecto
 
-- ❌ Añadir PrimeVue, PrimeIcons, Material Symbols en código nuevo.
+- ❌ Reintroducir PrimeVue, PrimeIcons o `@primevue/themes`.
+- ❌ Usar la CSS class `pi pi-*` (PrimeIcons); usar `<CollectionIcon name="...">`.
+- ❌ Usar `--p-primary-*` o cualquier CSS var de tema PrimeVue; usar hex Tailwind
+  directo (`text-[#17663a]`, `border-[#17663a]`, etc.).
+- ❌ Usar el wrapper `primevue/editor`; el editor de texto rico es
+  `Core/Components/Form/VEditor.vue` (Quill directo).
 - ❌ Añadir `axios` como dependencia de feature (sólo queda el global
   heredado de Laravel; está en desuso).
 - ❌ Devolver `JsonResponse` ad-hoc para "consumir desde Vue con fetch";
