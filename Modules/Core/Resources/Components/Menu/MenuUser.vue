@@ -1,9 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import { usePreset } from '@primevue/themes';
 
-import Presents from '@Core/Libs/PrimePresents';
 import { useDrawerRightMenuStore } from '@Core/Stores/sidebar.js';
 import { canShowRightMenu } from '@Auth/Services/Auth';
 
@@ -13,15 +11,7 @@ const root = ref(null);
 const drawerRightMenuStore = useDrawerRightMenuStore();
 
 const showDropDown = ref(false);
-const showRightMenu = ref(canShowRightMenu());
-
-const themes = [
-    { name: 'Apple', class: 'bg-[#16a34a]' },
-    { name: 'Cobalt', class: 'bg-[#1e40af]' },
-    { name: 'DodgerBlue', class: 'bg-[#3b82f6]' },
-    { name: 'Vulcan', class: 'bg-[#18181b]' },
-    { name: 'CarrotOrange', class: 'bg-[#f59e0b]' },
-];
+const showRightMenu = canShowRightMenu();
 
 const darkMode = ref('light');
 
@@ -49,11 +39,9 @@ const setDarkMode = (value) => {
     toggleTheme(value === 'dark');
 };
 
-const setTheme = (theme) => {
-    localStorage.setItem('theme', theme.name);
-    usePreset(Presents[theme.name]);
-};
-
+// One-shot bootstrap: honour persisted preference, otherwise fall back
+// to the OS-level prefers-color-scheme. Tailwind's `.dark` selector
+// handles the actual styling; no PrimeVue preset involved.
 const storedThemeType = localStorage.getItem('themeType');
 const shouldUseDarkTheme = storedThemeType === null
     ? window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -134,18 +122,6 @@ onUnmounted(() => {
                         <span class="material-symbols-rounded">light_mode</span>
                     </button>
                 </div>
-            </div>
-            <div class="px-4 py-2 mb-4">
-                <div
-                    v-for="theme in themes"
-                    :key="theme.name"
-                    :class="`${theme.class} rounded-full w-4 h-4 float-start me-2 cursor-pointer`"
-                    role="button"
-                    :aria-label="theme.name"
-                    tabindex="0"
-                    @click="setTheme(theme)"
-                    @keydown.enter="setTheme(theme)"
-                ></div>
             </div>
             <div class="py-1 text-left" role="none">
                 <Link

@@ -5,6 +5,7 @@ import FormComments from './Comments.vue';
 import FormResources from './Resources.vue';
 
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 const props = defineProps({
   form: Object,
@@ -47,9 +48,14 @@ const statesClasses = {
       v-for="state in task_states"
       :class="`me-3 text-l ${statesClasses[state.value]}`"
       @click.prevent="form.status = state"
-      :label="state.text"
-      :icon="form.status.value === state.value ? 'pi pi-check-square' : 'pi pi-stop'"
-    />
+    >
+      <CollectionIcon
+        :name="form.status.value === state.value ? 'check_square' : 'stop'"
+        :size="16"
+        aria-hidden="true"
+      />
+      {{ state.text }}
+    </CollectionButton>
   </div>
   <form @submit.prevent="props.submitHandler">
     <FormMain

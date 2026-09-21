@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 import { listUnread } from '@Tasks/Services/TaskNotificationService';
 import { stringToDate, relativeTimeDifference } from '@Core/Utils/date';
 
@@ -40,10 +41,10 @@ onMounted(async () => {
 
       <div class="flex" v-show="!loading">
         <div class="me-5" v-show="messages.prev_page_url != null">
-          <i class="pi pi-arrow-left hover:text-gray-500 dark:hover:text-gray-300"></i>
+          <CollectionIcon name="arrow_left" :size="20" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" />
         </div>
         <div v-show="messages.next_page_url != null">
-          <i class="pi pi-arrow-right hover:text-gray-500 dark:hover:text-gray-300"></i>
+          <CollectionIcon name="arrow_right" :size="20" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" />
         </div>
       </div>
     </div>
@@ -67,7 +68,7 @@ onMounted(async () => {
         <img
           class="w-[35px] rounded-full border-2 float-left me-2 mt-2"
           :class="{
-            'border-(--p-primary-color)': message.read_at === null,
+            'border-[#17663a]': message.read_at === null,
             'border-white': message.read_at !== null
           }"
           :src="message.notifier_user_avatar"

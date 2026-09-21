@@ -87,7 +87,7 @@ const deleteHandler = async (id) => {
         <span
           v-for="tab of tabs"
           class="px-4 py-2 cursor-default font-semibold"
-          :class="current_tab === tab ? 'text-(--p-primary-500)' : 'hover:text-(--p-primary-300) dark:hover:text-(--p-primary-600) text-gray-400'"
+          :class="current_tab === tab ? 'text-[#17663a]' : 'hover:text-[#86c798] dark:hover:text-[#105534] text-gray-400'"
           @click="selectTab(tab)"
         >
           {{ __('field.show.tabs.' + tab) }}

@@ -1,6 +1,11 @@
 <script setup>
 import { computed } from 'vue';
 import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  CheckSquare,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -8,6 +13,7 @@ import {
   CircleAlert,
   CircleCheck,
   Download,
+  FilterX,
   LayoutGrid,
   Map,
   MapPin,
@@ -18,6 +24,7 @@ import {
   Search,
   Shapes,
   Sprout,
+  Square,
   Tractor,
   Trash2,
   UserRound,
@@ -43,8 +50,13 @@ const props = defineProps({
 const icons = {
   add: Plus,
   agriculture: Tractor,
+  arrow_downward: ArrowDown,
+  arrow_left: ArrowLeft,
+  arrow_right: ArrowRight,
+  arrow_upward: ArrowUp,
   category: Shapes,
   check_circle: CircleCheck,
+  check_square: CheckSquare,
   chevron_left: ChevronLeft,
   chevron_right: ChevronRight,
   close: X,
@@ -53,6 +65,7 @@ const icons = {
   error: CircleAlert,
   expand_less: ChevronUp,
   expand_more: ChevronDown,
+  filter_alt_off: FilterX,
   grid_view: LayoutGrid,
   landscape: Mountain,
   location_on: MapPin,
@@ -62,6 +75,7 @@ const icons = {
   pets: PawPrint,
   potted_plant: Sprout,
   search: Search,
+  stop: Square,
   wrench: Wrench,
 };
 
