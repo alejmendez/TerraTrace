@@ -55,7 +55,7 @@ class PlantsController extends Controller
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->forSelect(),
             'plant_types' => $this->plantTypes->forSelect(),
-            'responsible' => $this->users->responsibles(),
+            'responsible' => $this->users->forSelect(),
         ]);
     }
 

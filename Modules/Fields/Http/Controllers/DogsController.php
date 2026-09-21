@@ -37,7 +37,7 @@ class DogsController extends Controller
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
             'fields' => $this->fields->forSelect(),
-            'couples' => $this->users->couples(),
+            'couples' => $this->users->forSelect(),
         ]);
     }
 
@@ -48,7 +48,7 @@ class DogsController extends Controller
     {
         return Inertia::render('Fields::Dogs/Create', [
             'fields' => $this->fields->forSelect(),
-            'couples' => $this->users->couples(),
+            'couples' => $this->users->forSelect(),
         ]);
     }
 
@@ -91,7 +91,7 @@ class DogsController extends Controller
         return Inertia::render('Fields::Dogs/Edit', [
             'data' => new DogResource($dog),
             'fields' => $this->fields->forSelect(),
-            'couples' => $this->users->couples(),
+            'couples' => $this->users->forSelect(),
         ]);
     }
 

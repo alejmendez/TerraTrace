@@ -145,6 +145,12 @@ class HarvestService
             $currentYear = (int) date('Y');
             $year = Harvest::max('year');
 
+            // No harvests yet (e.g. fresh DB). Fall back to the current year
+            // so consumers get a sensible default instead of a TypeError.
+            if ($year === null) {
+                return $currentYear;
+            }
+
             return $year > $currentYear ? $currentYear : $year;
         });
     }

@@ -54,7 +54,7 @@ class QuartersController extends Controller
     {
         return Inertia::render('Fields::Quarters/Create', [
             'fields' => $this->fields->forSelect(),
-            'responsibles' => $this->users->responsibles(),
+            'responsibles' => $this->users->forSelect(),
         ]);
     }
 
@@ -90,7 +90,7 @@ class QuartersController extends Controller
             'harvest_available_weeks' => $this->harvests->availableWeeks(),
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->forSelect(),
-            'users' => $this->users->responsibles(),
+            'users' => $this->users->forSelect(),
         ]);
     }
 
@@ -104,7 +104,7 @@ class QuartersController extends Controller
         return Inertia::render('Fields::Quarters/Edit', [
             'data' => new QuarterResource($quarter),
             'fields' => $this->fields->forSelect(),
-            'responsibles' => $this->users->responsibles(),
+            'responsibles' => $this->users->forSelect(),
         ]);
     }
 

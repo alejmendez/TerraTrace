@@ -44,7 +44,26 @@ class Dashboard
     public function show(int|string|null $fieldId = null): array
     {
         $fields = $this->fields->forSelect();
-        $field = $this->fieldsStats->findField($fieldId ?? $fields[0]['value']);
+        $resolvedId = $fieldId ?: ($fields[0]['value'] ?? null);
+
+        // No fields at all (fresh DB / no seed): return an empty payload
+        // instead of crashing findField(). The Index page must handle the
+        // empty `field` shape (FieldResource on null is the caller's job).
+        if ($resolvedId === null || $resolvedId === 'undefined') {
+            return [
+                'fields' => $fields,
+                'field' => null,
+                'harvest_data' => [
+                    'total_weight_of_last_harvest' => 0,
+                    'average_weight_per_plant' => 0,
+                    'variation_between_harvests' => 0,
+                    'years_variation' => [0, 0],
+                ],
+                'task_data' => $this->tasksStats->taskCounters(),
+            ];
+        }
+
+        $field = $this->fieldsStats->findField($resolvedId);
 
         return [
             'fields' => $fields,

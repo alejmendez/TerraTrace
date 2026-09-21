@@ -88,12 +88,12 @@ class LiquidationService
             ->select('liquidations.id', 'liquidations.liquidation_number', 'liquidations.delivery_date', 'liquidations.importer_id', 'liquidations.created_at')
             ->with(['importer:id,name'])
             ->withSum([
-                'products as total_commercial' => function ($query) {
+                'liquidationProducts as total_commercial' => function ($query) {
                     $query->whereHas('categoryProduct', fn ($q) => $q->where('is_commercial', true));
                 },
             ], 'weight')
             ->withSum([
-                'products as total_not_commercial' => function ($query) {
+                'liquidationProducts as total_not_commercial' => function ($query) {
                     $query->whereHas('categoryProduct', fn ($q) => $q->where('is_commercial', false));
                 },
             ], 'weight');

@@ -87,7 +87,7 @@ class FieldsController extends Controller
             'harvest_available_weeks' => $this->harvests->availableWeeks(),
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->forSelect(),
-            'users' => $this->users->responsibles(),
+            'users' => $this->users->forSelect(),
         ]);
     }
 

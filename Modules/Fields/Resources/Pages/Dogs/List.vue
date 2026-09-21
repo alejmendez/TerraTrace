@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { trans } from 'laravel-vue-i18n';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionActionMenu from '@Core/Components/Collection/CollectionActionMenu.vue';
@@ -23,6 +24,12 @@ const props = defineProps({
   summary: Object,
   toast: Object,
 });
+
+// `__` is registered as a global Vue property for use in templates,
+// but `<script setup>` does NOT auto-import it. Import `trans` directly
+// so the GENDERS/SCALE_TYPE/etc. constants can resolve their labelKey
+// at script-setup time.
+const __ = trans;
 
 const genderOptions = GENDERS.map((g) => ({ value: g.value, text: __(g.labelKey) }));
 

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { trans } from 'laravel-vue-i18n';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionActionMenu from '@Core/Components/Collection/CollectionActionMenu.vue';
@@ -134,7 +135,7 @@ const totalNoComercial = computed(() => formatNumber(props.summary?.non_commerci
 // stringify `null` so the <select> comparison stays simple.
 const isCommercialFilter = IS_COMMERCIAL_OPTIONS.map((o) => ({
   value: o.value === null ? '' : String(o.value),
-  text: __(o.labelKey),
+  text: trans(o.labelKey),
 }));
 
 const commercialLabel = (value) => (value ? 'Sí' : 'No');

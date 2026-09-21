@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
+import { trans } from 'laravel-vue-i18n';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
@@ -9,6 +10,12 @@ import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 
 import { getAge } from '@Core/Utils/date';
 import { GENDERS } from '@Core/Constants/gender';
+
+// `__` is registered as a global Vue property for templates, but is NOT
+// auto-imported into `<script setup>` scope. Alias `trans` as `__` so the
+// rest of the file can call `__(g.labelKey)` as documented in
+// @Core/Constants/gender.js.
+const __ = trans;
 
 const props = defineProps({
   form: Object,

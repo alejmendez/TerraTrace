@@ -1,14 +1,19 @@
 <script setup>
-import { useAttrs } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 import { useSideBarStore } from '@Core/Stores/sidebar.js';
 
-const attrs = useAttrs();
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps({
-  link: String,
-  text: String,
+  link: {
+    type: String,
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
   icon: {
     type: String,
     default: 'fa-solid fa-circle',
@@ -30,7 +35,6 @@ const closeSideBarOnMobile = () => {
 
 <template>
   <Link
-    v-bind="attrs"
     :href="props.link"
     class="menu-element"
     :class="{ active: props.active }"

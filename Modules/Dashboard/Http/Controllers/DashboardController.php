@@ -21,7 +21,10 @@ class DashboardController extends Controller
     {
         $field_id = request('field_id');
         $data = $this->dashboard->show($field_id);
-        $data['field'] = new FieldResource($data['field']);
+
+        if ($data['field']) {
+            $data['field'] = new FieldResource($data['field']);
+        }
 
         return Inertia::render('Dashboard::Index', $data);
     }

@@ -5,11 +5,11 @@ const props = defineProps({
   field: Object,
 });
 
-const field = props.field.data;
+const field = props.field?.data ?? null;
 </script>
 
 <template>
-  <div class="lg:col-span-3 rounded-xl card-section">
+  <div v-if="field" class="lg:col-span-3 rounded-xl card-section">
     <header class="flex items-center overflow-hidden border-b border-gray-200 dark:border-gray-900">
       <h3 class="px-4 py-3 text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
         Campo: {{ field.name }}
@@ -55,5 +55,8 @@ const field = props.field.data;
         </div>
       </div>
     </div>
+  </div>
+  <div v-else class="lg:col-span-3 rounded-xl card-section p-6 text-center text-gray-500">
+    Aún no hay campos registrados.
   </div>
 </template>

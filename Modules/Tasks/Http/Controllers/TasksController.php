@@ -46,7 +46,7 @@ class TasksController extends Controller
             'records' => $payload['items'],
             'meta' => $payload['meta'],
             'summary' => $payload['summary'],
-            'responsibles' => $this->users->responsibles(),
+            'responsibles' => $this->users->forSelect(),
             'task_priorities' => $this->tasks->priorities(),
             'task_states' => $this->tasks->states(),
         ]);
@@ -59,7 +59,7 @@ class TasksController extends Controller
     {
         return Inertia::render('Tasks::Create', [
             'fields' => $this->fields->forSelect(),
-            'responsibles' => $this->users->responsibles(),
+            'responsibles' => $this->users->forSelect(),
             'tools' => $this->tools->forSelect(),
             'security_equipments' => $this->securityEquipments->forSelect(),
             'machineries' => $this->machineries->forSelect(),
@@ -99,7 +99,7 @@ class TasksController extends Controller
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->byField($task->field_id),
             'plants' => $this->plants->byQuarter($task->quarters->map(fn ($q) => $q->id)->toArray()),
-            'responsibles' => $this->users->responsibles(),
+            'responsibles' => $this->users->forSelect(),
             'tools' => $this->tools->forSelect(),
             'security_equipments' => $this->securityEquipments->forSelect(),
             'machineries' => $this->machineries->forSelect(),
@@ -119,7 +119,7 @@ class TasksController extends Controller
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->byField($task->field_id),
             'plants' => $this->plants->byQuarter($task->quarters->map(fn ($q) => $q->id)->toArray()),
-            'responsibles' => $this->users->responsibles(),
+            'responsibles' => $this->users->forSelect(),
             'tools' => $this->tools->forSelect(),
             'security_equipments' => $this->securityEquipments->forSelect(),
             'machineries' => $this->machineries->forSelect(),

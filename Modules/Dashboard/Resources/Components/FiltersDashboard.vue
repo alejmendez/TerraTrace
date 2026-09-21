@@ -9,12 +9,19 @@ const props = defineProps({
 });
 
 const form = useForm({
-  field_id: props.fields.find((a) => a.value === props.field.data.id),
+  field_id: props.fields.find((a) => a.value === props.field?.data?.id),
 });
 
 const fieldChangeHandler = () => {
   const url = new URL(window.location.href);
-  url.searchParams.set('field_id', form.field_id.value);
+  // Don't serialize `undefined` into the URL — `URLSearchParams.set()`
+  // would coerce it to the literal string "undefined" and crash the
+  // backend's bigint cast.
+  if (form.field_id?.value) {
+    url.searchParams.set('field_id', form.field_id.value);
+  } else {
+    url.searchParams.delete('field_id');
+  }
   router.get(url);
 };
 </script>

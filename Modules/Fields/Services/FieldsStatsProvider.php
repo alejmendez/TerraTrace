@@ -25,17 +25,23 @@ class FieldsStatsProvider
     public function __construct(private readonly HarvestService $harvests) {}
 
     /**
-     * Locate a field by id, eager-loading the relations Dashboard needs.
+     * Locate a field by id, eager-loading the counts Dashboard needs.
      *
      * Kept here (rather than a separate "FieldsQueryProvider") because
      * it's a small operation that Dashboard legitimately needs to
      * bootstrap its view, and the eager-loads are an exact match for
      * the stats methods below.
+     *
+     * NOTE: previously eager-loaded `responsible` and `field` here as
+     * a leftover copy-paste from QuarterService::find() — neither
+     * relationship exists on `Field` (Field has `owner`, not
+     * `responsible`; the `fields` table has no self-reference). The
+     * bogus eager-loads threw "Call to undefined relationship" the
+     * moment Dashboard booted after login.
      */
     public function findField(int|string $id)
     {
-        return Field::with('responsible', 'field')
-            ->withCount('plants')
+        return Field::withCount('plants')
             ->findOrFail($id);
     }
 

@@ -13,4 +13,9 @@ class Importer extends Model
     {
         return $this->hasMany(Batch::class);
     }
+
+    public function liquidations()
+    {
+        return $this->hasMany(Liquidation::class);
+    }
 }

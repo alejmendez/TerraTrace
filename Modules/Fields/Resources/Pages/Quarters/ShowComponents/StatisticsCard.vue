@@ -1,6 +1,7 @@
 <script setup>
 import { ref, toRaw, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { trans } from 'laravel-vue-i18n';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionDialog from '@Core/Components/Collection/CollectionDialog.vue';
@@ -11,6 +12,12 @@ import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import QuarterService from '@Fields/Services/QuarterService.js';
 import { SCALE_TYPE } from '@Core/Constants/scaleType';
 import { can } from '@Auth/Services/Auth';
+
+// `__` is registered as a global Vue property for templates, but is NOT
+// auto-imported into `<script setup>` scope. Alias `trans` so the rest of
+// the file can call `__(s.labelKey)` as documented in
+// @Core/Constants/scaleType.js.
+const __ = trans;
 
 const props = defineProps({
   quarter: Object,

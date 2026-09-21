@@ -52,7 +52,7 @@ class HarvestsController extends Controller
             'harvest_available_weeks' => $this->harvests->availableWeeks(),
             'fields' => $this->fields->forSelect(),
             'quarters' => $this->quarters->forSelect(),
-            'users' => $this->users->responsibles(),
+            'users' => $this->users->forSelect(),
         ]);
     }
 
@@ -64,7 +64,7 @@ class HarvestsController extends Controller
         return Inertia::render('Fields::Harvests/Create', [
             'quarters' => $this->quarters->quartersByFieldGrouped(),
             'dogs' => $this->dogs->forSelect(),
-            'users' => $this->users->responsibles(),
+            'users' => $this->users->forSelect(),
             'plant_codes' => $this->plants->forSelect(),
             'qualities' => $this->harvestDetails->qualities('select'),
         ]);
@@ -96,7 +96,7 @@ class HarvestsController extends Controller
             'data' => new HarvestResource($harvest),
             'quarters' => $this->quarters->quartersByFieldGrouped(),
             'dogs' => $this->dogs->forSelect(),
-            'users' => $this->users->responsibles(),
+            'users' => $this->users->forSelect(),
             'plant_codes' => $this->plants->forSelect(),
             'qualities' => $this->harvestDetails->qualities('select'),
         ]);
@@ -113,7 +113,7 @@ class HarvestsController extends Controller
             'data' => new HarvestResource($harvest),
             'quarters' => $this->quarters->quartersByFieldGrouped(),
             'dogs' => $this->dogs->forSelect(),
-            'users' => $this->users->responsibles(),
+            'users' => $this->users->forSelect(),
             'plant_codes' => $this->plants->forSelect(),
             'qualities' => $this->harvestDetails->qualities('select'),
         ]);
