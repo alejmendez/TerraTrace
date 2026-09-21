@@ -4,6 +4,7 @@ import { router, usePage } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@Core/Layouts/AuthenticatedLayout.vue';
 import CollectionActionMenu from '@Core/Components/Collection/CollectionActionMenu.vue';
+import CollectionAvatar from '@Core/Components/Collection/CollectionAvatar.vue';
 import CollectionConfirmDialog from '@Core/Components/Collection/CollectionConfirmDialog.vue';
 import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 import CollectionMetricCard from '@Core/Components/Collection/CollectionMetricCard.vue';
@@ -206,11 +207,11 @@ onUnmounted(() => clearTimeout(searchTimer));
           :key="record.id"
           class="flex min-w-0 gap-4 rounded-xl border border-[#e3ebe5] bg-[#fcfdfc] p-4 transition hover:border-[#bddcc6] hover:shadow-sm"
         >
-          <img
+          <CollectionAvatar
             :src="record.avatar_url"
-            :alt="record.full_name || record.name"
-            class="size-16 shrink-0 rounded-full border border-[#d7e0d9] bg-[#e7f3e9] object-cover"
-          >
+            :name="record.full_name || record.name"
+            :size="64"
+          />
           <div class="min-w-0 flex-1">
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
