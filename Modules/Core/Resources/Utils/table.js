@@ -20,20 +20,13 @@ export const deleteRowTable = (accept, entity = null) => {
 
 /**
  * Open a confirmation dialog before deleting a row from a table.
- * On success, reloads the datatable and shows a toast. Used by
- * the harvest / datatable components that refresh after deletion.
+ * On success, calls `datatable.loadLazyData()` to refresh the table
+ * and shows a toast. Used by the HarvestTable component.
  *
- * The first two positional args (`confirm`, `toast`) are accepted
- * for backwards compatibility but ignored — the module-level
- * composables handle them now. `HarvestTable.vue` still calls with
- * the old shape and will be migrated separately.
- *
- * @param  {object}  _confirm   legacy PrimeVue confirm instance (ignored)
- * @param  {{value: object, loadLazyData: () => void}}  datatable
- * @param  {object}  _toast     legacy PrimeVue toast instance (ignored)
- * @param  {() => Promise<boolean>}  fetchDelete
+ * @param  {{ value: { loadLazyData: () => void } }}  datatable  ref to the table
+ * @param  {() => Promise<boolean>}  fetchDelete  delete request, returns true on success
  */
-export const defaultDeleteHandler = (_confirm, datatable, _toast, fetchDelete) => {
+export const defaultDeleteHandler = (datatable, fetchDelete) => {
     useConfirm().ask({
         message: trans('generics.tables.confirm.delete', { entity: trans('generics.tables.entity') }),
         title: trans('generics.tables.confirm.delete_header', { entity: trans('generics.tables.entity') }),
