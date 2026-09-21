@@ -1,8 +1,6 @@
 <script setup>
 import { computed, useAttrs } from 'vue';
 
-import CollectionLabel from './CollectionLabel.vue';
-
 const model = defineModel({ default: false });
 
 const attrs = useAttrs();
@@ -24,7 +22,18 @@ const props = defineProps({
 
 defineOptions({ inheritAttrs: false });
 
-const wrapperClasses = computed(() => ['flex items-center gap-2', props.classWrapper]);
+const checkboxClasses = [
+    'size-4 shrink-0 cursor-pointer rounded-sm border border-[#b8c9bd] bg-white accent-[#17663a]',
+    'transition-colors hover:border-[#17663a]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9e8d1] focus-visible:ring-offset-2',
+    'disabled:cursor-not-allowed disabled:opacity-50',
+];
+
+const wrapperClasses = computed(() => [
+    'inline-flex max-w-full items-center gap-2',
+    props.disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+    props.classWrapper,
+]);
 </script>
 
 <template>
@@ -34,11 +43,9 @@ const wrapperClasses = computed(() => ['flex items-center gap-2', props.classWra
             v-model="model"
             type="checkbox"
             :disabled="props.disabled"
-            class="size-4 rounded border-[#d7e0d9] text-[#17663a] focus:ring-2 focus:ring-[#17663a] disabled:opacity-60 disabled:cursor-not-allowed"
+            :class="checkboxClasses"
         />
-        <CollectionLabel invalid="false">
-            <span class="text-sm text-[#284238]">{{ props.label }}</span>
-        </CollectionLabel>
+        <span class="select-none text-sm font-medium leading-5 text-[#284238]">{{ props.label }}</span>
     </label>
     <input
         v-else
@@ -46,6 +53,6 @@ const wrapperClasses = computed(() => ['flex items-center gap-2', props.classWra
         v-model="model"
         type="checkbox"
         :disabled="props.disabled"
-        class="size-4 rounded border-[#d7e0d9] text-[#17663a] focus:ring-2 focus:ring-[#17663a] disabled:opacity-60 disabled:cursor-not-allowed"
+        :class="checkboxClasses"
     />
 </template>
