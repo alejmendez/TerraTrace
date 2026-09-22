@@ -90,7 +90,7 @@ const deleteHandler = async (id) => {
     />
 
     <div class="flex place-content-center mt-5">
-      <nav class="flex mb-1 rounded-lg bg-white dark:bg-(--p-surface-950) dark:border-(--p-surface-700) border border-gray-200 px-4 py-1">
+      <nav class="flex mb-1 rounded-lg bg-white dark:bg-[#111d16] dark:border-[#374b3d] border border-gray-200 px-4 py-1">
         <span
           v-for="tab of tabs"
           class="px-4 py-2 cursor-default font-semibold"
@@ -150,7 +150,7 @@ const deleteHandler = async (id) => {
             {{ __('task.show.detail.tools.label') }}
           </div>
           <div class="mb-4">
-            <div class="py-3 ps-3 min-h-10 border border-gray-200 rounded-md bg-gray-50 dark:bg-(--p-surface-950) dark:border-(--p-surface-700) ring-1 ring-gray-950/5">
+            <div class="py-3 ps-3 min-h-10 border border-gray-200 rounded-md bg-gray-50 dark:bg-[#111d16] dark:border-[#374b3d] ring-1 ring-gray-950/5">
               <span
                 class="inline-flex items-center rounded-md bg-gray-200 px-2 py-1 me-2 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                 v-for="tool of data.tools"
@@ -163,7 +163,7 @@ const deleteHandler = async (id) => {
             {{ __('task.show.detail.machineries.label') }}
           </div>
           <div class="mb-4">
-            <div class="py-3 ps-3 min-h-10 border border-gray-200 rounded-md bg-gray-50 dark:bg-(--p-surface-950) dark:border-(--p-surface-700) ring-1 ring-gray-950/5">
+            <div class="py-3 ps-3 min-h-10 border border-gray-200 rounded-md bg-gray-50 dark:bg-[#111d16] dark:border-[#374b3d] ring-1 ring-gray-950/5">
               <span
                 class="inline-flex items-center rounded-md bg-gray-200 px-2 py-1 me-2 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                 v-for="machinery of data.machineries"
@@ -177,7 +177,7 @@ const deleteHandler = async (id) => {
             {{ __('task.show.detail.security_equipments.label') }}
           </div>
           <div class="mb-4">
-            <div class="py-3 ps-3 min-h-10 border border-gray-200 rounded-md bg-gray-50 dark:bg-(--p-surface-950) dark:border-(--p-surface-700) ring-1 ring-gray-950/5">
+            <div class="py-3 ps-3 min-h-10 border border-gray-200 rounded-md bg-gray-50 dark:bg-[#111d16] dark:border-[#374b3d] ring-1 ring-gray-950/5">
               <span
                 class="inline-flex items-center rounded-md bg-gray-200 px-2 py-1 me-2 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                 v-for="security_equipment of data.security_equipments"

@@ -4,6 +4,7 @@ import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSe
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 const props = defineProps({
   form: Object,
@@ -103,12 +104,12 @@ const remove_supply = (index) => {
           />
         </div>
         <div class="pt-10" v-if="index !== 0">
-          <span
-            class="material-symbols-rounded float-right me-3 text-gray-800 dark:text-gray-100 hover:text-orange-700 dark:hover:text-orange-700"
+          <CollectionIcon
+            name="delete"
+            :size="22"
+            class="float-right me-3 text-gray-800 dark:text-gray-100 hover:text-orange-700 dark:hover:text-orange-700"
             @click="remove_supply(index)"
-          >
-            delete
-          </span>
+          />
         </div>
       </div>
     </div>

@@ -1,6 +1,8 @@
 <script setup>
 import { formatNumber } from '@Core/Utils/format';
 
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
+
 const props = defineProps({
   field: Object,
 });
@@ -23,7 +25,7 @@ const field = props.field?.data ?? null;
         <div class="text-gray-500 dark:text-gray-100 font-bold mb-3">Ciclo: Siembra</div>
         <div class="min-h-10">
           <div class="w-8 h-8 px-2 py-1 me-2 rounded text-green-500 float-left" title="Ubicación">
-            <span class="material-symbols-rounded">pin_drop</span>
+            <CollectionIcon name="pin_drop" :size="20" />
           </div>
           <div class="pt-1 truncate" :title="field.location">
             {{ field.location }}
@@ -39,7 +41,7 @@ const field = props.field?.data ?? null;
         </div>
         <div class="min-h-10" title="Cantidad de Cuarteles">
           <div class="w-8 h-8 px-2 py-1 me-2 rounded text-yellow-500 float-left">
-            <span class="material-symbols-rounded">check_box_outline_blank</span>
+            <CollectionIcon name="check_box_outline_blank" :size="20" />
           </div>
           <div class="pt-1">
             {{ formatNumber(field.quarters_count, 0) }}
@@ -47,7 +49,7 @@ const field = props.field?.data ?? null;
         </div>
         <div class="min-h-10" title="Cantidad de Arboles">
           <div class="w-8 h-8 px-2 py-1 me-2 rounded text-yellow-500 float-left">
-            <span class="material-symbols-rounded">park</span>
+            <CollectionIcon name="park" :size="20" />
           </div>
           <div class="pt-1">
             {{ formatNumber(field.plants_count, 0) }}

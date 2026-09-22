@@ -491,19 +491,21 @@ onMounted(loadLazyData);
                     <td class="px-4 py-2">{{ row.farmer_name }}</td>
                     <td v-if="props.show_actions" class="px-4 py-2 whitespace-nowrap">
                         <Link :href="route('harvests.show', row.id)" v-if="canShow" class="inline-block me-2">
-                            <span class="material-symbols-rounded cursor-pointer text-slate-500 hover:text-sky-600">visibility</span>
+                            <CollectionIcon name="visibility" :size="18" class="cursor-pointer text-slate-500 hover:text-sky-600" />
                         </Link>
                         <Link :href="route('harvests.edit', row.id)" v-if="canEdit" class="inline-block me-2">
-                            <span class="material-symbols-rounded cursor-pointer text-slate-500 hover:text-emerald-600">edit</span>
+                            <CollectionIcon name="edit" :size="18" class="cursor-pointer text-slate-500 hover:text-emerald-600" />
                         </Link>
-                        <span
+                        <CollectionIcon
                             v-if="canDestroy"
-                            class="material-symbols-rounded cursor-pointer text-slate-500 hover:text-pink-600"
+                            name="delete"
+                            :size="18"
+                            class="cursor-pointer text-slate-500 hover:text-pink-600"
                             role="button"
                             tabindex="0"
                             @click="deleteHandler(row)"
                             @keydown.enter="deleteHandler(row)"
-                        >delete</span>
+                        />
                     </td>
                 </tr>
             </tbody>

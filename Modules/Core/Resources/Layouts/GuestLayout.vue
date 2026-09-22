@@ -1,5 +1,5 @@
 <script setup>
-
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 </script>
 
 <template>
@@ -7,7 +7,7 @@
     <div class="w-full lg:max-w-md">
       <div class="mb-7 flex items-center justify-center gap-3 text-[#173e2e] dark:text-white">
         <span class="grid h-10 w-10 place-items-center rounded-[50%_50%_50%_12%] bg-[#26713d] text-white rotate-[-16deg]">
-          <span class="material-symbols-rounded rotate-[16deg]">spa</span>
+          <CollectionIcon name="spa" :size="20" class="rotate-[16deg]" />
         </span>
         <div>
           <p class="m-0 text-lg font-extrabold tracking-[-0.04em]">TerraTrace</p>

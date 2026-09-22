@@ -3,6 +3,7 @@ import { usePage, Head, Link } from '@inertiajs/vue3';
 import { storeToRefs } from 'pinia';
 
 import CollectionConfirmDialog from '@Core/Components/Collection/CollectionConfirmDialog.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
 import { useConfirm } from '@Core/Composables/useConfirm';
 import { useToast } from '@Core/Composables/useToast';
@@ -43,7 +44,7 @@ const toast = useToast();
     <aside class="terra-sidebar" :class="{ 'terra-sidebar--closed': !showSideBar }">
       <div class="terra-brand">
         <div class="terra-brand-mark" aria-hidden="true">
-          <span class="material-symbols-rounded">spa</span>
+          <CollectionIcon name="spa" :size="20" />
         </div>
         <div>
           <p class="terra-brand-name">TerraTrace</p>
@@ -54,7 +55,7 @@ const toast = useToast();
       <SideBarLeft />
 
       <div class="terra-sidebar-footer">
-        <span class="material-symbols-rounded" aria-hidden="true">eco</span>
+        <CollectionIcon name="eco" :size="20" aria-hidden="true" />
         <p>Trazabilidad para<br>mejores decisiones</p>
         <i aria-hidden="true"></i>
       </div>
@@ -68,11 +69,11 @@ const toast = useToast();
           aria-label="Alternar navegación"
           @click="sideBarStore.toggle"
         >
-          <span class="material-symbols-rounded">menu</span>
+          <CollectionIcon name="menu" :size="22" />
         </button>
 
         <label class="terra-global-search">
-          <span class="material-symbols-rounded" aria-hidden="true">search</span>
+          <CollectionIcon name="search" :size="20" class="text-[#61716c]" aria-hidden="true" />
           <input type="search" placeholder="Buscar predios, lotes o tareas..." aria-label="Buscar registros">
         </label>
 
@@ -110,7 +111,7 @@ const toast = useToast();
                 aria-label="Cerrar"
                 @click="drawerRightMenuStore.close"
             >
-                <span class="material-symbols-rounded">close</span>
+                <CollectionIcon name="close" :size="22" />
             </button>
         </header>
         <ul class="grow space-y-1 overflow-y-auto p-3">
@@ -120,10 +121,12 @@ const toast = useToast();
                     class="flex items-center rounded-lg px-3 py-2 text-[#315347] transition-colors hover:bg-[#edf5ed] hover:text-[#17663a]"
                     @click="drawerRightMenuStore.close"
                 >
-                    <span
-                        class="material-symbols-rounded me-3"
+                    <CollectionIcon
                         v-if="item.icon"
-                    >{{ item.icon }}</span>
+                        :name="item.icon"
+                        :size="20"
+                        class="me-3"
+                    />
                     {{ __(item.text) }}
                 </Link>
             </li>

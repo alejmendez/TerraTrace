@@ -1,6 +1,7 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import SideBarLeft from '@Core/Components/Menu/SideBarLeft.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 import { useSideBarStore } from '@Core/Stores/sidebar.js';
 
@@ -15,7 +16,7 @@ const { show } = storeToRefs(sideBarStore);
       class="w-[36px] inline rounded outline-none transition duration-75 text-gray-100 hover:text-red-500 focus-visible:ring-primary-600 border border-white hover:border-red-500 px-3 py-1"
         @click="sideBarStore.toggle"
       >
-        <span class="material-symbols-rounded !text-md">dehaze</span>
+        <CollectionIcon name="dehaze" :size="16" />
       </div>
     </div>
   </div>

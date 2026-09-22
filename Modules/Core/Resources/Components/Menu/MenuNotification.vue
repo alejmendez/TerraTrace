@@ -2,6 +2,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { usePage, Link } from '@inertiajs/vue3';
 
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
+
 const root = ref(null);
 const page = usePage();
 const unread_notifications = page.props.auth.user.unread_notifications || [];
@@ -35,7 +37,7 @@ onUnmounted(() => {
       class="text-lg w-[40px] h-[40px] cursor-pointer hover:bg-[#eff7ef] dark:hover:bg-[#203a2a] text-[#294a3c] dark:text-[#dcebdd] pt-2 ps-2 rounded-full transition-all ease-out duration-300"
       @click="toggleDrop"
     >
-      <span class="material-symbols-rounded">notifications</span>
+      <CollectionIcon name="notifications" :size="22" />
       <span
         class="text-xs bg-[#e3a325] text-[#263216] rounded-full px-1 py-0 absolute top-2 right-2"
         v-if="numberOfNotifications > 0"
@@ -58,7 +60,7 @@ onUnmounted(() => {
       <div v-else>
         <ul>
           <li v-for="notification in unread_notifications">
-            <div class="material-symbols-rounded text-sky-600 !text-[20px]">info</div>
+            <CollectionIcon name="info" :size="20" class="text-sky-600" />
             <Link :href="route('tasks.show', notification.data.task_id)">
               Hay una actualizacion en la tarea {{ notification.data.task_name }}
             </Link>

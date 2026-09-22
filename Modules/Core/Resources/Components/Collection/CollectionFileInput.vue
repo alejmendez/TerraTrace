@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 
 import CollectionButton from './CollectionButton.vue';
+import CollectionIcon from './CollectionIcon.vue';
 
 const props = defineProps({
     multiple: {
@@ -141,11 +142,11 @@ const removeServerFile = (id) => {
             >
                 <button
                     type="button"
-                    class="material-symbols-rounded cursor-pointer mt-1 me-1 !text-md text-black hover:text-[#be123c]"
+                    class="cursor-pointer mt-1 me-1 text-black hover:text-[#be123c]"
                     aria-label="Eliminar archivo"
                     @click="removeServerFile(file.id)"
                 >
-                    delete
+                    <CollectionIcon name="delete" :size="18" />
                 </button>
                 <a :href="file.url" target="_blank">{{ file.name }}</a>
             </div>

@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 import { useDrawerRightMenuStore } from '@Core/Stores/sidebar.js';
 import { canShowRightMenu } from '@Auth/Services/Auth';
 
@@ -65,7 +66,7 @@ onUnmounted(() => {
             class="text-lg w-[40px] h-[40px] cursor-pointer hover:bg-[#eff7ef] dark:hover:bg-[#203a2a] text-[#294a3c] dark:text-[#dcebdd] pt-2 ps-2 rounded-full transition-all ease-out duration-300"
             @click="toggleDropMenu"
         >
-            <span class="material-symbols-rounded">settings</span>
+            <CollectionIcon name="settings" :size="22" />
         </div>
     </div>
 
@@ -108,7 +109,7 @@ onUnmounted(() => {
                         :aria-pressed="darkMode === 'dark'"
                         @click="setDarkMode('dark')"
                     >
-                        <span class="material-symbols-rounded">dark_mode</span>
+                        <CollectionIcon name="dark_mode" :size="20" />
                     </button>
                     <button
                         type="button"
@@ -119,7 +120,7 @@ onUnmounted(() => {
                         :aria-pressed="darkMode === 'light'"
                         @click="setDarkMode('light')"
                     >
-                        <span class="material-symbols-rounded">light_mode</span>
+                        <CollectionIcon name="light_mode" :size="20" />
                     </button>
                 </div>
             </div>

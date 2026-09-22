@@ -8,6 +8,7 @@ import CollectionDialog from '@Core/Components/Collection/CollectionDialog.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 import QuarterService from '@Fields/Services/QuarterService.js';
 import { SCALE_TYPE } from '@Core/Constants/scaleType';
@@ -143,10 +144,10 @@ onMounted(async () => {
 <style scoped>
 table {
   text-align: center;
-  border: solid 10px var(--p-neutral-300);
+  border: solid 10px #d4d4d8;
 }
 table thead tr th {
-  background-color: var(--p-zinc-300);
+  background-color: #d4d4d8;
   padding: 0;
   font-weight: normal;
   font-size: 10px;
@@ -156,7 +157,7 @@ table tbody tr td {
   height: 15px;
   width: 35px;
   line-height: 0.5;
-  background-color: var(--p-neutral-300);
+  background-color: #d4d4d8;
   cursor: pointer;
   border-left: solid 1px #ddd;
 }
@@ -170,14 +171,14 @@ table tbody tr td.border_cell_left {
 }
 
 .dark table {
-  border: solid 2px var(--p-gray-800);
+  border: solid 2px #1f2937;
 }
 .dark table thead tr th {
-  background-color: var(--p-gray-500);
+  background-color: #6b7280;
 }
 
 .dark table tbody tr td {
-  background-color: var(--p-gray-500);
+  background-color: #6b7280;
 }
 
 .dark table tbody tr td.border_cell {
@@ -270,7 +271,7 @@ table tbody tr td.border_cell_left {
         <div>Unidades: {{ detail_current_plant.length }}</div>
         <div>
           <Link :href="route('plants.show', current_plant.id) + '?current_tab=logs'">
-            Ir a ficha de planta <span class="material-symbols-rounded">open_in_new</span>
+            Ir a ficha de planta <CollectionIcon name="open_in_new" :size="16" class="inline-block align-middle" />
           </Link>
         </div>
       </div>

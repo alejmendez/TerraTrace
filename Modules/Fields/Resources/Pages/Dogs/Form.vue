@@ -7,6 +7,7 @@ import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionFileInput from '@Core/Components/Collection/CollectionFileInput.vue';
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 import { getAge } from '@Core/Utils/date';
 import { GENDERS } from '@Core/Constants/gender';
@@ -155,7 +156,7 @@ const remove_vaccine = (index) => {
             />
           </div>
           <div class="pt-8 text-black hover:text-red-500 dark:text-gray-400 cursor-pointer" v-if="index !== 0" @click="remove_vaccine(index)">
-            <span class="material-symbols-rounded">delete</span>
+            <CollectionIcon name="delete" :size="22" />
           </div>
         </div>
       </div>

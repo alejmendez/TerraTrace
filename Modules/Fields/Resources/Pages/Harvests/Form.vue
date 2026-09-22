@@ -9,6 +9,7 @@ import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSe
 import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 const props = defineProps({
   form: Object,
@@ -209,7 +210,7 @@ watch(totalWeight, (newValue) => {
             @click="remove_detail(index)"
             v-if="index !== 0"
           >
-            <span class="material-symbols-rounded">delete</span>
+            <CollectionIcon name="delete" :size="22" />
           </div>
         </div>
       </div>

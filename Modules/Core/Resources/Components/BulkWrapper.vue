@@ -3,6 +3,7 @@ import { ref } from 'vue';
 
 import CollectionCardSection from '@Core/Components/Collection/CollectionCardSection.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 const props = defineProps({
   message_success: String,
@@ -48,17 +49,17 @@ const openUnprocesseds = ref(true);
 
     <div class="px-6 pb-6" v-if="props.message_success != '' && props.message_success != undefined && openAlert">
       <div class="p-4 rounded-lg bg-neutral-200 border border-slate-400 text-gray-700">
-        <span class="material-symbols-rounded me-1 !text-[20px]">warning</span>
+        <CollectionIcon name="warning" :size="20" class="me-1" />
         {{ props.message_success }}
-        <span class="material-symbols-rounded float-right !text-[18px] cursor-pointer" @click="openAlert = !openAlert">close</span>
+        <CollectionIcon name="close" :size="18" class="float-right cursor-pointer" @click="openAlert = !openAlert" />
       </div>
     </div>
 
     <div class="px-6 pb-6" v-if="props.unprocessed_message != '' && props.unprocessed_message != undefined && openUnprocesseds">
       <div class="p-4 rounded-lg bg-orange-200 border border-yellow-700 text-yellow-900">
-        <span class="material-symbols-rounded me-1 !text-[20px]">warning</span>
+        <CollectionIcon name="warning" :size="20" class="me-1" />
         {{ props.unprocessed_message }}
-        <span class="material-symbols-rounded float-right !text-[18px] cursor-pointer" @click="openUnprocesseds = !openUnprocesseds">close</span>
+        <CollectionIcon name="close" :size="18" class="float-right cursor-pointer" @click="openUnprocesseds = !openUnprocesseds" />
         <ul class="list-disc ps-5">
           <li v-for="detail in unprocessed_details" v-text="detail" />
         </ul>
@@ -67,9 +68,9 @@ const openUnprocesseds = ref(true);
 
     <div class="px-6 pb-6" v-if="props.error_message != '' && props.error_message != undefined && openErrors">
       <div class="p-4 rounded-lg bg-red-100 border border-red-300 text-stone-500">
-        <span class="material-symbols-rounded me-1 !text-[20px]">warning</span>
+        <CollectionIcon name="warning" :size="20" class="me-1" />
         {{ props.error_message }}
-        <span class="material-symbols-rounded float-right !text-[18px] cursor-pointer" @click="openErrors = !openErrors">close</span>
+        <CollectionIcon name="close" :size="18" class="float-right cursor-pointer" @click="openErrors = !openErrors" />
         <ul class="list-disc ps-5">
           <li v-for="error in props.errors">
             {{ error }}

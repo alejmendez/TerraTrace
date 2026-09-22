@@ -3,6 +3,7 @@ import { QrcodeStream } from 'vue-qrcode-reader';
 
 import CollectionInput from '@Core/Components/Collection/CollectionInput.vue';
 import CollectionButton from '@Core/Components/Collection/CollectionButton.vue';
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 
 const props = defineProps({
     paused: {
@@ -56,7 +57,7 @@ const findPlantByCode = () => {
                         @click="$emit('resetQr')"
                     >
                         {{ hasError ? __('harvest.errors.details.plant_code_not_found', { plant_code: plantCode }) : plantCode }}
-                        <span class="material-symbols-rounded mt-3">refresh</span>
+                        <CollectionIcon name="refresh" :size="22" class="mt-3" />
                     </div>
                 </QrcodeStream>
             </div>

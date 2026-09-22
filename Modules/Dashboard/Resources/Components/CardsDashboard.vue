@@ -2,6 +2,8 @@
 import { router } from '@inertiajs/vue3';
 import { formatNumber } from '@Core/Utils/format';
 
+import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
+
 const props = defineProps({
   field: Object,
   harvest_data: Object,
@@ -29,7 +31,7 @@ function getPorcent(total, num) {
 <template>
   <section class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4">
     <div class="terra-metric-card mt-5 p-5 rounded-xl card-section">
-      <div class="terra-metric-icon terra-metric-icon--green"><span class="material-symbols-rounded">inventory_2</span></div>
+      <div class="terra-metric-icon terra-metric-icon--green"><CollectionIcon name="inventory_2" :size="22" /></div>
       <div>
         <div class="text-sm text-[#5e7369] font-bold">Temporada {{ harvest_data.years_variation[0] }}</div>
         <div class="text-2xl font-extrabold mb-1">{{ formatNumber(harvest_data.total_weight_of_last_harvest) }} kgs</div>
@@ -40,7 +42,7 @@ function getPorcent(total, num) {
     </div>
 
     <div class="terra-metric-card mt-5 p-5 rounded-xl card-section">
-      <div class="terra-metric-icon terra-metric-icon--amber"><span class="material-symbols-rounded">trending_up</span></div>
+      <div class="terra-metric-icon terra-metric-icon--amber"><CollectionIcon name="trending_up" :size="22" /></div>
       <div>
         <div class="text-sm text-[#5e7369] font-bold">Variación de cosecha</div>
         <div class="text-2xl font-extrabold mb-1">{{ formatNumber(harvest_data.variation_between_harvests) }} %</div>
@@ -52,7 +54,7 @@ function getPorcent(total, num) {
           }"
         >
           {{ harvest_data.variation_between_harvests >= 0 ? 'Incremento' : 'Disminución'}}
-          <span class="material-symbols-rounded !text-[16px] align-middle" :class="{ 'rotate-180' : harvest_data.variation_between_harvests < 0 }">straight</span>
+          <CollectionIcon name="straight" :size="16" class="align-middle" :class="{ 'rotate-180' : harvest_data.variation_between_harvests < 0 }" />
         </div>
       </div>
     </div>
@@ -61,7 +63,7 @@ function getPorcent(total, num) {
       class="terra-metric-card mt-5 p-5 rounded-xl card-section cursor-pointer"
       @click="navigateToTasks('status=overdued')"
     >
-      <div class="terra-metric-icon terra-metric-icon--red"><span class="material-symbols-rounded">assignment_late</span></div>
+      <div class="terra-metric-icon terra-metric-icon--red"><CollectionIcon name="assignment_late" :size="22" /></div>
       <div class="grow">
         <div class="text-sm text-[#5e7369] font-bold">Tareas atrasadas</div>
         <div class="text-2xl font-extrabold">{{ task_data.pending_tasks }}</div>
@@ -79,7 +81,7 @@ function getPorcent(total, num) {
       class="terra-metric-card mt-5 p-5 rounded-xl card-section cursor-pointer"
       @click="navigateToTasks('status=started,overdued')"
     >
-      <div class="terra-metric-icon terra-metric-icon--blue"><span class="material-symbols-rounded">pending_actions</span></div>
+      <div class="terra-metric-icon terra-metric-icon--blue"><CollectionIcon name="pending_actions" :size="22" /></div>
       <div class="grow">
         <div class="text-sm text-[#5e7369] font-bold">Tareas en curso</div>
         <div class="text-2xl font-extrabold">{{ task_data.tasks_in_progress }}</div>
