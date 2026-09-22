@@ -93,7 +93,6 @@ watch(
       v-model="form.rows"
       :placeholder="__('generics.please_select')"
       :options="rows"
-      :virtualScrollerOptions="{ itemSize: 44 }"
       :label="__('task.form.rows.label')"
       :message="form.errors.rows"
     />
@@ -103,7 +102,6 @@ watch(
       v-model="form.plant_id"
       :placeholder="__('generics.please_select')"
       :options="plants"
-      :virtualScrollerOptions="{ itemSize: 44 }"
       :label="__('task.form.plant_id.label')"
       :message="form.errors.plant_id"
     />

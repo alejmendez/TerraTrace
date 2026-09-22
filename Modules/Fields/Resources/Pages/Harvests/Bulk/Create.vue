@@ -35,7 +35,7 @@ const form = useForm({
 });
 
 const submitHandler = () => {
-  if (form.harvest_id === '' || form.bulk_file === null) {
+  if (form.harvest_id === null || form.bulk_file === null) {
     return;
   }
   form.post(route('harvests.store.bulk'), {

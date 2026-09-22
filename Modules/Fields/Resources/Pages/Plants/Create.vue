@@ -13,13 +13,13 @@ const props = defineProps({
 
 const form = useForm({
   name: null,
-  plant_type_id: '',
+  plant_type_id: null,
   age: 0,
   planned_at: null,
   nursery_origin: null,
   code: null,
-  field_id: '',
-  quarter_id: '',
+  field_id: null,
+  quarter_id: null,
   row: '',
 });
 

@@ -27,11 +27,11 @@ const form = useForm({
   priority: props.task_priorities.find((a) => a.value === 'when_possible'),
   start_date: null,
   end_date: null,
-  field_id: [],
+  field_id: null,
   quarter_id: [],
   plant_id: [],
   rows: [],
-  responsible_id: [],
+  responsible_id: null,
   note: null,
   comment: null,
   comments: [

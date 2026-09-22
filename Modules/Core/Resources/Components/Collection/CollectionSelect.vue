@@ -1,5 +1,6 @@
 <script setup>
-import { computed, useAttrs, ref, onMounted } from 'vue';
+import { computed, useAttrs } from 'vue';
+import VueMultiselect from 'vue-multiselect';
 
 import CollectionFieldWrapper from './CollectionFieldWrapper.vue';
 
@@ -26,10 +27,6 @@ const props = defineProps({
         type: String,
         default: '',
     },
-    autofocus: {
-        type: Boolean,
-        default: false,
-    },
     disabled: {
         type: Boolean,
         default: false,
@@ -42,59 +39,41 @@ const props = defineProps({
         type: String,
         default: 'value',
     },
+    loading: {
+        type: Boolean,
+        default: false,
+    },
 });
 
+// vue-multiselect is a fragment component, so $attrs fallthrough is
+// unreliable — disable it and forward the bits we care about manually.
 defineOptions({ inheritAttrs: false });
 const attrs = useAttrs();
+
+const emit = defineEmits(['change']);
 
 const isInvalid = computed(
     () => props.message !== '' && props.message !== undefined && props.message !== null
 );
 
-const fieldClasses = computed(() => {
-    const base = [
-        'w-full',
-        'rounded-lg',
-        'border',
-        'border-[#d7e0d9]',
-        'bg-white',
-        'px-3',
-        'py-2',
-        'text-[#102f27]',
-        'focus:outline-none',
-        'focus:ring-2',
-        'focus:ring-[#17663a]',
-        'focus:border-[#17663a]',
-        'disabled:opacity-60',
-        'disabled:cursor-not-allowed',
-        'transition',
-    ];
-    const invalid = isInvalid.value ? ['border-[#be123c]', 'focus:ring-[#be123c]', 'focus:border-[#be123c]'] : [];
-    return [...base, ...invalid].join(' ');
-});
-
-const input = ref(null);
-
-onMounted(() => {
-    if (props.autofocus && input.value) {
-        input.value.focus();
-    }
-});
-
-function getOptionValue(option) {
+/**
+ * vue-multiselect uses `label` to render the visible text. The backend
+ * convention here is `{value, text}`, so we build a `customLabel`
+ * function that always resolves `option[optionLabel]`. Doing this
+ * instead of `:label="optionLabel"` lets us support nested/missing
+ * fields without changing every call site.
+ */
+const customLabel = (option) => {
     if (option === null || option === undefined) return '';
-    if (typeof option === 'object') {
-        return option[props.optionValue] ?? '';
-    }
-    return option;
-}
-
-function getOptionLabel(option) {
-    if (option === null || option === undefined) return '';
-    if (typeof option === 'object') {
-        return option[props.optionLabel] ?? '';
-    }
+    if (typeof option === 'object') return option[props.optionLabel] ?? '';
     return String(option);
+};
+
+function onUpdate(val) {
+    model.value = val;
+    // Mirror the native `<select>` `@change` event so existing
+    // consumer code (`@change="handler"`) keeps working.
+    emit('change', val);
 }
 </script>
 
@@ -104,22 +83,28 @@ function getOptionLabel(option) {
         :label="props.label"
         :message="props.message"
     >
-        <select
-            ref="input"
-            v-bind="attrs"
-            v-model="model"
+        <VueMultiselect
+            :id="attrs.id"
+            :model-value="model"
+            :options="props.options"
+            :track-by="props.optionValue"
+            :custom-label="customLabel"
+            :placeholder="props.placeholder"
             :disabled="props.disabled"
-            :aria-invalid="isInvalid"
-            :class="fieldClasses"
+            :loading="props.loading"
+            :multiple="false"
+            :close-on-select="true"
+            :clear-on-select="true"
+            :allow-empty="true"
+            :internal-search="true"
+            :show-no-options="false"
+            :show-no-results="true"
+            :class="['terra-multiselect', { 'terra-multiselect--invalid': isInvalid }]"
+            @update:model-value="onUpdate"
         >
-            <option v-if="props.placeholder !== ''" value="">{{ props.placeholder }}</option>
-            <option
-                v-for="(opt, idx) in props.options"
-                :key="`${getOptionValue(opt)}-${idx}`"
-                :value="getOptionValue(opt)"
-            >
-                {{ getOptionLabel(opt) }}
-            </option>
-        </select>
+            <template #noResult>
+                <span>{{ __('generics.form.multiselect.not_found') }}</span>
+            </template>
+        </VueMultiselect>
     </CollectionFieldWrapper>
 </template>

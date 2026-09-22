@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "vue-multiselect/dist/vue-multiselect.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -520,4 +521,399 @@ body {
     position: fixed;
     width: 272px;
   }
+}
+
+/*
+ * vue-multiselect overrides — keep the library's class names but
+ * recolor them to match the TerraTrace verde tailwind theme. The
+ * library's default styling ships with a blue/grey palette and a
+ * flat look; these rules restore focus rings, error state, dark mode,
+ * chip styling and rounded corners consistent with CollectionInput.
+ *
+ * Specificity is intentionally kept at 0,1,1 (single class chain)
+ * so future Tailwind utility tweaks don't fight us here.
+ */
+.terra-multiselect.multiselect {
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 0;
+  border: 1px solid #d7e0d9;
+  border-radius: 8px;
+  background: #fff;
+  color: #102f27;
+  font-size: 14px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.terra-multiselect.multiselect:hover {
+  border-color: #b9cfc1;
+}
+
+.terra-multiselect.multiselect:active,
+.terra-multiselect.multiselect.is-open {
+  border-color: #17663a;
+}
+
+.terra-multiselect.multiselect.is-open {
+  box-shadow: 0 0 0 2px #c9e8d1;
+}
+
+.terra-multiselect--invalid.multiselect,
+.terra-multiselect--invalid.multiselect:hover,
+.terra-multiselect--invalid.multiselect.is-open {
+  border-color: #be123c;
+  box-shadow: 0 0 0 2px #fbd5dd;
+}
+
+.terra-multiselect .multiselect__tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 6px 32px 6px 12px;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  color: #102f27;
+}
+
+.terra-multiselect .multiselect__input,
+.terra-multiselect .multiselect__single {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: #102f27;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.terra-multiselect .multiselect__input::placeholder {
+  color: #9ba8a0;
+}
+
+.terra-multiselect .multiselect__single {
+  padding: 4px 0;
+  margin-bottom: 0;
+}
+
+.terra-multiselect .multiselect__placeholder {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 0;
+  color: #6f7d76;
+  font-size: 14px;
+}
+
+.terra-multiselect .multiselect__input {
+  border: none !important;
+  outline: none;
+  box-shadow: none;
+}
+
+.terra-multiselect .multiselect__input:focus {
+  border: none !important;
+  outline: none;
+  box-shadow: none;
+}
+
+.terra-multiselect .multiselect__select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+}
+
+/* vue-multiselect only ships the CSS triangle caret via
+ * `.multiselect__select::before` (border-style: solid trick). It
+ * does NOT ship an SVG icon. We restyle the triangle with the
+ * project's palette instead of switching rendering paths. */
+.terra-multiselect .multiselect__select::before {
+  position: relative;
+  right: 0;
+  top: 0;
+  margin-top: 0;
+  border-style: solid;
+  border-width: 6px 5px 0 5px;
+  border-color: #6f7d76 transparent transparent transparent;
+  transition: transform 150ms ease;
+}
+
+.terra-multiselect.multiselect.is-open .multiselect__select::before {
+  transform: rotate(180deg);
+  border-top-color: #17663a;
+}
+
+.terra-multiselect .multiselect__clear {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 4px;
+  font-size: 18px;
+  line-height: 1;
+  color: #6f7d76;
+}
+
+.terra-multiselect .multiselect__clear:hover {
+  background: #f1f7f1;
+  color: #17663a;
+}
+
+.terra-multiselect .multiselect__clear-icon {
+  display: none;
+}
+
+.terra-multiselect .multiselect__clear::before {
+  content: "\00d7";
+}
+
+.terra-multiselect .multiselect__content-wrapper {
+  border: 1px solid #d7e0d9;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(24, 57, 39, 0.08);
+}
+
+.terra-multiselect .multiselect__option {
+  display: block;
+  min-height: 38px;
+  padding: 8px 12px;
+  color: #102f27;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+.terra-multiselect .multiselect__option--highlight,
+.terra-multiselect .multiselect__option--highlight:hover {
+  background: #f1f7f1;
+  color: #17663a;
+}
+
+.terra-multiselect .multiselect__option--selected {
+  background: #c9e8d1;
+  color: #155d34;
+  font-weight: 600;
+}
+
+.terra-multiselect .multiselect__option--selected.multiselect__option--highlight {
+  background: #9bcfa6;
+  color: #103d22;
+}
+
+.terra-multiselect .multiselect__option--group {
+  background: #f6faf7;
+  color: #284238;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.terra-multiselect .multiselect__option--group.multiselect__option--highlight {
+  background: #e0f0e1;
+  color: #155d34;
+}
+
+.terra-multiselect--multiple .multiselect__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 2px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #dff1e0;
+  color: #155d34;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* The library renders the per-chip close "X" as ::after on
+ * .multiselect__tag-icon. Force it to look like a proper glyph
+ * (line-height=1, fixed box) so it doesn't bleed into the next chip
+ * and create the "duplicate caret" artifact. */
+.terra-multiselect--multiple .multiselect__tag-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+  border-radius: 999px;
+  font-style: normal;
+  font-size: 0;
+  line-height: 1;
+}
+
+.terra-multiselect--multiple .multiselect__tag-icon::after {
+  content: "\00d7";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #155d34;
+}
+
+.terra-multiselect--multiple .multiselect__tag-icon:hover {
+  background: #17663a;
+}
+
+.terra-multiselect--multiple .multiselect__tag-icon:hover::after {
+  color: #fff;
+}
+
+.terra-multiselect .multiselect__option--no-result {
+  padding: 8px 12px;
+  color: #6f7d76;
+  font-style: italic;
+}
+
+.terra-multiselect.multiselect--disabled {
+  background: #f6f8f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.terra-multiselect.multiselect--disabled .multiselect__tags,
+.terra-multiselect.multiselect--disabled .multiselect__input {
+  cursor: not-allowed;
+}
+
+.terra-multiselect .multiselect__spinner {
+  background: transparent;
+}
+
+.terra-multiselect .multiselect__spinner::before,
+.terra-multiselect .multiselect__spinner::after {
+  border-top-color: #17663a;
+}
+
+.dark .terra-multiselect.multiselect {
+  border-color: #374b3d;
+  background: #111d16;
+  color: #edf6ed;
+}
+
+.dark .terra-multiselect.multiselect:hover {
+  border-color: #4a6453;
+}
+
+.dark .terra-multiselect.multiselect:active,
+.dark .terra-multiselect.multiselect.is-open {
+  border-color: #74cc88;
+}
+
+.dark .terra-multiselect.multiselect.is-open {
+  box-shadow: 0 0 0 2px rgba(116, 204, 136, 0.18);
+}
+
+.dark .terra-multiselect--invalid.multiselect,
+.dark .terra-multiselect--invalid.multiselect:hover,
+.dark .terra-multiselect--invalid.multiselect.is-open {
+  border-color: #f87171;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.18);
+}
+
+.dark .terra-multiselect .multiselect__tags {
+  color: #edf6ed;
+}
+
+.dark .terra-multiselect .multiselect__input,
+.dark .terra-multiselect .multiselect__single {
+  color: #edf6ed;
+}
+
+.dark .terra-multiselect .multiselect__input::placeholder {
+  color: #6f7d76;
+}
+
+.dark .terra-multiselect .multiselect__placeholder {
+  color: #9ba8a0;
+}
+
+.dark .terra-multiselect .multiselect__select::before {
+  border-top-color: #9ba8a0;
+}
+
+.dark .terra-multiselect.multiselect.is-open .multiselect__select::before {
+  border-top-color: #74cc88;
+}
+
+.dark .terra-multiselect .multiselect__clear {
+  color: #9ba8a0;
+}
+
+.dark .terra-multiselect .multiselect__clear:hover {
+  background: #1d3525;
+  color: #74cc88;
+}
+
+.dark .terra-multiselect .multiselect__content-wrapper {
+  border-color: #2c4637;
+  background: #14251b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.dark .terra-multiselect .multiselect__option {
+  color: #edf6ed;
+}
+
+.dark .terra-multiselect .multiselect__option--highlight,
+.dark .terra-multiselect .multiselect__option--highlight:hover {
+  background: #1d3525;
+  color: #cfe0d1;
+}
+
+.dark .terra-multiselect .multiselect__option--selected {
+  background: #294a35;
+  color: #cfe0d1;
+}
+
+.dark .terra-multiselect .multiselect__option--selected.multiselect__option--highlight {
+  background: #2f5b3d;
+  color: #fff;
+}
+
+.dark .terra-multiselect .multiselect__option--group {
+  background: #111d16;
+  color: #9ba8a0;
+}
+
+.dark .terra-multiselect .multiselect__option--group.multiselect__option--highlight {
+  background: #1d3525;
+  color: #cfe0d1;
+}
+
+.dark .terra-multiselect--multiple .multiselect__tag {
+  background: #294a35;
+  color: #cfe0d1;
+}
+
+.dark .terra-multiselect--multiple .multiselect__tag-icon {
+  color: #cfe0d1;
+}
+
+.dark .terra-multiselect--multiple .multiselect__tag-icon::after {
+  color: #cfe0d1;
+}
+
+.dark .terra-multiselect--multiple .multiselect__tag-icon:hover {
+  background: #74cc88;
+}
+
+.dark .terra-multiselect--multiple .multiselect__tag-icon:hover::after {
+  color: #111d16;
+}
+
+.dark .terra-multiselect .multiselect__option--no-result {
+  color: #9ba8a0;
+}
+
+.dark .terra-multiselect.multiselect--disabled {
+  background: #0d1810;
 }

@@ -22,8 +22,8 @@ const props = defineProps({
 });
 
 const form = useForm({
-  field_id: [],
-  quarter_id: [],
+  field_id: null,
+  quarter_id: null,
   bulk_file: null,
 });
 
@@ -41,7 +41,7 @@ watch(
 );
 
 const submitHandler = () => {
-  if (form.field_id.length === 0 || form.quarter_id.length === 0 || form.bulk_file === null) {
+  if (form.field_id === null || form.quarter_id === null || form.bulk_file === null) {
     return;
   }
   form.post(route('plants.store.bulk'), {

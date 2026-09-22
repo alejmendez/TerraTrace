@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useAttrs } from 'vue';
+import VueMultiselect from 'vue-multiselect';
 
 import CollectionFieldWrapper from './CollectionFieldWrapper.vue';
 
@@ -19,6 +20,10 @@ const props = defineProps({
         default: () => [],
     },
     message: {
+        type: String,
+        default: '',
+    },
+    placeholder: {
         type: String,
         default: '',
     },
@@ -42,8 +47,14 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    loading: {
+        type: Boolean,
+        default: false,
+    },
 });
 
+// vue-multiselect is a fragment component, so $attrs fallthrough is
+// unreliable — disable it and forward the bits we care about manually.
 defineOptions({ inheritAttrs: false });
 const attrs = useAttrs();
 
@@ -53,51 +64,31 @@ const isInvalid = computed(
     () => props.message !== '' && props.message !== undefined && props.message !== null
 );
 
-const fieldClasses = computed(() => {
-    const base = [
-        'w-full',
-        'rounded-lg',
-        'border',
-        'border-[#d7e0d9]',
-        'bg-white',
-        'px-3',
-        'py-2',
-        'text-[#102f27]',
-        'focus:outline-none',
-        'focus:ring-2',
-        'focus:ring-[#17663a]',
-        'focus:border-[#17663a]',
-        'disabled:opacity-60',
-        'disabled:cursor-not-allowed',
-        'transition',
-        'min-h-24',
-    ];
-    const invalid = isInvalid.value ? ['border-[#be123c]', 'focus:ring-[#be123c]', 'focus:border-[#be123c]'] : [];
-    return [...base, ...invalid].join(' ');
-});
+const isGrouped = computed(
+    () => Boolean(props.optionGroupLabel) && Boolean(props.optionGroupChildren)
+);
 
-function getOptionValue(option) {
+/**
+ * vue-multiselect's `label` prop renders the visible text. With the
+ * project's `{value, text}` convention, we always resolve through
+ * `option[optionLabel]` via `customLabel` so nested/missing fields
+ * don't blow up at runtime.
+ */
+const customLabel = (option) => {
     if (option === null || option === undefined) return '';
-    if (typeof option === 'object') {
-        return option[props.optionValue] ?? '';
-    }
-    return option;
-}
-
-function getOptionLabel(option) {
-    if (option === null || option === undefined) return '';
-    if (typeof option === 'object') {
-        return option[props.optionLabel] ?? '';
-    }
+    if (typeof option === 'object') return option[props.optionLabel] ?? '';
     return String(option);
+};
+
+function onUpdate(val) {
+    model.value = val ?? [];
+    // Mirror the native `<select multiple>` `@change` event so existing
+    // consumer code (`@change="handler"`) keeps working.
+    emit('change', val ?? []);
 }
 
-function onChange(e) {
-    emit('change', e);
-}
-
-function onBlur(e) {
-    emit('blur', e);
+function onBlur() {
+    emit('blur');
 }
 </script>
 
@@ -107,40 +98,32 @@ function onBlur(e) {
         :label="props.label"
         :message="props.message"
     >
-        <select
-            v-bind="attrs"
-            v-model="model"
-            multiple
+        <VueMultiselect
+            :id="attrs.id"
+            :model-value="model"
+            :options="props.options"
+            :track-by="props.optionValue"
+            :custom-label="customLabel"
+            :placeholder="props.placeholder"
             :disabled="props.disabled"
-            :aria-invalid="isInvalid"
-            :class="fieldClasses"
-            @change="onChange"
+            :loading="props.loading"
+            :multiple="true"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :allow-empty="true"
+            :internal-search="true"
+            :show-no-options="false"
+            :show-no-results="true"
+            :group-values="isGrouped ? props.optionGroupChildren : null"
+            :group-label="isGrouped ? props.optionGroupLabel : null"
+            :group-select="false"
+            :class="['terra-multiselect', 'terra-multiselect--multiple', { 'terra-multiselect--invalid': isInvalid }]"
+            @update:model-value="onUpdate"
             @blur="onBlur"
         >
-            <template v-if="props.optionGroupLabel && props.optionGroupChildren">
-                <optgroup
-                    v-for="(group, gIdx) in props.options"
-                    :key="gIdx"
-                    :label="getOptionLabel(group)"
-                >
-                    <option
-                        v-for="(opt, idx) in (group[props.optionGroupChildren] || [])"
-                        :key="`${getOptionValue(opt)}-${gIdx}-${idx}`"
-                        :value="getOptionValue(opt)"
-                    >
-                        {{ getOptionLabel(opt) }}
-                    </option>
-                </optgroup>
+            <template #noResult>
+                <span>{{ __('generics.form.multiselect.not_found') }}</span>
             </template>
-            <template v-else>
-                <option
-                    v-for="(opt, idx) in props.options"
-                    :key="`${getOptionValue(opt)}-${idx}`"
-                    :value="getOptionValue(opt)"
-                >
-                    {{ getOptionLabel(opt) }}
-                </option>
-            </template>
-        </select>
+        </VueMultiselect>
     </CollectionFieldWrapper>
 </template>

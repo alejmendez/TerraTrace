@@ -9,6 +9,8 @@ import CollectionIcon from '@Core/Components/Collection/CollectionIcon.vue';
 import CollectionMetricCard from '@Core/Components/Collection/CollectionMetricCard.vue';
 import CollectionPageHeader from '@Core/Components/Collection/CollectionPageHeader.vue';
 import CollectionPagination from '@Core/Components/Collection/CollectionPagination.vue';
+import CollectionSelect from '@Core/Components/Collection/CollectionSelect.vue';
+import CollectionMultiSelect from '@Core/Components/Collection/CollectionMultiSelect.vue';
 import CollectionToast from '@Core/Components/Collection/CollectionToast.vue';
 import { formatNumber } from '@Core/Utils/format';
 import { dateToString } from '@Core/Utils/date';
@@ -110,8 +112,8 @@ const onSearchInput = () => {
   searchTimer = setTimeout(() => reloadList({ page: 1 }), 250);
 };
 
-const onStatusChange = (event) => {
-  const values = Array.from(event.target.selectedOptions).map((option) => option.value).filter(Boolean);
+const onStatusChange = (selected) => {
+  const values = (selected ?? []).map((option) => option.value).filter(Boolean);
   reloadList({ status: values.join(','), page: 1 });
 };
 
@@ -172,6 +174,36 @@ const totalAsignadas = computed(() => formatNumber(props.summary?.assigned || 0,
 
 const selectedStatuses = computed(() => (query.status ? query.status.split(',').filter(Boolean) : []));
 
+const selectedStatusOptions = computed(() =>
+    selectedStatuses.value
+        .map((value) => props.task_states.find((s) => s.value == value))
+        .filter(Boolean)
+);
+
+const selectedPriorityOption = computed(() =>
+    props.task_priorities.find((p) => p.value == query.priority) ?? null
+);
+
+const selectedResponsibleOption = computed(() =>
+    props.responsibles.find((r) => r.value == query.responsible_id) ?? null
+);
+
+// `__` is registered as app.config.globalProperties (see
+// Modules/Core/Libs/i18n.js) so it's only available inside templates,
+// not in <script setup>. These labels are local filter strings on a
+// Spanish-only page, so hardcoding is simpler than threading an
+// injection just for them.
+const sort_options = [
+    { value: 'updated_at', text: 'Ordenar por última actualización' },
+    { value: 'end_date', text: 'Ordenar por fecha de fin' },
+    { value: 'name', text: 'Ordenar por nombre' },
+    { value: 'correlative', text: 'Ordenar por correlativo' },
+];
+
+const selectedSortOption = computed(() =>
+    sort_options.find((s) => s.value === query.sort) ?? sort_options[0]
+);
+
 watch(() => props.toast, (next) => {
   if (next?.detail) notify(next.detail, next.severity === 'error' ? 'error' : 'success');
 });
@@ -217,50 +249,38 @@ onUnmounted(() => clearTimeout(searchTimer));
               @input="onSearchInput"
             >
           </label>
-          <select
-            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
-            multiple
+          <CollectionMultiSelect
+            class-wrapper="sm:min-w-[180px] sm:flex-1"
+            :model-value="selectedStatusOptions"
+            :options="props.task_states"
+            :placeholder="__('Filtrar por estado')"
             aria-label="Filtrar por estado"
             @change="onStatusChange"
-          >
-            <option
-              v-for="state in task_states"
-              :key="state.value"
-              :value="state.value"
-              :selected="selectedStatuses.includes(state.value)"
-            >
-              {{ state.text }}
-            </option>
-          </select>
-          <select
-            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
-            :value="query.priority"
+          />
+          <CollectionSelect
+            class-wrapper="sm:min-w-[160px] sm:flex-1"
+            :model-value="selectedPriorityOption"
+            :options="props.task_priorities"
+            :placeholder="__('Todas las prioridades')"
             aria-label="Filtrar por prioridad"
-            @change="setFilter('priority', $event.target.value)"
-          >
-            <option value="">Todas las prioridades</option>
-            <option v-for="priority in task_priorities" :key="priority.value" :value="priority.value">{{ priority.text }}</option>
-          </select>
-          <select
-            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
-            :value="query.responsible_id"
+            @change="(opt) => setFilter('priority', opt?.value ?? '')"
+          />
+          <CollectionSelect
+            class-wrapper="sm:min-w-[180px] sm:flex-1"
+            :model-value="selectedResponsibleOption"
+            :options="props.responsibles"
+            :placeholder="__('Todos los responsables')"
             aria-label="Filtrar por responsable"
-            @change="setFilter('responsible_id', $event.target.value)"
-          >
-            <option value="">Todos los responsables</option>
-            <option v-for="responsible in responsibles" :key="responsible.value" :value="responsible.value">{{ responsible.text }}</option>
-          </select>
-          <select
-            class="h-10 rounded-lg border border-[#d7e0d9] bg-white px-3 text-sm text-[#284238] focus:border-[#17663a] focus:outline-none focus:ring-2 focus:ring-[#c9e8d1]"
-            :value="query.sort"
+            @change="(opt) => setFilter('responsible_id', opt?.value ?? '')"
+          />
+          <CollectionSelect
+            class-wrapper="sm:min-w-[200px] sm:flex-1"
+            :model-value="selectedSortOption"
+            :options="sort_options"
+            :placeholder="__('Ordenar por')"
             aria-label="Ordenar tareas"
-            @change="setSort($event.target.value)"
-          >
-            <option value="updated_at">Ordenar por última actualización</option>
-            <option value="end_date">Ordenar por fecha de fin</option>
-            <option value="name">Ordenar por nombre</option>
-            <option value="correlative">Ordenar por correlativo</option>
-          </select>
+            @change="(opt) => setSort(opt?.value)"
+          />
         </div>
       </div>
 
