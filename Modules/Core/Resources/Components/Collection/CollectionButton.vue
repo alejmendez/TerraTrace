@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useAttrs } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     label: {
@@ -29,7 +29,6 @@ defineOptions({ inheritAttrs: false });
 const attrs = useAttrs();
 
 const isLink = computed(() => Boolean(props.href));
-const tag = computed(() => (isLink.value ? 'a' : 'button'));
 
 /**
  * Disabled state. `attrs.disabled` is set via `:disabled="..."` on
@@ -104,9 +103,11 @@ const classes = computed(() => {
 
 /**
  * Click handler. Matches the legacy `Button` wrapper's contract:
- *   - if `href` is set and no explicit onClick, navigate via Inertia.
- *   - if onClick is set, call it (allowing `@click.prevent` etc.).
- *   - always short-circuit when disabled.
+ *   - short-circuit when disabled.
+ *   - if onClick is set, call it (allowing `@click.prevent` etc.);
+ *     otherwise let <Link> (or the native <button> submit) drive
+ *     navigation itself — no manual `router.visit` here so middle /
+ *     right-click and modifier-keys fall through to the browser.
  */
 function handleClick(event) {
     if (isDisabled.value) {
@@ -115,17 +116,13 @@ function handleClick(event) {
     }
     if (typeof attrs.onClick === 'function') {
         attrs.onClick(event);
-        return;
-    }
-    if (props.href) {
-        router.visit(props.href);
     }
 }
 </script>
 
 <template>
     <component
-        :is="tag"
+        :is="isLink ? Link : 'button'"
         :type="!isLink ? type : undefined"
         :href="isLink ? href : undefined"
         :disabled="!isLink ? isDisabled : undefined"
