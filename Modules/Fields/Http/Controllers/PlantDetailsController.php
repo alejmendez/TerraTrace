@@ -71,6 +71,6 @@ class PlantDetailsController extends Controller
             return null;
         }
 
-        return $request->file($field)->storePublicly('public/variables');
+        return $request->file($field)->storePublicly('variables', ['disk' => 'public']);
     }
 }

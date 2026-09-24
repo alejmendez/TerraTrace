@@ -125,6 +125,6 @@ class UsersController extends Controller
             return null;
         }
 
-        return $request->file('avatar')->storePublicly('public/avatars');
+        return $request->file('avatar')->storePublicly('avatars', ['disk' => 'public']);
     }
 }

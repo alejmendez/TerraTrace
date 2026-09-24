@@ -22,11 +22,11 @@ class FieldResource extends JsonResource
             'size' => $this->size,
             'plants_count' => $this->plants_count,
             'quarters_count' => $this->quarters_count,
-            'blueprint' => $this->blueprint ? Storage::url($this->blueprint) : '',
+            'blueprint' => $this->blueprint ? Storage::disk('public')->url($this->blueprint) : '',
             'documents' => $this->documents ? $this->documents->map(fn ($document) => [
                 'id' => $document->id,
                 'name' => $document->name,
-                'url' => Storage::url($document->path),
+                'url' => Storage::disk('public')->url($document->path),
             ]) : [],
             'owner' => [
                 'dni' => $this->owner_dni,

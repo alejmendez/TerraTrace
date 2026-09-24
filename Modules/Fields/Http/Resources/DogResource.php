@@ -23,7 +23,7 @@ class DogResource extends JsonResource
             'birthdate' => $this->birthdate,
             'age' => $this->age,
             'veterinary' => $this->veterinary,
-            'avatar' => $this->avatar ? Storage::url($this->avatar) : '',
+            'avatar' => $this->avatar ? Storage::disk('public')->url($this->avatar) : '',
             'field' => [
                 'id' => optional($this->field)->id,
                 'name' => optional($this->field)->name,

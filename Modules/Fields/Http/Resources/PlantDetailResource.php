@@ -17,7 +17,7 @@ class PlantDetailResource extends JsonResource
     {
         $value = $this->value;
         if (str_ends_with($this->type, '_photo')) {
-            $value = Storage::url($this->value);
+            $value = Storage::disk('public')->url($this->value);
         }
 
         return [

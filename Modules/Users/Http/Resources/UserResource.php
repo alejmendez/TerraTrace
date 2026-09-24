@@ -32,7 +32,7 @@ class UserResource extends JsonResource
             'dni' => $this->dni,
             'last_name' => $this->last_name,
             'phone' => $this->phone,
-            'avatar' => $this->avatar ? Storage::url($this->avatar) : '',
+            'avatar' => $this->avatar ? Storage::disk('public')->url($this->avatar) : '',
             'role' => $roleData,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

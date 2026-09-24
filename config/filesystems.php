@@ -36,7 +36,27 @@ return [
             'throw' => false,
         ],
 
-        'public' => [
+        // The 'public' disk is the canonical "user-uploaded file" store.
+        // Its backing driver (local filesystem or AWS S3) is selected by
+        // the FILESYSTEM_DISK env var, so application code can always
+        // reference Storage::disk('public') without caring about the
+        // underlying driver.
+        //
+        // Switching backends is a one-line change in .env:
+        //   FILESYSTEM_DISK=local  → uses storage/app/public + storage:link
+        //   FILESYSTEM_DISK=s3     → uses the S3 bucket below (creds from env)
+        'public' => env('FILESYSTEM_DISK', 'local') === 's3' ? [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'visibility' => 'public',
+            'throw' => false,
+        ] : [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',

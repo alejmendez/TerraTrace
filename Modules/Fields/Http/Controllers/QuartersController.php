@@ -153,6 +153,6 @@ class QuartersController extends Controller
             return null;
         }
 
-        return $request->file('blueprint')->storePublicly('public/blueprints');
+        return $request->file('blueprint')->storePublicly('blueprints', ['disk' => 'public']);
     }
 }

@@ -32,7 +32,7 @@ class PlantResource extends JsonResource
             'nursery_origin' => $this->nursery_origin,
             'code' => $this->code,
             'row' => $this->row,
-            'blueprint' => $this->blueprint ? Storage::url($this->blueprint) : '',
+            'blueprint' => $this->blueprint ? Storage::disk('public')->url($this->blueprint) : '',
             'field' => [
                 'id' => $field->id,
                 'name' => $field->name,

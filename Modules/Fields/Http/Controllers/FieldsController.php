@@ -137,7 +137,7 @@ class FieldsController extends Controller
             return null;
         }
 
-        return $request->file('blueprint')->storePublicly('public/blueprints');
+        return $request->file('blueprint')->storePublicly('blueprints', ['disk' => 'public']);
     }
 
     protected function storeDocuments(UpdateFieldRequest|StoreFieldRequest $request)
@@ -150,7 +150,7 @@ class FieldsController extends Controller
         $documentStore = [];
         foreach ($documents as $document) {
             $documentStore[] = [
-                'path' => $document->storePublicly('public/documents'),
+                'path' => $document->storePublicly('documents', ['disk' => 'public']),
                 'name' => $document->getClientOriginalName(),
                 'type' => $document->getClientMimeType(),
             ];
