@@ -21,7 +21,13 @@ class PlantSeeder extends Seeder
 
         $quarters = Quarter::all();
         foreach ($quarters as $quarter) {
-            Plant::factory(rand(0, 10))->create([
+            // Each quarter must have plants, otherwise:
+            //   - the dashboard's "Promedio gr por planta" renders 0
+            //     (division by zero is guarded, but the value is still 0)
+            //   - HarvestSeeder has nothing to attach HarvestDetails to
+            // Range 8-25 keeps the field's total plant count realistic
+            // (10 fields × 3 quarters × ~16 plants ≈ 480 plants total).
+            Plant::factory(rand(8, 25))->create([
                 'quarter_id' => $quarter->id,
                 'plant_type_id' => $plant_types_ids[rand(0, $plant_types_ids_count)],
             ]);
