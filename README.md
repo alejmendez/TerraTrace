@@ -30,19 +30,27 @@ Predio → Cuartel → Planta → Cosecha → Lote → Inventario → Liquidaci�
 
 ## Galería
 
-Las capturas usan datos ficticios y anonimizados.
+Capturas reales de la aplicación en ejecución. El flujo recorre las vistas principales en el orden `Escritorio → Campos → Plantas → Cosechas → Liquidaciones`.
 
-### Registro de cosechas
+### Escritorio
 
-![Listado de cosechas y formulario de registro](docs/images/harvest-list-anonymized.png)
+![Dashboard con saludo, selector de campo y tarjetas de temporada, variación de cosecha y carga operativa](docs/images/dashboard-index.png)
 
-### Inventario y trazabilidad
+### Campos
 
-![Inventario de lotes y línea de trazabilidad](docs/images/inventory-traceability-anonymized.png)
+![Listado de campos con superficie, cuarteles y plantas registradas por ubicación](docs/images/fields-index.png)
 
-### Resultado económico
+### Plantas
 
-![Indicadores y resumen económico de ejemplo](docs/images/economic-results-anonymized.png)
+![Registro de plantas con código, ubicación, tipo y edad, filtrable por campo, cuartel y tipo](docs/images/plants-index.png)
+
+### Cosechas
+
+![Listado de cosechas agrupadas por lote, semana y campo, con peso total y unidades](docs/images/harvests-index.png)
+
+### Liquidaciones
+
+![Listado de liquidaciones por importador y año, con peso comercial y no comercial](docs/images/liquidations-index.png)
 
 ## Capacidades
 
