@@ -47,13 +47,13 @@ function getPorcent(total, num) {
         <div class="text-sm text-[#5e7369] font-bold">Variación de cosecha</div>
         <div class="text-2xl font-extrabold mb-1">{{ formatNumber(harvest_data.variation_between_harvests) }} %</div>
         <div
-          class="text-xs font-bold"
+          class="flex items-center justify-normal text-xs font-bold"
           :class="{
             'text-green-700': harvest_data.variation_between_harvests >= 0,
             'text-red-600': harvest_data.variation_between_harvests < 0,
           }"
         >
-          {{ harvest_data.variation_between_harvests >= 0 ? 'Incremento' : 'Disminución'}}
+          <span>{{ harvest_data.variation_between_harvests >= 0 ? 'Incremento' : 'Disminución' }}</span>
           <CollectionIcon name="straight" :size="16" class="align-middle" :class="{ 'rotate-180' : harvest_data.variation_between_harvests < 0 }" />
         </div>
       </div>
